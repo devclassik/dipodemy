@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
 import React, { useRef } from "react";
 import {
@@ -9,6 +10,7 @@ import {
   View,
 } from "react-native";
 import Swiper from "react-native-swiper";
+import RoundedActionButton from "./RoundedActionButton";
 
 type Slide = {
   img: ImageSourcePropType;
@@ -57,9 +59,19 @@ const OnboardingSlider: React.FC<OnboardingSliderProps> = ({
             <Text style={styles.title}>{slide.title}</Text>
             <Text style={styles.desc}>{slide.description}</Text>
             {idx === slides.length - 1 ? (
-              <TouchableOpacity style={styles.doneBtn} onPress={onDone}>
-                <Text style={styles.doneText}>→</Text>
-              </TouchableOpacity>
+              // <TouchableOpacity style={styles.doneBtn} onPress={onDone}>
+              //   <Text style={styles.doneText}>→</Text>
+              // </TouchableOpacity>
+              <View style={{position: "absolute", bottom: 40, right: 20}}>
+                <RoundedActionButton
+                  text="Get Started"
+                  icon={
+                    <Ionicons name="arrow-forward" size={24} color="#27d86c" />
+                  }
+                  bgColor="#27d86c"
+                  onPress={onDone}
+                />
+              </View>
             ) : (
               <>
                 <View style={styles.nextBtnPlaceholder} />
@@ -71,6 +83,7 @@ const OnboardingSlider: React.FC<OnboardingSliderProps> = ({
           </View>
         ))}
       </Swiper>
+      
     </>
   );
 };

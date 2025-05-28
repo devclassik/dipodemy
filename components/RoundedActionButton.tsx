@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    ViewStyle,
+} from "react-native";
 
 interface RoundedActionButtonProps {
   text?: string;
@@ -47,14 +53,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderRadius: 30,
-    paddingHorizontal: 24,
+    paddingLeft: 20,
+    paddingRight: 2,
     height: 50,
-    minWidth: 160,
+    minWidth: 150,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2,
   },
   text: {
     color: "#fff",
@@ -84,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RoundedActionButton; 
+export default RoundedActionButton;
