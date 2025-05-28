@@ -90,8 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-    shadowColor: "#000",
-    elevation: 2,
+    elevation: 4,
   },
   socialButton: {
     flexDirection: "row",
@@ -149,6 +148,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#555",
     marginBottom: 20,
+    marginTop: 10
   },
   signupText: {
     color: "#f97316",
