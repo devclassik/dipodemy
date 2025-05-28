@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
   footerText: {
     textAlign: "center",
     color: "#555",
+    fontWeight:"bold",
     marginBottom: 20,
     marginTop: 10
   },
