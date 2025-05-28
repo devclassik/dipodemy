@@ -15,7 +15,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Mulish: require('../assets/fonts/Mulish-Regular.ttf'),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -35,6 +35,7 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack initialRouteName='splash'>
           <Stack.Screen name='splash' options={{ headerShown: false}} />
+          <Stack.Screen name='landing' options={{ headerShown: false}} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>

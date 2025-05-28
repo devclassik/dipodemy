@@ -29,8 +29,8 @@ export default function Onboarding() {
   return (
     <OnboardingSlider
       slides={slides}
-      onSkip={() => router.replace("/(tabs)")}
-      onDone={() => router.replace("/(tabs)")}
+      onSkip={() => router.replace("/landing")}
+      onDone={() => router.replace("/landing")}
     />
   );
 }
