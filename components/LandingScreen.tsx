@@ -39,7 +39,7 @@ const LandingScreen = () => {
             width: "70%",
             alignSelf: "center",
             alignItems: "center",
-            marginVertical: 60,
+            marginVertical: 40,
           }}
         >
           <RoundedActionButton
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     color: "#555",
     fontWeight:"bold",
     marginBottom: 10,
-    marginTop: 10
+    marginTop: 20
   },
   signupText: {
     color: "#f97316",

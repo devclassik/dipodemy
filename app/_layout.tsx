@@ -36,6 +36,7 @@ export default function RootLayout() {
         <Stack initialRouteName='splash'>
           <Stack.Screen name='splash' options={{ headerShown: false}} />
           <Stack.Screen name='landing' options={{ headerShown: false}} />
+          <Stack.Screen name='(auth)' options={{ headerShown: false}} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
