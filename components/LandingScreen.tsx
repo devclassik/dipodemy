@@ -39,7 +39,7 @@ const LandingScreen = () => {
             width: "70%",
             alignSelf: "center",
             alignItems: "center",
-            marginVertical: 20,
+            marginVertical: 60,
           }}
         >
           <RoundedActionButton
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
   orText: {
     textAlign: "center",
     color: "#999",
-    marginVertical: 20,
     fontWeight: "400"
   },
   signInButton: {
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#27d86c",
     paddingVertical: 14,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 10,
     elevation: 5,
     shadowColor: "#27d86c",
     shadowOpacity: 0.3,
@@ -149,7 +148,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#555",
     fontWeight:"bold",
-    marginBottom: 20,
+    marginBottom: 10,
     marginTop: 10
   },
   signupText: {
