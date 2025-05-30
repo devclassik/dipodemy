@@ -1,10 +1,10 @@
 import React from "react";
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
 
 interface RoundedActionButtonProps {
@@ -13,6 +13,7 @@ interface RoundedActionButtonProps {
   bgColor?: string;
   onPress: () => void;
   style?: ViewStyle;
+  disabled?: boolean;
 }
 
 const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
@@ -21,6 +22,7 @@ const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
   bgColor = "#27d86c",
   onPress,
   style,
+  disabled,
 }) => {
   if (!text) {
     // Icon-only button
@@ -29,6 +31,7 @@ const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
         style={[styles.iconOnlyButton, { backgroundColor: bgColor }, style]}
         activeOpacity={0.8}
         onPress={onPress}
+        disabled={disabled}
       >
         {icon}
       </TouchableOpacity>
@@ -40,6 +43,7 @@ const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
       style={[styles.button, { backgroundColor: bgColor }, style]}
       activeOpacity={0.8}
       onPress={onPress}
+      disabled={disabled}
     >
       <Text style={styles.text}>{text}</Text>
       <View style={styles.iconContainer}>{icon}</View>

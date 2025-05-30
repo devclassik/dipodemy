@@ -157,8 +157,7 @@ const RegisterScreen = () => {
         <RoundedActionButton
           text="Sign Up"
           icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-          bgColor="#27d86c"
-          onPress={() => {}}
+          onPress={() => router.navigate("/pin")}
         />
       </View>
 
@@ -180,7 +179,10 @@ const RegisterScreen = () => {
       </View>
 
       <Text style={styles.footerText}>
-        Already have an Account? <Text style={styles.signUp} onPress={()=> router.navigate('/login')}>SIGN IN</Text>
+        Already have an Account?{" "}
+        <Text style={styles.signUp} onPress={() => router.navigate("/login")}>
+          SIGN IN
+        </Text>
       </Text>
     </View>
   );
