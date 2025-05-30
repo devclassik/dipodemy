@@ -41,15 +41,6 @@ export default function App() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container} style={{ marginBottom: 113 }}>
-        <View style={styles.statusBarContainer}>
-          {/* Time container */}
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>9:41</Text>
-          </View>
-          <FontAwesome name="signal" style={styles.signalIcon} />
-          <FontAwesome name="wifi" style={styles.wifiIcon} />
-          <FontAwesome name="battery-full" style={styles.batteryIcon} />
-        </View>
 
         {/* Header */}
         <View style={styles.header}>
@@ -179,41 +170,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SCREEN_WIDTH * 0.05,
     paddingBottom: 20,
-  },
-  statusBarContainer: {
-    width: '100%',
-    height: 44,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SCREEN_WIDTH * 0.05,
-  },
-  timeContainer: {
-    justifyContent: 'center',
-    width: SCREEN_WIDTH * 0.15,
-  },
-  timeText: {
-    fontFamily: 'Jost_600SemiBold',
-    fontWeight: '600',
-    fontSize: 15,
-    lineHeight: 15,
-    letterSpacing: -0.3,
-    textAlign: 'center',
-    color: '#000',
-  },
-  signalIcon: {
-    color: '#A0A4AB',
-    marginLeft: 'auto',
-    marginRight: 10,
-    fontSize: 16,
-  },
-  wifiIcon: {
-    color: '#A0A4AB',
-    fontSize: 16,
-    marginRight: 10,
-  },
-  batteryIcon: {
-    color: '#000',
-    fontSize: 16,
   },
   header: {
     flexDirection: 'row',
