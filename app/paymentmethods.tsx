@@ -1,9 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
-import { default as React, useState } from 'react';
+import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function App() {
   const [selectedOption, setSelectedOption] = useState(false);
@@ -24,10 +23,7 @@ export default function App() {
       {/* Back Button */}
       <Pressable
         onPress={() => router.back()}
-        style={{
-          marginTop: 25,
-          marginLeft: 35,
-        }}
+        style={{ marginTop: 25, marginLeft: 35 }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.backArrow}>←</Text>
@@ -37,18 +33,21 @@ export default function App() {
 
       <View style={styles.mainContainer}>
         <View style={styles.selectedCourse}>
-  <Image
-    source={require('../assets/images/Designer.png')}
-    style={styles.image}
-    resizeMode="contain"
-  />
-  
-  <View style={styles.textWrapper}>
-    <Text style={styles.title}>Graphic Design</Text>
-    <Text style={styles.subtitle}>Setup your Graphic Desig..</Text>
-  </View>
-</View>
-        <Text style={styles.selectMethod}>Select the Payment Methods you Want to Use</Text>
+          <Image
+            source={require('../assets/images/Designer.png')}
+            style={styles.image}
+            resizeMode="contain"
+          />
+          <View style={styles.textWrapper}>
+            <Text style={styles.title}>Graphic Design</Text>
+            <Text style={styles.subtitle}>Setup your Graphic Desig..</Text>
+          </View>
+        </View>
+
+        <Text style={styles.selectMethod}>
+          Select the Payment Methods you Want to Use
+        </Text>
+
         {/* Payment Methods */}
         {['Paypal', 'Google Pay', 'Apple Pay', 'Bank Transfer'].map((method) => (
           <View style={styles.paymentOptionWrapper} key={method}>
@@ -57,24 +56,28 @@ export default function App() {
             </View>
             <Pressable
               onPress={() => setSelectedOption(method)}
-              style={styles.check}>
+              style={styles.check}
+            >
               {selectedOption === method && <View style={styles.radioInner} />}
             </Pressable>
           </View>
         ))}
-{/*Add New Card */}
-<View style={styles.greenBox}>
-  <Icon name="add" size={32} color="#fff" />
-</View>
-<Pressable style={styles.enrollButton} onPress={() => router.push('PAYMENT_METHODS')}>
-      <Text style={styles.enrollText}>Enroll Course - $55</Text>
 
-      <View style={styles.arrowBox}>
-      <Ionicons name="arrow-forward" size={24} color="#40E96A" />
-    </View>
-    </Pressable>
+        {/* Add New Card */}
+        <View style={styles.greenBox}>
+          <Ionicons name="add" size={32} color="#fff" />
+        </View>
+
+        <Pressable
+          style={styles.enrollButton}
+          onPress={() => router.push('PAYMENT_METHODS')}
+        >
+          <Text style={styles.enrollText}>Enroll Course - $55</Text>
+          <View style={styles.arrowBox}>
+            <Ionicons name="arrow-forward" size={24} color="#40E96A" />
+          </View>
+        </Pressable>
       </View>
-      
     </View>
   );
 }
@@ -118,34 +121,33 @@ const styles = StyleSheet.create({
     marginLeft: 19,
   },
   textWrapper: {
-  flexDirection: 'column',
-  justifyContent: 'center',
-},
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
   title: {
-    fontFamily: 'Mulish',
-  fontSize: 12,
-  fontWeight: '700',
-  color: '#FF6B00',
-  marginLeft: 22,
-},
-
-subtitle: {
-  fontFamily:'Jost-Bold',
-  fontWeight: '600',
-  fontSize: 14,
-  color: '#202244',
-  marginLeft: 22,
-},
-selectMethod: {
-  fontFamily:'Mulish',
-  fontWeight: '700',
-  fontSize: 14,
-  color: '#545454',
-  marginTop: 44,
-  marginLeft: 35,
-},
-paymentOptionWrapper: {
-  width: 312,
+    fontFamily: 'Mulish-Bold',
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FF6B00',
+    marginLeft: 22,
+  },
+  subtitle: {
+    fontFamily: 'Jost-Bold',
+    fontWeight: '600',
+    fontSize: 14,
+    color: '#202244',
+    marginLeft: 22,
+  },
+  selectMethod: {
+    fontFamily: 'Mulish-Bold',
+    fontWeight: '700',
+    fontSize: 14,
+    color: '#545454',
+    marginTop: 44,
+    marginLeft: 35,
+  },
+  paymentOptionWrapper: {
+    width: 312,
     height: 43,
     marginTop: 5,
     marginLeft: 29,
@@ -158,59 +160,54 @@ paymentOptionWrapper: {
     flexDirection: 'row',
     alignContent: 'center',
     elevation: 4,
-},
-paymentOptionContainer: {
-  width: 88,
-  height: 18,
-  marginTop: 13,
-  marginLeft: 175,
+  },
+  paymentOptionContainer: {
+    width: 88,
+    height: 18,
+    marginTop: 13,
+    marginLeft: 175,
     alignContent: 'center',
     alignItems: 'flex-end',
-},
-paymentOption: {
-  fontFamily: 'Mulish-Bold',
-  fontWeight: '800',
-  fontSize: 12,
-  color: '#202244',
-
-},
-check: {
-  width: 22.5,
-  height: 18.63,
-  borderRadius: 10,
-  borderWidth: 2,
-  borderColor: '#B4BDC4',
-  marginTop: 12.18,
-  marginLeft: 10.13,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-radioInner: {
-  width: 12,
-  height: 12,
-  borderRadius: 6,
-  backgroundColor: '#34C759',
-},
-greenBox: {
-  width: 52,
-  height: 49,
-  marginTop: 60, 
-  marginLeft: 296, 
-  backgroundColor: '#34C759',
-  shadowColor: '#000000',
-  shadowOffset: { width: 1, height: 2 },
-  shadowOpacity: 0.3,
-  shadowRadius: 8,
-  elevation: 4, 
-  borderRadius: '100%',
-   justifyContent: 'center',
-  alignItems: 'center',
-},
-icon: {
-  width: 21.8,
-  height: 20.55,
-},
-enrollButton: {
+  },
+  paymentOption: {
+    fontFamily: 'Mulish-Bold',
+    fontWeight: '800',
+    fontSize: 12,
+    color: '#202244',
+  },
+  check: {
+    width: 22.5,
+    height: 18.63,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#B4BDC4',
+    marginTop: 12.18,
+    marginLeft: 10.13,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#34C759',
+  },
+  greenBox: {
+    width: 52,
+    height: 49,
+    marginTop: 60,
+    marginLeft: 296,
+    backgroundColor: '#34C759',
+    shadowColor: '#000000',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  enrollButton: {
     width: 297,
     height: 43,
     backgroundColor: '#40E96A',
@@ -232,12 +229,11 @@ enrollButton: {
     marginLeft: 81,
   },
   arrowBox: {
-    // position: 'absolute',
-    right: 8, // adjust to match `left: 249.48px`
-    width: 40.73,
-    height: 34.4,
+    right: 8,
+    width: 35,
+    height: 35,
     backgroundColor: '#FFFFFF',
-    borderRadius: '100%',
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000000',
@@ -245,5 +241,5 @@ enrollButton: {
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,
-  }
+  },
 });

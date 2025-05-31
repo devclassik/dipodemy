@@ -363,9 +363,9 @@ const styles = StyleSheet.create({
 
   },
   iconContainer: {
-    width: 40.51, 
-    height: 43.2, 
-    borderRadius: '100%', 
+    width: 40, 
+    height: 40, 
+    borderRadius: 20, 
     backgroundColor: '#ffffff', 
     justifyContent: 'center',
     alignItems: 'center',
