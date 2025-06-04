@@ -46,7 +46,7 @@ const LandingScreen = () => {
             text="Sign In With your Account"
             icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
             bgColor="#27d86c"
-            onPress={() => router.push('/login')}
+            onPress={() => router.navigate('/login')}
           />
         </View>
 
@@ -54,7 +54,7 @@ const LandingScreen = () => {
           Don’t have an Account?{" "}
           <Text
             style={styles.signupText}
-            onPress={() => console.log("pressed")}
+            onPress={() => router.navigate('/register')}
           >
             SIGN UP
           </Text>

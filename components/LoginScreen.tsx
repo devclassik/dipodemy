@@ -98,7 +98,7 @@ const LoginScreen = () => {
           text="Sign In"
           icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
           bgColor="#27d86c"
-          onPress={() => {}}
+          onPress={() => router.navigate('/(tabs)')}
         />
       </View>
 
