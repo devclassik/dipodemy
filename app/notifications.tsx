@@ -8,7 +8,7 @@ import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-nati
 
 const { width: screenWidth } = Dimensions.get('window');
 
-export default function App() {
+export default function NotificationScreen() {
   const [selectedOption, setSelectedOption] = useState(false);
   const [fontsLoaded] = useFonts({
     'Jost-Regular': require('../assets/fonts/Jost-Regular.ttf'),
