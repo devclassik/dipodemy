@@ -99,14 +99,12 @@ const Search: React.FC<SearchProps> = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 40,
   },
   searchBox: {
-    flex: 1,
     flexDirection: "row",
     backgroundColor: "#fff",
-    marginLeft: 10,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 8,
