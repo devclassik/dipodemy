@@ -1,12 +1,8 @@
 import Search from "@/components/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity
-} from "react-native";
+import { router } from "expo-router";
+import { Image, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function SearchScreen() {
   const categories = [
@@ -67,7 +63,17 @@ export default function SearchScreen() {
       <Search showFilter={false} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {categories.map((category, index) => (
-          <TouchableOpacity key={index} style={styles.categoryItem}>
+          <TouchableOpacity
+            key={index}
+            style={styles.categoryItem}
+            onPress={() => {
+              console.log(`Selected category: ${category.title}`);
+              router.navigate({
+                pathname: "/learn",
+                params: { category: category.title },
+              });
+            }}
+          >
             <Image source={category.image} style={styles.avatar} />
             <ThemedText style={styles.categoryTitle}>
               {category.title}

@@ -29,7 +29,7 @@ const CourseSection: React.FC<CourseSectionProps> = ({
     <ThemedView style={styles.section}>
       <SectionHeader
         title={title}
-        onSeeAll={() => console.log("See All Pressed")}
+        onSeeAll={() => onSeeAllPress && onSeeAllPress()}
       />
       <FlatList
         data={courses}
