@@ -1,75 +1,113 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import Search from "@/components/Search";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import {
+    Image,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function SearchScreen() {
+  const categories = [
+    {
+      id: 1,
+      title: "3D Design ",
+      image: require("@/assets/images/3d.png"),
+    },
+    {
+      id: 2,
+      title: "Graphics Design",
+      image: require("@/assets/images/gr.png"),
+    },
+    {
+      id: 3,
+      title: "Web Development",
+      image: require("@/assets/images/wb.png"),
+    },
+    {
+      id: 4,
+      title: "SEO & Marketing",
+      image: require("@/assets/images/seo.png"),
+    },
+    {
+      id: 5,
+      title: "Finance & Accounting",
+      image: require("@/assets/images/fin.png"),
+    },
+    {
+      id: 6,
+      title: "HR Management",
+      image: require("@/assets/images/hr.png"),
+    },
+    {
+      id: 7,
+      title: "Personal Development",
+      image: require("@/assets/images/per.png"),
+    },
+    {
+      id: 8,
+      title: "Office Productivity",
+      image: require("@/assets/images/office.png"),
+    },
+    {
+      id: 8,
+      title: "Artificial Intelligence",
+      image: require("@/assets/images/ai.png"),
+    },
+    {
+      id: 8,
+      title: "Health & Fitness",
+      image: require("@/assets/images/hlth.png"),
+    },
+  ];
 
-export default function Learn() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <Search showFilter={false} />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {categories.map((category, index) => (
+          <TouchableOpacity key={index} style={styles.categoryItem}>
+            <Image source={category.image} style={styles.avatar} />
+            <ThemedText style={styles.categoryTitle}>
+              {category.title}
+            </ThemedText>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  scrollContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    paddingHorizontal: 12,
+    justifyContent: "space-between",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  categoryItem: {
+    width: "48%",
+    padding: 16,
+    marginBottom: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  categorySubtitle: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 4,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
   },
 });

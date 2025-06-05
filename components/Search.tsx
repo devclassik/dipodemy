@@ -10,17 +10,20 @@ import {
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
-interface SearchProps {}
+interface SearchProps {
+  selectedTab?: "Courses" | "Mentors";
+  onTabChange?: (tab: "Courses" | "Mentors") => void;
+  showFilter?: boolean;
+  onFilterPress?: () => void;
+}
 
-const Search: React.FC<SearchProps> = () => {
+const Search: React.FC<SearchProps> = ({
+  selectedTab,
+  onTabChange,
+  showFilter = true,
+  onFilterPress,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTab, setSelectedTab] = useState<"Courses" | "Mentors">(
-    "Courses"
-  );
-
-  const handleToggleTab = (tab: "Courses" | "Mentors") => {
-    setSelectedTab(tab);
-  };
 
   return (
     <ThemedView style={styles.container}>
@@ -48,40 +51,42 @@ const Search: React.FC<SearchProps> = () => {
       </View>
 
       {/* Toggle Buttons */}
-      <View style={styles.toggleRow}>
-        <TouchableOpacity
-          style={[
-            styles.toggleBtn,
-            selectedTab === "Courses" && styles.activeToggle,
-          ]}
-          onPress={() => handleToggleTab("Courses")}
-        >
-          <Text
+      {showFilter && (
+        <View style={styles.toggleRow}>
+          <TouchableOpacity
             style={[
-              styles.toggleText,
-              selectedTab === "Courses" && styles.activeText,
+              styles.toggleBtn,
+              selectedTab === "Courses" && styles.activeToggle,
             ]}
+            onPress={() => onTabChange && onTabChange("Courses")}
           >
-            Courses
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.toggleBtn,
-            selectedTab === "Mentors" && styles.activeToggle,
-          ]}
-          onPress={() => handleToggleTab("Mentors")}
-        >
-          <Text
+            <Text
+              style={[
+                styles.toggleText,
+                selectedTab === "Courses" && styles.activeText,
+              ]}
+            >
+              Courses
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[
-              styles.toggleText,
-              selectedTab === "Mentors" && styles.activeText,
+              styles.toggleBtn,
+              selectedTab === "Mentors" && styles.activeToggle,
             ]}
+            onPress={() => onTabChange && onTabChange("Mentors")}
           >
-            Mentors
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Text
+              style={[
+                styles.toggleText,
+                selectedTab === "Mentors" && styles.activeText,
+              ]}
+            >
+              Mentors
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Search Result Text */}
       <View style={styles.resultRow}>
@@ -129,7 +134,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     gap: 6,
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   activeToggle: {
     backgroundColor: "#1A9E4F",
@@ -145,7 +150,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 6,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    marginTop: 10,
   },
 });
 

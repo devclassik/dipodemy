@@ -1,9 +1,15 @@
 import LearnCardList from "@/components/LearnCardList";
+import MentorCard from "@/components/MentorCard";
 import Search from "@/components/Search";
 import { ThemedView } from "@/components/ThemedView";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 export default function Learn() {
+  const [selectedTab, setSelectedTab] = useState<"Courses" | "Mentors">(
+    "Courses"
+  );
+
   const mockCourses = [
     {
       id: "1",
@@ -87,13 +93,58 @@ export default function Learn() {
       image: require("@/assets/images/c3.png"),
     },
   ];
+
+  const mockMentors = [
+    {
+      id: "1",
+      name: "Ramal",
+      specialty: "3D Design",
+      avatar: require("@/assets/images/avatar.png"),
+    },
+    {
+      id: "2",
+      name: "Aman MK",
+      specialty: "3D Design",
+      avatar: require("@/assets/images/avatar.png"),
+    },
+    {
+      id: "3",
+      name: "Manav M",
+      specialty: "3D Design",
+      avatar: require("@/assets/images/avatar.png"),
+    },
+    {
+      id: "4",
+      name: "Ramal",
+      specialty: "3D Design",
+      avatar: require("@/assets/images/avatar.png"),
+    },
+    {
+      id: "5",
+      name: "Aman MK",
+      specialty: "3D Design",
+      avatar: require("@/assets/images/avatar.png"),
+    },
+    {
+      id: "6",
+      name: "Manav M",
+      specialty: "3D Design",
+      avatar: require("@/assets/images/avatar.png"),
+    },
+    // ... add more
+  ];
+
   return (
     <ThemedView style={styles.container}>
-      <Search />
-      <LearnCardList
-        data={mockCourses}
-        onCardPress={(data) => console.log("card press", data)}
-      />
+      <Search selectedTab={selectedTab} onTabChange={setSelectedTab} />
+      {selectedTab === "Courses" ? (
+        <LearnCardList
+          data={mockCourses}
+          onCardPress={(data) => console.log("card press", data)}
+        />
+      ) : (
+        <MentorCard item={mockMentors} />
+      )}
     </ThemedView>
   );
 }
