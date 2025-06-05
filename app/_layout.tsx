@@ -40,6 +40,7 @@ export default function RootLayout() {
           <Stack.Screen name='landing' options={{ headerShown: false}} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name='notifications' options={{ headerShown: false}} />
+          <Stack.Screen name='writereview' options={{ headerShown: false}} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

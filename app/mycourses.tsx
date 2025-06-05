@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   sectionCard: {
-    width: 321.87, // Figma-specific width
+    width: 321.87,
   backgroundColor: '#fff',
   borderRadius: 16,
   padding: 16,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   shadowOpacity: 0.08,
   shadowRadius: 10,
   elevation: 5,
-  alignSelf: 'center', // Center the card since it's not full width
+  alignSelf: 'center', 
 },
   sectionHeader: {
     flexDirection: 'row',
