@@ -2,6 +2,7 @@ import LearnCardList from "@/components/LearnCardList";
 import MentorCard from "@/components/MentorCard";
 import Search from "@/components/Search";
 import { ThemedView } from "@/components/ThemedView";
+import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 
@@ -140,7 +141,12 @@ export default function Learn() {
       {selectedTab === "Courses" ? (
         <LearnCardList
           data={mockCourses}
-          onCardPress={(data) => console.log("card press", data)}
+          onCardPress={(data) =>
+            router.navigate({
+              pathname: "/courseDetails",
+              params: { data: JSON.stringify(data) },
+            })
+          }
         />
       ) : (
         <MentorCard item={mockMentors} />

@@ -135,7 +135,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, marginBottom: 10 }}>
-        <Header />
+        <Header onSearchPress={()=>router.navigate("/search")}/>
         <SpecialOfferBanner />
       </View>
       <CategoryList
