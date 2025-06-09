@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons"; // Example for icons
-import React, { useState } from "react";
+import * as SystemUI from "expo-system-ui";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import About from "./About";
 import LessonSections from "./LessonSections";
@@ -41,15 +42,9 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
   const [activeTab, setActiveTab] = React.useState<"about" | "curriculum">(
     "about"
   );
-
-  const [expanded, setExpanded] = useState(false);
-  const maxWords = 25;
-
-  const getTrimmedText = () => {
-    const words = description.split(" ");
-    if (words.length <= maxWords) return description;
-    return words.slice(0, maxWords).join(" ") + "...";
-  };
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync("#888"); // Your preferred background color
+  }, []);
 
   return (
     <View style={styles.cardContainer}>

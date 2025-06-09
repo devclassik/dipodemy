@@ -135,7 +135,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, marginBottom: 10 }}>
-        <Header onSearchPress={()=>router.navigate("/search")}/>
+        <Header onNotificationsPress={() => router.navigate("/notification")} />
         <SpecialOfferBanner />
       </View>
       <CategoryList
@@ -148,10 +148,16 @@ export default function HomeScreen() {
         courses={newCourses}
         onSeeAllPress={() => router.navigate("/learn")}
       />
-      <CourseSection title="Earn Your Degree" courses={degreeCourses} 
-      onSeeAllPress={()=> router.navigate("/learn")}/>
-      <CourseSection title="Most Popular Courses" courses={popularCourses} 
-      onSeeAllPress={()=> router.navigate("/learn")}/>
+      <CourseSection
+        title="Earn Your Degree"
+        courses={degreeCourses}
+        onSeeAllPress={() => router.navigate("/learn")}
+      />
+      <CourseSection
+        title="Most Popular Courses"
+        courses={popularCourses}
+        onSeeAllPress={() => router.navigate("/learn")}
+      />
     </ScrollView>
   );
 }
