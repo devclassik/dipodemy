@@ -15,7 +15,6 @@ const CourseDetails = () => {
     <>
       <Stack.Screen options={{ title: "Course Details", headerShown: true }} />
       <InstructionSection />
-      {/* <CourseDetailsCard /> */}
     </>
   );
 };
