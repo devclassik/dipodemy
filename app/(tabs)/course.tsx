@@ -4,9 +4,8 @@ import CategoryList, { Category } from "@/components/CategoryList";
 import CourseSection from "@/components/CourseSection";
 import Header from "@/components/Header";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
-import { router } from "expo-router";
 
-export default function HomeScreen() {
+export default function MyCourse() {
   const newCourses = [
     {
       id: "1",
@@ -131,33 +130,24 @@ export default function HomeScreen() {
     { id: "6", label: "Health & Fitness" },
     // ...add more as needed
   ];
-
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={{ flex: 1, marginBottom: 10 }}>
-        <Header onNotificationsPress={() => router.navigate("/notification")} />
+      <View style={{ flex: 1, marginBottom: 10}}>
+        <Header />
         <SpecialOfferBanner />
       </View>
       <CategoryList
         categories={categories}
         onCategoryPress={(cat) => console.log(cat)}
-        onSeeAllPress={() => router.navigate("/search")}
+        onSeeAllPress={() => console.log("See All Categories Pressed")}
       />
       <CourseSection
         title="New Courses"
         courses={newCourses}
-        onSeeAllPress={() => router.navigate("/learn")}
+        onSeeAllPress={() => console.log("See All Pressed")}
       />
-      <CourseSection
-        title="Earn Your Degree"
-        courses={degreeCourses}
-        onSeeAllPress={() => router.navigate("/learn")}
-      />
-      <CourseSection
-        title="Most Popular Courses"
-        courses={popularCourses}
-        onSeeAllPress={() => router.navigate("/learn")}
-      />
+      <CourseSection title="Earn Your Degree" courses={degreeCourses} />
+      <CourseSection title="Most Popular Courses" courses={popularCourses} />
     </ScrollView>
   );
 }

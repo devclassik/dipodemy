@@ -39,14 +39,14 @@ const LandingScreen = () => {
             width: "70%",
             alignSelf: "center",
             alignItems: "center",
-            marginVertical: 20,
+            marginVertical: 40,
           }}
         >
           <RoundedActionButton
             text="Sign In With your Account"
             icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
             bgColor="#27d86c"
-            onPress={() => router.push('/login')}
+            onPress={() => router.navigate('/login')}
           />
         </View>
 
@@ -54,7 +54,7 @@ const LandingScreen = () => {
           Don’t have an Account?{" "}
           <Text
             style={styles.signupText}
-            onPress={() => console.log("pressed")}
+            onPress={() => router.navigate('/register')}
           >
             SIGN UP
           </Text>
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
   orText: {
     textAlign: "center",
     color: "#999",
-    marginVertical: 20,
     fontWeight: "400"
   },
   signInButton: {
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#27d86c",
     paddingVertical: 14,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 10,
     elevation: 5,
     shadowColor: "#27d86c",
     shadowOpacity: 0.3,
@@ -149,8 +148,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#555",
     fontWeight:"bold",
-    marginBottom: 20,
-    marginTop: 10
+    marginBottom: 10,
+    marginTop: 20
   },
   signupText: {
     color: "#f97316",

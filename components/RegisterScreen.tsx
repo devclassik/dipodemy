@@ -2,16 +2,16 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Image,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -23,17 +23,20 @@ const LoginScreen = () => {
       />
       <Text style={styles.title}>Dipodemy</Text>
 
-      <Text style={styles.loginLabel}>Login!</Text>
+      <Text style={styles.loginLabel}>Getting Started!</Text>
+      <Text style={styles.subLabel}>
+        Create an Account to Continue your all Courses
+      </Text>
 
       <View style={styles.inputWrapper}>
         <Ionicons
-          name="mail-outline"
+          name="person"
           size={20}
-          color="#888"
+          color="#000"
           style={styles.inputIcon}
         />
         <TextInput
-          placeholder="Email"
+          placeholder="First Name"
           style={styles.input}
           placeholderTextColor="#444"
         />
@@ -41,9 +44,45 @@ const LoginScreen = () => {
 
       <View style={styles.inputWrapper}>
         <Ionicons
-          name="lock-closed-outline"
+          name="person"
           size={20}
-          color="#888"
+          color="#000"
+          style={styles.inputIcon}
+        />
+        <TextInput
+          placeholder="Last Name"
+          style={styles.input}
+          placeholderTextColor="#444"
+        />
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <Ionicons name="mail" size={20} color="#000" style={styles.inputIcon} />
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          placeholderTextColor="#444"
+        />
+      </View>
+      <View style={styles.inputWrapper}>
+        <Ionicons
+          name="phone-portrait-outline"
+          size={20}
+          color="#000"
+          style={styles.inputIcon}
+        />
+        <TextInput
+          placeholder="Phone Number"
+          style={styles.input}
+          placeholderTextColor="#444"
+        />
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <Ionicons
+          name="lock-closed"
+          size={20}
+          color="#000"
           style={styles.inputIcon}
         />
         <TextInput
@@ -59,7 +98,31 @@ const LoginScreen = () => {
           <Ionicons
             name={passwordVisible ? "eye-off" : "eye"}
             size={20}
-            color="#888"
+            color="#000"
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputWrapper}>
+        <Ionicons
+          name="lock-closed"
+          size={20}
+          color="#000"
+          style={styles.inputIcon}
+        />
+        <TextInput
+          placeholder="Re-enter Password"
+          secureTextEntry={!passwordVisible}
+          style={styles.input}
+          placeholderTextColor="#444"
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setPasswordVisible(!passwordVisible)}
+        >
+          <Ionicons
+            name={passwordVisible ? "eye-off" : "eye"}
+            size={20}
+            color="#000"
           />
         </TouchableOpacity>
       </View>
@@ -78,27 +141,23 @@ const LoginScreen = () => {
             size={20}
             color="#27d86c"
           />
-          <Text style={styles.rememberText}> Remember Password</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.forgotText}>Forget password</Text>
+          <Text style={styles.rememberText}>Agree to Terms & Condition</Text>
         </TouchableOpacity>
       </View>
 
       <View
         style={{
           flex: 1,
-          width: "10%",
+          width: "70%",
           alignSelf: "center",
           alignItems: "center",
-          marginVertical: 50,
+          marginVertical: 5,
         }}
       >
         <RoundedActionButton
-          text="Sign In"
+          text="Sign Up"
           icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-          bgColor="#27d86c"
-          onPress={() => router.navigate('/(tabs)')}
+          onPress={() => router.navigate("/pin")}
         />
       </View>
 
@@ -121,19 +180,16 @@ const LoginScreen = () => {
 
       <Text style={styles.footerText}>
         Already have an Account?{" "}
-        <Text
-          style={styles.signUp}
-          onPress={() => router.navigate('/register')
-          }
-        >
-          SIGN UP
+        <Text style={styles.signUp} onPress={() => router.navigate("/login")}>
+          SIGN IN
         </Text>
       </Text>
     </View>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
+
 const styles = StyleSheet.create({
   container: {
     padding: 24,
@@ -144,21 +200,25 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     alignSelf: "center",
-    marginBottom: 8,
-    marginTop: "40%",
+    marginBottom: 2,
+    marginTop: "10%",
   },
   title: {
     textAlign: "center",
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 30,
+    fontWeight: "600",
   },
   loginLabel: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#2a2a72",
-    marginBottom: 10,
     marginTop: 60,
+  },
+  subLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#2a2a72",
+    marginBottom: 10,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -192,10 +252,7 @@ const styles = StyleSheet.create({
   rememberText: {
     marginLeft: 6,
     color: "#333",
-  },
-  forgotText: {
-    color: "#888",
-    fontSize: 13,
+    fontWeight: "bold",
   },
   signInButton: {
     flexDirection: "row",
