@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import CourseInfoScreen from "./CourseInfo";
 import RoundedActionButton from "./RoundedActionButton";
 
 interface AboutProps {
@@ -8,12 +9,14 @@ interface AboutProps {
   price: string;
   onPress: () => void; // Optional onPress function for the button
   buttonText?: string; // Optional custom button text
+  showCourseInfo?: boolean;
 }
 const About: React.FC<AboutProps> = ({
   description,
   price,
   onPress,
   buttonText = "Enroll Course",
+  showCourseInfo = false,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const maxWords = 25;
@@ -36,6 +39,7 @@ const About: React.FC<AboutProps> = ({
           </Text>
         </TouchableOpacity>
       )}
+      {showCourseInfo && <CourseInfoScreen />}
       <RoundedActionButton
         text={`${buttonText}    ₦${price}`}
         onPress={onPress}

@@ -127,6 +127,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
           description={description}
           price={price}
           onPress={() => console.log(`enroll price:${price}`)}
+          showCourseInfo={true}
         />
       ) : (
         <LessonSections
