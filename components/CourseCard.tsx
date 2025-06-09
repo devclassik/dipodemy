@@ -1,5 +1,6 @@
+import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemedView } from "./ThemedView";
 
 interface CourseCardProps {
@@ -19,20 +20,40 @@ const CourseCard: React.FC<CourseCardProps> = ({
   rating,
   reviews,
 }) => {
+  const handlePress = () => {
+    router.navigate({
+      pathname: "/courseDetails",
+      params: {
+        data: JSON.stringify({
+          image,
+          category,
+          title,
+          price,
+          rating,
+          reviews,
+        }),
+      },
+    });
+  };
+
   return (
-    <ThemedView style={styles.card}>
-      <Image source={image} style={styles.image} resizeMode="cover" />
-      <View style={styles.info}>
-        <Text style={styles.category}>{category}</Text>
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        <View style={styles.details}>
-          <Text style={styles.price}>${price}</Text>
-          <Text style={styles.rating}>
-            ⭐ {rating} ({reviews})
+    <TouchableOpacity onPress={handlePress}>
+      <ThemedView style={styles.card}>
+        <Image source={image} style={styles.image} resizeMode="cover" />
+        <View style={styles.info}>
+          <Text style={styles.category}>{category}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
           </Text>
+          <View style={styles.details}>
+            <Text style={styles.price}>${price}</Text>
+            <Text style={styles.rating}>
+              ⭐ {rating} ({reviews})
+            </Text>
+          </View>
         </View>
-      </View>
-    </ThemedView>
+      </ThemedView>
+    </TouchableOpacity>
   );
 };
 

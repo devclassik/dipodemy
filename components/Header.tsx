@@ -6,19 +6,34 @@ import { ThemedView } from "./ThemedView";
 
 interface HeaderProps {
   userName?: string;
+  title?: string;
+  subtitle?: string;
+  showWelcome?: boolean;
   onSearchPress?: () => void;
   onNotificationsPress?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   userName = "Jason",
+  title,
+  subtitle,
+  showWelcome = true,
   onSearchPress,
   onNotificationsPress,
 }) => (
   <ThemedView style={styles.container}>
     <View>
-      <Text style={styles.welcome}>Welcome, {userName}  <HelloWave /></Text>
-      <Text style={styles.subtitle}>Upgrade your skill for better future!</Text>
+      {showWelcome ? (
+        <>
+          <Text style={styles.welcome}>Welcome, {userName}  <HelloWave /></Text>
+          <Text style={styles.subtitle}>Upgrade your skill for better future!</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.welcome}>{title}</Text>
+          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+        </>
+      )}
     </View>
     <View style={styles.icons}>
       <TouchableOpacity onPress={onSearchPress}>

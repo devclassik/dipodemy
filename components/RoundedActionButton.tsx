@@ -1,11 +1,11 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
-  View,
-  ViewStyle,
+  ViewStyle
 } from "react-native";
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 interface RoundedActionButtonProps {
   text?: string;
@@ -45,8 +45,8 @@ const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={styles.text}>{text}</Text>
-      <View style={styles.iconContainer}>{icon}</View>
+      <ThemedText style={styles.text}>{text}</ThemedText>
+      <ThemedView style={styles.iconContainer}>{icon}</ThemedView>
     </TouchableOpacity>
   );
 };
