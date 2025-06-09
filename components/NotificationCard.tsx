@@ -22,7 +22,6 @@ interface NotificationCardProps {
   notifications: Notification[];
 }
 
-// Utility to compute "Today", "Yesterday", or a formatted date
 const getDateLabel = (date: Date): string => {
   const now = new Date();
   const inputDate = new Date(date);
@@ -142,6 +141,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 const styles = StyleSheet.create({
   section: {
     marginBottom: 24,
+    marginTop: 10
   },
   sectionHeader: {
     fontSize: 16,
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 12,
     padding: 12,
+    elevation: 5
   },
   readCard: {
     opacity: 0.5,
