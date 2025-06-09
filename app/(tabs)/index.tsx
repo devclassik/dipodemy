@@ -135,7 +135,9 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, marginBottom: 10 }}>
-        <Header onNotificationsPress={() => router.navigate("/notification")} />
+        <Header 
+        onSearchPress={()=> router.navigate('/search')}
+        onNotificationsPress={() => router.navigate("/notification")} />
         <SpecialOfferBanner />
       </View>
       <CategoryList
