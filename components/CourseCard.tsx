@@ -21,8 +21,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
   reviews,
 }) => {
   const handlePress = () => {
-    // Handle card press action, e.g., navigate to course details
-    console.log(`Pressed on course: ${title}`);
     router.navigate({
       pathname: "/courseDetails",
       params: {

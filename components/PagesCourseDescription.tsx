@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons"; // Example for icons
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import RoundedActionButton from "./RoundedActionButton";
+import About from "./About";
+import LessonSections from "./LessonSections";
 import { ThemedText } from "./ThemedText";
 
 interface CourseCardProps {
@@ -16,7 +17,7 @@ interface CourseCardProps {
   onPress?: () => void;
   curriculum?: curriculum[];
 }
-interface curriculum {
+export interface curriculum {
   section: string;
   duration: string;
   lessons: {
@@ -122,61 +123,18 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
       </View>
 
       {activeTab === "about" ? (
-        <View>
-          <Text style={styles.descriptionText}>
-            {expanded ? description : getTrimmedText()}
-          </Text>
-          {description.split(" ").length > maxWords && (
-            <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-              <Text style={styles.readMoreText}>
-                {expanded ? "Read Less" : "Read More"}
-              </Text>
-            </TouchableOpacity>
-          )}
-          <RoundedActionButton
-            text={`Enroll Course    ₦${price}`}
-            onPress={() => console.log(`enroll price:${price}`)}
-            style={{ marginTop: 10 }}
-            icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-          />
-        </View>
+        <About
+          description={description}
+          price={price}
+          onPress={() => console.log(`enroll price:${price}`)}
+        />
       ) : (
-        <View>
-          {curriculum?.map((section, sectionIndex) => (
-            <View key={sectionIndex} style={styles.sectionBlock}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <ThemedText style={styles.sectionTitle}>
-                  {section.section}
-                </ThemedText>
-                <ThemedText style={styles.priceText}>
-                  {section.duration}
-                </ThemedText>
-              </View>
-              {section.lessons.map((lesson, lessonIndex) => (
-                <View key={lessonIndex} style={styles.lessonRow}>
-                  <Text style={styles.lessonIndex}>{lessonIndex + 1}.</Text>
-                  <View style={{ flex: 1, paddingLeft: 10 }}>
-                    <Text style={styles.lessonTitle}>{lesson.title}</Text>
-                    <Text style={styles.lessonDuration}>{lesson.duration}</Text>
-                  </View>
-                  <Ionicons name="play-outline" color="green" />
-                </View>
-              ))}
-            </View>
-          ))}
-          <RoundedActionButton
-            text={`Enroll Course     ₦${price}`}
-            onPress={() => console.log(`enroll price:${price}`)}
-            style={{ marginTop: 10 }}
-            icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-          />
-        </View>
+        <LessonSections
+          curriculum={curriculum}
+          onPress={() => onPress}
+          price={price}
+          buttonText="Enroll Course"
+        />
       )}
     </View>
   );
@@ -257,75 +215,28 @@ const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: "row",
     marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     overflow: "hidden",
-    backgroundColor: "blue",
+    backgroundColor: "#E8F1FF",
+    borderRadius: 10,
   },
   tabButton: {
     paddingVertical: 10,
-    paddingHorizontal: 45,
+    paddingHorizontal: 50,
+    borderRadius: 10,
+    marginRight: 10,
   },
   tabText: {
     fontSize: 16,
+    fontWeight: "600",
   },
   activeTabButton: {
-    backgroundColor: "yellow",
+    backgroundColor: "#FAC025",
   },
+
   activeTabText: {
     color: "#000",
     fontWeight: "bold",
-  },
-  descriptionText: {
-    fontSize: 14,
-    color: "#333",
-    marginBottom: 5,
-  },
-  readMoreText: {
-    fontSize: 14,
-    color: "blue", // Example color
-    fontWeight: "bold",
-  },
-
-  sectionBlock: {
-    marginBottom: 20,
-  },
-
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 6,
-    color: "#222",
-  },
-
-  lessonRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-
-  lessonIndex: {
-    width: 20,
-    height: 20,
-    fontWeight: "bold",
-    color: "#555",
-    backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    textAlign: "center",
-    textAlignVertical: "center", // works on Android
-  },
-
-  lessonTitle: {
-    flex: 1,
-    fontSize: 15,
-    color: "#333",
-  },
-
-  lessonDuration: {
-    marginLeft: 8,
-    fontSize: 13,
-    color: "gray",
   },
 });
 

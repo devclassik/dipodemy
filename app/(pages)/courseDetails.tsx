@@ -8,7 +8,7 @@ const CourseDetails = () => {
  const course = data ? JSON.parse(data as string) : null; 
  
  console.log("Course Details:", course);
- console.log('image', course?.image);
+
  
  
   return (
