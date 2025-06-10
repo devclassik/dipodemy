@@ -80,7 +80,9 @@ const LoginScreen = () => {
           />
           <Text style={styles.rememberText}> Remember Password</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.navigate("/(auth)/forgetPassword")}
+        >
           <Text style={styles.forgotText}>Forget password</Text>
         </TouchableOpacity>
       </View>
@@ -98,7 +100,7 @@ const LoginScreen = () => {
           text="Sign In"
           icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
           bgColor="#27d86c"
-          onPress={() => router.navigate('/(tabs)')}
+          onPress={() => router.navigate("/(tabs)")}
         />
       </View>
 
@@ -123,8 +125,7 @@ const LoginScreen = () => {
         Already have an Account?{" "}
         <Text
           style={styles.signUp}
-          onPress={() => router.navigate('/register')
-          }
+          onPress={() => router.navigate("/register")}
         >
           SIGN UP
         </Text>
