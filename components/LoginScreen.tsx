@@ -80,7 +80,7 @@ const LoginScreen = () => {
           />
           <Text style={styles.rememberText}> Remember Password</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.navigate('/')}>
           <Text style={styles.forgotText}>Forget password</Text>
         </TouchableOpacity>
       </View>
