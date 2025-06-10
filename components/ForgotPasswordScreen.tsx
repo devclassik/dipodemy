@@ -24,7 +24,7 @@ const ForgetPasswordScreen = () => {
     console.log("Selected Option:", selectedOption);
     console.log("Entered Value:", inputValue);
     // proceed to next step
-    router.navigate("/(tabs)");
+    router.replace("/(tabs)");
   };
 
   const renderInputField = () => {
@@ -77,7 +77,7 @@ const ForgetPasswordScreen = () => {
           >
             <View style={styles.iconWrapper}>
               <Image
-                source={require("@/assets/images/email.png")}
+                source={require("@/assets/images/circle.png")}
                 style={styles.emailIcon}
                 resizeMode="contain"
               />
@@ -99,7 +99,7 @@ const ForgetPasswordScreen = () => {
           >
             <View style={styles.iconWrapper}>
               <Image
-                source={require("@/assets/images/email.png")}
+                source={require("@/assets/images/circle.png")}
                 style={styles.emailIcon}
               />
             </View>
@@ -114,14 +114,14 @@ const ForgetPasswordScreen = () => {
         {renderInputField()}
 
         {/* Continue Button */}
-        <ThemedView style={{ alignItems: "center", backgroundColor: "F5F9FF" }}>
+        <View style={{ alignItems: "center" }}>
           <RoundedActionButton
             text="Continue"
             icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
             onPress={handleContinue}
             style={{ width: "50%" }}
           />
-        </ThemedView>
+        </View>
       </View>
     </ThemedView>
   );
