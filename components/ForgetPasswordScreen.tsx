@@ -66,7 +66,7 @@ export default function ForgetPasswordScreen() {
           >
             <View style={styles.iconWrapper}>
               <Image
-                source={require('../assets/images/Email.png')}
+                source={require('@/assets/images/email.png')}
                 style={styles.emailIcon}
                 resizeMode="contain"
               />

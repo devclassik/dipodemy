@@ -45,7 +45,7 @@ export default function RootLayout() {
           <Stack.Screen name='splash' options={{ headerShown: false}} />
           <Stack.Screen name='mycourses' options={{ headerShown: false}} />
           <Stack.Screen name='paymentmethods' options={{ headerShown: false}} />
-          <Stack.Screen name='forgotpassword' options={{ headerShown: false}} />
+          {/* <Stack.Screen name='forgotpassword' options={{ headerShown: false}} /> */}
           <Stack.Screen name='landing' options={{ headerShown: false}} />
           <Stack.Screen name='(auth)' options={{ headerShown: false}} />
           <Stack.Screen
