@@ -43,96 +43,100 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
     "about"
   );
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync("#888"); // Your preferred background color
+    SystemUI.setBackgroundColorAsync("#888");
   }, []);
 
   return (
-    <View style={styles.cardContainer}>
-      <View style={styles.header}>
-        <ThemedText style={styles.categoryText}>{category}</ThemedText>
-        <View style={styles.ratingAndButton}>
-          <Ionicons name="star" size={14} color="#FFC107" />
-          <ThemedText style={styles.ratingText}>{rating}</ThemedText>
-          {isPaid && (
-            <TouchableOpacity style={styles.playButton} onPress={onPress}>
-              <Ionicons name="play" size={24} color="white" />
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-
-      <ThemedText style={styles.titleText}>{title}</ThemedText>
-
-      <View style={styles.detailsContainer}>
-        <View style={styles.leftDetails}>
-          <View style={styles.detailItem}>
-            <Ionicons name="videocam-outline" size={16} color="gray" />
-            <ThemedText style={styles.detailText}>{classes} Class </ThemedText>
-          </View>
-          <ThemedText style={{ color: "#000" }}>|</ThemedText>
-          <View style={styles.detailItem}>
-            <Ionicons name="time-outline" size={16} color="gray" />
-            <Text style={styles.detailText}>{hours} Hours</Text>
+    <>
+      <View style={styles.cardContainer}>
+        <View style={styles.header}>
+          <ThemedText style={styles.categoryText}>{category}</ThemedText>
+          <View style={styles.ratingAndButton}>
+            <Ionicons name="star" size={14} color="#FFC107" />
+            <ThemedText style={styles.ratingText}>{rating}</ThemedText>
+            {isPaid && (
+              <TouchableOpacity style={styles.playButton} onPress={onPress}>
+                <Ionicons name="play" size={24} color="white" />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
-        <Text style={styles.priceText}>₦{price}</Text>
-      </View>
 
-      <View style={styles.tabsContainer}>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === "about" && styles.activeTabButton,
-          ]}
-          onPress={() => {
-            setActiveTab("about");
-          }}
-        >
-          <Text
+        <ThemedText style={styles.titleText}>{title}</ThemedText>
+
+        <View style={styles.detailsContainer}>
+          <View style={styles.leftDetails}>
+            <View style={styles.detailItem}>
+              <Ionicons name="videocam-outline" size={16} color="gray" />
+              <ThemedText style={styles.detailText}>
+                {classes} Class{" "}
+              </ThemedText>
+            </View>
+            <ThemedText style={{ color: "#000" }}>|</ThemedText>
+            <View style={styles.detailItem}>
+              <Ionicons name="time-outline" size={16} color="gray" />
+              <Text style={styles.detailText}>{hours} Hours</Text>
+            </View>
+          </View>
+          <Text style={styles.priceText}>₦{price}</Text>
+        </View>
+
+        <View style={styles.tabsContainer}>
+          <TouchableOpacity
             style={[
-              styles.tabText,
+              styles.tabButton,
               activeTab === "about" && styles.activeTabButton,
             ]}
+            onPress={() => {
+              setActiveTab("about");
+            }}
           >
-            About
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === "curriculum" && styles.activeTabButton,
-          ]}
-          onPress={() => {
-            setActiveTab("curriculum");
-          }}
-        >
-          <Text
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === "about" && styles.activeTabButton,
+              ]}
+            >
+              About
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[
-              styles.tabText,
+              styles.tabButton,
               activeTab === "curriculum" && styles.activeTabButton,
             ]}
+            onPress={() => {
+              setActiveTab("curriculum");
+            }}
           >
-            Curriculum
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === "curriculum" && styles.activeTabButton,
+              ]}
+            >
+              Curriculum
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      {activeTab === "about" ? (
-        <About
-          description={description}
-          price={price}
-          onPress={() => console.log(`enroll price:${price}`)}
-          showCourseInfo={true}
-        />
-      ) : (
-        <LessonSections
-          curriculum={curriculum}
-          onPress={() => onPress}
-          price={price}
-          buttonText="Enroll Course"
-        />
-      )}
-    </View>
+        {activeTab === "about" ? (
+          <About
+            description={description}
+            price={price}
+            onPress={() => console.log(`enroll price:${price}`)}
+            showCourseInfo={true}
+          />
+        ) : (
+          <LessonSections
+            curriculum={curriculum}
+            onPress={() => onPress}
+            price={price}
+            buttonText="Enroll Course"
+          />
+        )}
+      </View>
+    </>
   );
 };
 

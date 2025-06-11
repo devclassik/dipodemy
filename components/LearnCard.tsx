@@ -12,12 +12,14 @@ interface LearnCardProps {
   reviews: number;
   image: any;
   onPress?: () => void;
+  onBookmarkPress?: () => void;
 }
 
-const LearnCard: React.FC<{ item: LearnCardProps; onPress?: () => void }> = ({
-  item,
-  onPress,
-}) => {
+const LearnCard: React.FC<{
+  item: LearnCardProps;
+  onPress?: () => void;
+  onBookmarkPress?: () => void;
+}> = ({ item, onPress, onBookmarkPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image source={item.image} style={styles.image} />
@@ -32,7 +34,12 @@ const LearnCard: React.FC<{ item: LearnCardProps; onPress?: () => void }> = ({
           </Text>
         </View>
       </View>
-      <Ionicons name="bookmark-outline" size={20} color="#999" />
+      <Ionicons
+        name="bookmark-outline"
+        size={20}
+        color="#999"
+        onPress={onBookmarkPress}
+      />
     </TouchableOpacity>
   );
 };

@@ -2,31 +2,33 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 const RegisterScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <Image
         source={require("../assets/images/icon.png")}
         style={styles.logo}
       />
       <Text style={styles.title}>Dipodemy</Text>
 
-      <Text style={styles.loginLabel}>Getting Started!</Text>
-      <Text style={styles.subLabel}>
+      <ThemedText style={styles.loginLabel}>Getting Started!</ThemedText>
+      <ThemedText style={styles.subLabel}>
         Create an Account to Continue your all Courses
-      </Text>
+      </ThemedText>
 
       <View style={styles.inputWrapper}>
         <Ionicons
@@ -141,7 +143,7 @@ const RegisterScreen = () => {
             size={20}
             color="#27d86c"
           />
-          <Text style={styles.rememberText}>Agree to Terms & Condition</Text>
+          <ThemedText style={styles.rememberText}>Agree to Terms & Condition</ThemedText>
         </TouchableOpacity>
       </View>
 
@@ -178,13 +180,13 @@ const RegisterScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.footerText}>
+      <ThemedText style={styles.footerText}>
         Already have an Account?{" "}
-        <Text style={styles.signUp} onPress={() => router.navigate("/login")}>
+        <ThemedText style={styles.signUp} onPress={() => router.navigate('/(auth)/login')}>
           SIGN IN
-        </Text>
-      </Text>
-    </View>
+        </ThemedText>
+      </ThemedText>
+    </ThemedView>
   );
 };
 

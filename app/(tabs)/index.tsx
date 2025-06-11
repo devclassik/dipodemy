@@ -158,7 +158,7 @@ export default function HomeScreen() {
       <CourseSection
         title="Most Popular Courses"
         courses={popularCourses}
-        onSeeAllPress={() => router.navigate("/learn")}
+        onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
       />
     </ScrollView>
   );

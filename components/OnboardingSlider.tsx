@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import Swiper from "react-native-swiper";
 import RoundedActionButton from "./RoundedActionButton";
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 type Slide = {
   img: ImageSourcePropType;
@@ -47,22 +49,19 @@ const OnboardingSlider: React.FC<OnboardingSliderProps> = ({
         paginationStyle={styles.pagination}
       >
         {slides.map((slide, idx) => (
-          <View style={styles.slide} key={idx}>
+          <ThemedView style={styles.slide} key={idx}>
             <TouchableOpacity style={styles.skip} onPress={onSkip}>
-              <Text style={styles.skipText}>Skip</Text>
+              <ThemedText style={styles.skipText}>Skip</ThemedText>
             </TouchableOpacity>
             <Image
               source={slide.img}
               style={styles.image}
               resizeMode="contain"
             />
-            <Text style={styles.title}>{slide.title}</Text>
-            <Text style={styles.desc}>{slide.description}</Text>
+            <ThemedText style={styles.title}>{slide.title}</ThemedText>
+            <ThemedText style={styles.desc}>{slide.description}</ThemedText>
             {idx === slides.length - 1 ? (
-              // <TouchableOpacity style={styles.doneBtn} onPress={onDone}>
-              //   <Text style={styles.doneText}>→</Text>
-              // </TouchableOpacity>
-              <View style={{position: "absolute", bottom: 40, right: 20}}>
+              <ThemedView style={{ position: "absolute", bottom: 40, right: 20 }}>
                 <RoundedActionButton
                   text="Get Started"
                   icon={
@@ -71,7 +70,7 @@ const OnboardingSlider: React.FC<OnboardingSliderProps> = ({
                   bgColor="#27d86c"
                   onPress={onDone}
                 />
-              </View>
+              </ThemedView>
             ) : (
               <>
                 <View style={styles.nextBtnPlaceholder} />
@@ -80,10 +79,9 @@ const OnboardingSlider: React.FC<OnboardingSliderProps> = ({
                 </TouchableOpacity>
               </>
             )}
-          </View>
+          </ThemedView>
         ))}
       </Swiper>
-      
     </>
   );
 };
@@ -93,10 +91,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
   },
   skip: { position: "absolute", top: 40, right: 20 },
-  skipText: { color: "#888", fontWeight: "bold" },
+  skipText: {
+    color: "#888",
+    fontWeight: "bold",
+  },
   image: { width: 120, height: 120, marginBottom: 30 },
   title: {
     fontSize: 22,
@@ -106,7 +107,6 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontSize: 14,
-    color: "#666",
     textAlign: "center",
     marginHorizontal: 30,
   },

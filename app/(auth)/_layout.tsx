@@ -1,6 +1,7 @@
+import { ThemedView } from '@/components/ThemedView';
 import { Slot } from 'expo-router';
 import React from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
 export default function AuthLayout() {
   
@@ -10,9 +11,9 @@ export default function AuthLayout() {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.card}>
+        <ThemedView style={styles.card}>
           <Slot />
-        </View>
+        </ThemedView>
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,39 +1,40 @@
-
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 const LandingScreen = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.inner}>
-        <Text style={styles.title}>Let’s you in</Text>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.inner}>
+        <ThemedText style={styles.title}>Let’s you in</ThemedText>
 
         <TouchableOpacity style={styles.socialButton}>
-        <View style={styles.iconWrapper}>
+          <ThemedView style={styles.iconWrapper}>
             <Image
               source={require("../assets/images/google.png")}
               style={styles.iconImage}
             />
-          </View>
-          <Text style={styles.socialText}>Continue with Google</Text>
+          </ThemedView>
+          <ThemedText style={styles.socialText}>Continue with Google</ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.socialButton}>
-          <View style={styles.iconWrapper}>
+          <ThemedView style={styles.iconWrapper}>
             <Image
               source={require("../assets/images/fb.png")}
               style={styles.iconImage}
             />
-          </View>
-          <Text style={styles.socialText}>Continue with Facebook</Text>
+          </ThemedView>
+          <ThemedText style={styles.socialText}>Continue with Facebook</ThemedText>
         </TouchableOpacity>
 
-        <Text style={styles.orText}>( Or )</Text>
+        <ThemedText style={styles.orText}>( Or )</ThemedText>
 
-        <View
+        <ThemedView
           style={{
             flex: 1,
             width: "70%",
@@ -46,21 +47,21 @@ const LandingScreen = () => {
             text="Sign In With your Account"
             icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
             bgColor="#27d86c"
-            onPress={() => router.navigate('/login')}
+            onPress={() => router.navigate("/login")}
           />
-        </View>
+        </ThemedView>
 
-        <Text style={styles.footerText}>
+        <ThemedText style={styles.footerText}>
           Don’t have an Account?{" "}
-          <Text
+          <ThemedText
             style={styles.signupText}
-            onPress={() => router.navigate('/register')}
+            onPress={() => router.navigate("/register")}
           >
             SIGN UP
-          </Text>
-        </Text>
-      </View>
-    </View>
+          </ThemedText>
+        </ThemedText>
+      </ThemedView>
+    </ThemedView>
   );
 };
 
@@ -69,7 +70,6 @@ export default LandingScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     justifyContent: "flex-end",
   },
   inner: {
@@ -80,14 +80,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 30,
-    color: "#111",
+    marginVertical: 32,
   },
   iconWrapper: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#fff", // Optional background
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -96,7 +94,6 @@ const styles = StyleSheet.create({
   socialButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 40,
@@ -115,14 +112,12 @@ const styles = StyleSheet.create({
   },
   socialText: {
     fontSize: 20,
-    color: "#444",
     fontWeight: "bold",
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   orText: {
     textAlign: "center",
-    color: "#999",
-    fontWeight: "400"
+    fontWeight: "400",
   },
   signInButton: {
     flexDirection: "row",
@@ -146,10 +141,9 @@ const styles = StyleSheet.create({
   },
   footerText: {
     textAlign: "center",
-    color: "#555",
-    fontWeight:"bold",
+    fontWeight: "bold",
     marginBottom: 10,
-    marginTop: 20
+    marginVertical: 30,
   },
   signupText: {
     color: "#f97316",

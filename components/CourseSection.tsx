@@ -4,7 +4,7 @@ import CourseCard from "./CourseCard";
 import SectionHeader from "./SectionHeader";
 import { ThemedView } from "./ThemedView";
 
-interface Course {
+export interface Course {
   id: string;
   image: any;
   category: string;

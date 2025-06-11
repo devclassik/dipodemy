@@ -1,8 +1,8 @@
-import InstructionSection from "@/components/InstructionSection";
+import CourseReviewScreen from "@/components/CourseReviewScreen";
 import { Stack, useLocalSearchParams, } from "expo-router";
 import React from "react";
 
-const CourseDetails = () => {
+const CourseReview = () => {
   const { data } = useLocalSearchParams();
 
  const course = data ? JSON.parse(data as string) : null; 
@@ -11,10 +11,10 @@ const CourseDetails = () => {
  
   return (
     <>
-      <Stack.Screen options={{ title: "Course Details", headerShown: true }} />
-      <InstructionSection />
+      <Stack.Screen options={{ title: "Course Review", headerShown: true }} />
+      <CourseReviewScreen />
     </>
   );
 };
 
-export default CourseDetails;
+export default CourseReview;

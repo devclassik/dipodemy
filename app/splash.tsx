@@ -1,6 +1,7 @@
+import { ThemedView } from "@/components/ThemedView";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet } from "react-native";
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -14,13 +15,13 @@ export default function SplashScreen() {
   }, [router]);
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <Image
         source={require("../assets/images/splash.png")}
         style={styles.logo}
       />
       {/* <Text style={styles.text}>Dipodemy</Text> */}
-    </View>
+    </ThemedView>
   );
 }
 

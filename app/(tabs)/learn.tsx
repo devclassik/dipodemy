@@ -149,7 +149,15 @@ export default function Learn() {
           }
         />
       ) : (
-        <MentorCard item={mockMentors} />
+        <MentorCard
+          item={mockMentors}
+          onPress={() =>
+            router.navigate({
+              pathname: "/(pages)/courseDetails",
+              params: { data: JSON.stringify(mockMentors) },
+            })
+          }
+        />
       )}
     </ThemedView>
   );

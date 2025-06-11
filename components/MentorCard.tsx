@@ -10,15 +10,18 @@ interface MentorCardProps {
     specialty: string;
     avatar: any;
   }[];
+  onPress?: () => void;
 }
 
-const MentorCard: React.FC<MentorCardProps> = ({ item }) => {
+const MentorCard: React.FC<MentorCardProps> = ({ item, onPress }) => {
   return (
     <ThemedView style={styles.card}>
       <FlatList
         data={item}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <MentorCardList {...item} />}
+        renderItem={({ item }) => (
+          <MentorCardList {...item} onPress={onPress} />
+        )}
       />
     </ThemedView>
   );

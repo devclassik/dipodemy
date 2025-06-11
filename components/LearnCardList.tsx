@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 import LearnCard from "./LearnCard";
 
-interface LearnCardProps {
+export interface LearnCardProps {
   id: string;
   category: string;
   title: string;
@@ -12,7 +12,7 @@ interface LearnCardProps {
   image: any;
 }
 
-interface LearnCardListProps {
+export interface LearnCardListProps {
   data: LearnCardProps[];
   onCardPress?: (item: LearnCardProps) => void;
 }

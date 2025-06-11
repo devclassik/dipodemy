@@ -29,16 +29,18 @@ const About: React.FC<AboutProps> = ({
 
   return (
     <View>
-      <Text style={styles.descriptionText}>
-        {expanded ? description : getTrimmedText()}
-      </Text>
-      {description.split(" ").length > maxWords && (
-        <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-          <Text style={styles.readMoreText}>
-            {expanded ? "Read Less" : "Read More"}
-          </Text>
-        </TouchableOpacity>
-      )}
+      <View>
+        <Text style={styles.descriptionText}>
+          {expanded ? description : getTrimmedText()}
+        </Text>
+        {description.split(" ").length > maxWords && (
+          <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+            <Text style={styles.readMoreText}>
+              {expanded ? "Read Less" : "Read More"}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
       {showCourseInfo && <CourseInfoScreen />}
       <RoundedActionButton
         text={`${buttonText}    ₦${price}`}

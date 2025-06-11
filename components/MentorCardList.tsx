@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
@@ -7,21 +7,25 @@ interface MentorCardListProps {
   name: string;
   specialty: string;
   avatar: any;
+  onPress?: () => void;
 }
 
 const MentorCardList: React.FC<MentorCardListProps> = ({
   name,
   specialty,
   avatar,
+  onPress,
 }) => {
   return (
-    <ThemedView style={styles.card}>
-      <Image source={avatar} style={styles.avatar} />
-      <View>
-        <ThemedText style={styles.name}>{name}</ThemedText>
-        <Text style={styles.specialty}>{specialty}</Text>
-      </View>
-    </ThemedView>
+    <TouchableOpacity onPress={onPress}>
+      <ThemedView style={styles.card}>
+        <Image source={avatar} style={styles.avatar} />
+        <View>
+          <ThemedText style={styles.name}>{name}</ThemedText>
+          <Text style={styles.specialty}>{specialty}</Text>
+        </View>
+      </ThemedView>
+    </TouchableOpacity>
   );
 };
 

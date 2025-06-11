@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
+import { ThemedText } from "./ThemedText";
 
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -23,7 +24,7 @@ const LoginScreen = () => {
       />
       <Text style={styles.title}>Dipodemy</Text>
 
-      <Text style={styles.loginLabel}>Login!</Text>
+      <ThemedText style={styles.loginLabel}>Login!</ThemedText>
 
       <View style={styles.inputWrapper}>
         <Ionicons
@@ -78,12 +79,12 @@ const LoginScreen = () => {
             size={20}
             color="#27d86c"
           />
-          <Text style={styles.rememberText}> Remember Password</Text>
+          <ThemedText style={styles.rememberText}> Remember Password</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => router.navigate("/(auth)/forgetPassword")}
         >
-          <Text style={styles.forgotText}>Forget password</Text>
+          <ThemedText style={styles.forgotText}>Forget password</ThemedText>
         </TouchableOpacity>
       </View>
 
@@ -121,15 +122,15 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.footerText}>
+      <ThemedText style={styles.footerText}>
         Already have an Account?{" "}
-        <Text
+        <ThemedText
           style={styles.signUp}
           onPress={() => router.navigate("/register")}
         >
           SIGN UP
-        </Text>
-      </Text>
+        </ThemedText>
+      </ThemedText>
     </View>
   );
 };
@@ -196,7 +197,6 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     color: "#888",
-    fontSize: 13,
   },
   signInButton: {
     flexDirection: "row",

@@ -3,16 +3,16 @@ import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import CustomModal from "./CustomModal";
 import RoundedActionButton from "./RoundedActionButton";
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 const KeyboardPinEntryScreen = () => {
-  
   const [pin, setPin] = useState("");
   const [showModal, setShowModal] = useState(false);
   const inputRef = useRef<TextInput>(null);
@@ -39,11 +39,11 @@ const KeyboardPinEntryScreen = () => {
   const handleModalClose = () => setShowModal(false);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create New Pin</Text>
-      <Text style={styles.subtitle}>
+    <ThemedView style={styles.container}>
+      <ThemedText style={styles.title}>Create New Pin</ThemedText>
+      <ThemedText style={styles.subtitle}>
         Add a Pin Number to Make Your Account more Secure
-      </Text>
+      </ThemedText>
 
       {/* Pin boxes container */}
       <TouchableOpacity
@@ -54,7 +54,7 @@ const KeyboardPinEntryScreen = () => {
         {[0, 1, 2, 3].map((i) => (
           <View key={i} style={styles.pinBox}>
             {/* Show dot if pin character exists */}
-            <Text style={styles.pinText}>{pin[i] ? "•" : ""}</Text>
+            <ThemedText style={styles.pinText}>{pin[i] ? "•" : ""}</ThemedText>
           </View>
         ))}
 
@@ -94,12 +94,12 @@ const KeyboardPinEntryScreen = () => {
           loading={false}
           buttonText="OK"
           onButtonPress={() => {
-            router.replace('/(tabs)')
+            router.replace("/(tabs)");
             handleModalClose();
           }}
         />
       )}
-    </View>
+    </ThemedView>
   );
 };
 
@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  title: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  title: { color: "#000", fontSize: 18, fontWeight: "bold", marginBottom: 10 },
   subtitle: {
     textAlign: "center",
-    color: "#666",
+    color: "#000",
     marginBottom: 30,
     fontSize: 14,
   },
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
   },
-  pinText: { fontSize: 24 },
+  pinText: { fontSize: 24, color: "#000" },
   hiddenInput: {
     position: "absolute",
     width: 1,
