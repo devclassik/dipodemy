@@ -1,11 +1,7 @@
-import { Jost_600SemiBold } from '@expo-google-fonts/jost';
-import { Mulish_700Bold } from '@expo-google-fonts/mulish';
 import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
-import { useFonts } from 'expo-font';
 
 import React from 'react';
 import {
-  Dimensions,
   Image,
   SafeAreaView,
   ScrollView,
@@ -16,21 +12,6 @@ import {
   View
 } from 'react-native';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-export default function App() {
-  const [fontsLoaded] = useFonts({
-    Jost_600SemiBold,
-    Mulish_700Bold,
-  });
-
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading fonts...</Text>
-      </View>
-    );
-  }
 
   const handleStartCourse = () => {
     console.log('Start Course Again pressed');
