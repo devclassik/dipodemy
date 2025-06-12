@@ -27,7 +27,7 @@ export interface curriculum {
   }[];
 }
 
-const PagesCourseDescription: React.FC<CourseCardProps> = ({
+const PagesContentDescription: React.FC<CourseCardProps> = ({
   category,
   title,
   rating,
@@ -235,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PagesCourseDescription;
+export default PagesContentDescription;

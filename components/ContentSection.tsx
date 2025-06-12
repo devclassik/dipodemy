@@ -1,14 +1,14 @@
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Image, StyleSheet } from "react-native";
-import PagesCourseDescription from "./PagesCourseDescription";
+import PagesContentDescription from "./PagesContentDescription";
 import ParallaxScrollView from "./ParallaxScrollView";
 import { ThemedView } from "./ThemedView";
 
-interface InstructionSectionProps {
+interface ContentSectionProps {
   imageSource?: any; // Optional image source
 }
-const InstructionSection: React.FC<InstructionSectionProps> = ({
+const ContentSection: React.FC<ContentSectionProps> = ({
   imageSource,
 }) => {
   const { data } = useLocalSearchParams();
@@ -65,7 +65,7 @@ const InstructionSection: React.FC<InstructionSectionProps> = ({
       }
     >
       <ThemedView style={styles.carOverlay}>
-        <PagesCourseDescription
+        <PagesContentDescription
           category={course?.category || sampleCoursePayload.category}
           title={course?.title || sampleCoursePayload.title}
           rating={course?.rating || sampleCoursePayload.rating}
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InstructionSection;
+export default ContentSection;

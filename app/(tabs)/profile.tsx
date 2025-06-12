@@ -1,121 +1,34 @@
-// import { ThemedText } from "@/components/ThemedText";
-// import { ThemedView } from "@/components/ThemedView";
-// import { Image } from "expo-image";
-// import { StyleSheet, View } from "react-native";
-
-// export default function Profile() {
-//   return (
-//     <ThemedView style={styles.container}>
-//       <View style={{ flex: 1, justifyContent: "center",  width: "60%", backgroundColor: "#fff", borderRadius: 12, padding: 20 }}>
-//         <View style={styles.profileHeader}>
-//           <Image
-//             source={require("@/assets/images/avatar.png")}
-//             style={styles.profileImage}
-//           />
-//           <ThemedText type="title" style={styles.name}>
-//             John Chidi
-//           </ThemedText>
-//           <ThemedText style={styles.email}>
-//             hernandex.rediol@gmail.ac.in
-//           </ThemedText>
-//         </View>
-
-//         <View style={styles.menuList}>
-//           <MenuItem title="Payment Option" />
-//           <MenuItem title="Notifications" />
-//           <View style={styles.languageItem}>
-//             <ThemedText style={styles.menuItemText}>Language</ThemedText>
-//             <ThemedText style={styles.languageValue}>English (US)</ThemedText>
-//           </View>
-//           <MenuItem title="Terms & Conditions" />
-//           <MenuItem title="Logout" />
-//         </View>
-//       </View>
-//     </ThemedView>
-//   );
-// }
-
-// function MenuItem({ title }: { title: string }) {
-//   return (
-//     <View style={styles.menuItem}>
-//       <ThemedText style={styles.menuItemText}>{title}</ThemedText>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 30,
-//     justifyContent: "center",
-//   },
-//   profileHeader: {
-//     alignItems: "center",
-//     marginBottom: 30,
-//   },
-//   profileImage: {
-//     width: 100,
-//     height: 100,
-//     borderRadius: 50,
-//     marginBottom: 15,
-//   },
-//   name: {
-//     fontSize: 24,
-//     fontWeight: "bold",
-//     marginBottom: 5,
-//   },
-//   email: {
-//     fontSize: 16,
-//     color: "#666",
-//   },
-//   menuList: {
-//     width: "100%",
-//   },
-//   menuItem: {
-//     paddingVertical: 15,
-//     borderBottomWidth: 1,
-//     borderBottomColor: "#eee",
-//   },
-//   languageItem: {
-//     paddingVertical: 15,
-//     borderBottomWidth: 1,
-//     borderBottomColor: "#eee",
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//   },
-//   menuItemText: {
-//     fontSize: 18,
-//   },
-//   languageValue: {
-//     fontSize: 16,
-//     color: "#666",
-//   },
-// });
-
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const ProfileScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header} >
-        <Ionicons name="arrow-back" size={24} color="#000" onPress={() => router.back()}/>
-        <Text style={styles.headerTitle} onPress={() => router.back()}>Profile</Text>
+      <View style={styles.header}>
+        <Ionicons
+          name="arrow-back"
+          size={24}
+          color="#000"
+          onPress={() => router.back()}
+        />
+        <Text style={styles.headerTitle} onPress={() => router.back()}>
+          Profile
+        </Text>
       </View>
 
       <View style={styles.card}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={require("@/assets/images/avatar.png")} 
+            source={require("@/assets/images/avatar.png")}
             style={styles.profileImage}
           />
         </View>
@@ -133,6 +46,13 @@ const ProfileScreen = () => {
             rightTextColor="#0066cc"
           />
           <OptionItem icon="description" text="Terms & Conditions" />
+          <OptionItem
+            icon="change-password"
+            text="Change Password"
+            onPress={() =>
+              router.navigate("/(auth)/resetPassword?isReset=true")
+            }
+          />
           <OptionItem
             icon="logout"
             text="Logout"
@@ -171,8 +91,14 @@ const OptionItem = ({
         return <Ionicons name="language-outline" size={20} color={iconColor} />;
       case "description":
         return <MaterialIcons name="description" size={20} color={iconColor} />;
+      case "change-password":
+        return (
+          <MaterialIcons name="lock-outline" size={20} color={iconColor} />
+        );
       case "logout":
-        return <MaterialIcons name="settings-power" size={20} color={iconColor} />;
+        return (
+          <MaterialIcons name="settings-power" size={20} color={iconColor} />
+        );
       default:
         return null;
     }

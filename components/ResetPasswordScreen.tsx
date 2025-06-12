@@ -1,21 +1,26 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Image,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 
-const LoginScreen = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+interface ResetPasswordProps {
+  isReset?: boolean;
+}
 
+const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
+  isReset = false,
+}) => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  
   return (
     <View style={styles.container}>
       <Image
@@ -24,21 +29,36 @@ const LoginScreen = () => {
       />
       <Text style={styles.title}>Dipodemy</Text>
 
-      <ThemedText style={styles.loginLabel}>Login!</ThemedText>
+      <ThemedText style={styles.loginLabel}>
+        {isReset ? "Change Password" : "Reset Password"}!
+      </ThemedText>
 
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="mail-outline"
-          size={20}
-          color="#888"
-          style={styles.inputIcon}
-        />
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          placeholderTextColor="#444"
-        />
-      </View>
+      {isReset && (
+        <View style={styles.inputWrapper}>
+          <Ionicons
+            name="lock-closed-outline"
+            size={20}
+            color="#888"
+            style={styles.inputIcon}
+          />
+          <TextInput
+            placeholder="Old Password"
+            secureTextEntry={!passwordVisible}
+            style={styles.input}
+            placeholderTextColor="#444"
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setPasswordVisible(!passwordVisible)}
+          >
+            <Ionicons
+              name={passwordVisible ? "eye-off" : "eye"}
+              size={20}
+              color="#888"
+            />
+          </TouchableOpacity>
+        </View>
+      )}
 
       <View style={styles.inputWrapper}>
         <Ionicons
@@ -65,31 +85,31 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.rememberRow}>
+      <View style={styles.inputWrapper}>
+        <Ionicons
+          name="lock-closed-outline"
+          size={20}
+          color="#888"
+          style={styles.inputIcon}
+        />
+        <TextInput
+          placeholder="Re-enter Password"
+          secureTextEntry={!passwordVisible}
+          style={styles.input}
+          placeholderTextColor="#444"
+        />
         <TouchableOpacity
-          style={styles.rememberCheck}
-          onPress={() => setRememberMe(!rememberMe)}
+          style={styles.eyeIcon}
+          onPress={() => setPasswordVisible(!passwordVisible)}
         >
-          <MaterialCommunityIcons
-            name={
-              rememberMe
-                ? "checkbox-marked-circle"
-                : "checkbox-blank-circle-outline"
-            }
+          <Ionicons
+            name={passwordVisible ? "eye-off" : "eye"}
             size={20}
-            color="#27d86c"
+            color="#888"
           />
-          <ThemedText style={styles.rememberText}>
-            {" "}
-            Remember Password
-          </ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => router.navigate("/(auth)/forgetPassword")}
-        >
-          <ThemedText style={styles.forgotText}>Forget password</ThemedText>
         </TouchableOpacity>
       </View>
+
 
       <View
         style={{
@@ -97,43 +117,17 @@ const LoginScreen = () => {
           width: "10%",
           alignSelf: "center",
           alignItems: "center",
-          marginVertical: 50,
+          marginVertical: 40,
         }}
       >
         <RoundedActionButton
-          text="Sign In"
+          text="Continue"
           icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
           bgColor="#27d86c"
-          onPress={() => router.navigate("/(tabs)")}
+          onPress={() => router.replace("/(tabs)")}
         />
       </View>
 
-      <Text style={styles.orText}>Or Continue With</Text>
-
-      <View style={styles.socialsRow}>
-        <TouchableOpacity style={styles.socialIcon}>
-          <Image
-            source={require("../assets/images/google.png")}
-            style={styles.socialImg}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.socialIcon}>
-          <Image
-            source={require("../assets/images/fb.png")}
-            style={styles.socialImg}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <ThemedText style={styles.footerText}>
-        Already have an Account?{" "}
-        <ThemedText
-          style={styles.signUp}
-          onPress={() => router.navigate("/register")}
-        >
-          SIGN UP
-        </ThemedText>
-      </ThemedText>
     </View>
   );
 };
@@ -251,4 +245,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default ResetPasswordScreen;

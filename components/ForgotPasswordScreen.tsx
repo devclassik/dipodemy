@@ -3,12 +3,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { default as React, useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
@@ -24,7 +24,7 @@ const ForgetPasswordScreen = () => {
     console.log("Selected Option:", selectedOption);
     console.log("Entered Value:", inputValue);
     // proceed to next step
-    router.replace("/(tabs)");
+    router.navigate("/(auth)/resetPassword?isReset=false");
   };
 
   const renderInputField = () => {

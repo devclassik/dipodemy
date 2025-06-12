@@ -7,8 +7,8 @@ import RoundedActionButton from "./RoundedActionButton";
 interface AboutProps {
   description: string;
   price: string;
-  onPress: () => void; // Optional onPress function for the button
-  buttonText?: string; // Optional custom button text
+  onPress: () => void; 
+  buttonText?: string;
   showCourseInfo?: boolean;
 }
 const About: React.FC<AboutProps> = ({
@@ -36,7 +36,7 @@ const About: React.FC<AboutProps> = ({
         {description.split(" ").length > maxWords && (
           <TouchableOpacity onPress={() => setExpanded(!expanded)}>
             <Text style={styles.readMoreText}>
-              {expanded ? "Read Less" : "Read More"}
+              {expanded ? "Read Less" : "Read More ..."}
             </Text>
           </TouchableOpacity>
         )}
@@ -59,8 +59,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   readMoreText: {
-    fontSize: 14,
-    color: "blue", // Example color
+    fontSize: 12,
+    color: "green",
+    fontStyle: "italic",
     fontWeight: "bold",
   },
 });

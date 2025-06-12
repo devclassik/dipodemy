@@ -1,11 +1,12 @@
 import { Category } from "@/components/CategoryList";
 import PopularCourseScreen from "@/components/PopularCourseScreen";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
 const PopularCourse = () => {
   const categories: Category[] = [
+    { id: "7", label: "All" },
     { id: "1", label: "Design" },
     { id: "2", label: "Development" },
     { id: "3", label: "Business" },
@@ -56,7 +57,16 @@ const PopularCourse = () => {
   return (
     <>
       <Stack.Screen options={{ title: "Popular Course", headerShown: true }} />
-      <PopularCourseScreen sections={categories} courses={popularCourses} />
+      <PopularCourseScreen
+        sections={categories}
+        courses={popularCourses}
+        onCardPress={(data) =>
+          router.navigate({
+            pathname: "/(pages)/courseDetails",
+            params: { data: JSON.stringify(data) },
+          })
+        }
+      />
     </>
   );
 };

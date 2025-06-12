@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     FlatList,
     ScrollView,
@@ -23,6 +23,13 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
   onCardPress,
   onSectionPress,
 }) => {
+  const [activeId, setActiveId] = useState("all");
+
+  const handlePress = (item: Category) => {
+    setActiveId(item.id);
+    onSectionPress?.(item);
+  };
+
   return (
     <ThemedView>
       <ThemedView style={styles.sectionList}>
@@ -30,10 +37,17 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
           {sections.map((item: Category) => (
             <TouchableOpacity
               key={item.id}
-              style={styles.chip}
-              onPress={() => onSectionPress?.(item)}
+              style={[styles.chip, activeId === item.id && styles.activeChip]}
+              onPress={() => handlePress(item)}
             >
-              <ThemedText style={styles.chipText}>{item.label}</ThemedText>
+              <ThemedText
+                style={[
+                  styles.chipText,
+                  activeId === item.id && styles.activeChipText,
+                ]}
+              >
+                {item.label}
+              </ThemedText>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -60,14 +74,14 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: 12,
     paddingBottom: 20,
-    paddingTop: 12
+    paddingTop: 12,
   },
   sectionList: {
     gap: 4,
     padding: 8,
   },
   chip: {
-    backgroundColor: "#fff",
+    backgroundColor: "#E8F1FF",
     borderColor: "#000",
     borderWidth: 1,
     borderRadius: 20,
@@ -77,10 +91,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     elevation: 1,
   },
+  activeChip: {
+    backgroundColor: "#167F71",
+  },
   chipText: {
     color: "#000",
     fontWeight: "500",
     fontSize: 14,
+  },
+  activeChipText: {
+    color: "#fff",
   },
 });
 

@@ -61,11 +61,10 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "bold",
     marginBottom: 6,
     color: "#222",
-    // color: "#167F71",
   },
 
   lessonRow: {
@@ -74,13 +73,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   priceText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
     color: "#167F71",
   },
   lessonIndex: {
-    width: 20,
-    height: 20,
+    width: 15,
+    height: 15,
     fontWeight: "bold",
     color: "#555",
     backgroundColor: "#E8F1FF",
@@ -91,12 +90,11 @@ const styles = StyleSheet.create({
 
   lessonTitle: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
     color: "#333",
   },
   lessonDuration: {
     marginLeft: 8,
-    fontSize: 13,
     color: "gray",
   },
 });
