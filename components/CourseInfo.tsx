@@ -99,12 +99,16 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
       </ThemedView>
 
       {review.map((review, index) => (
-        <ThemedView key={index} style={[styles.reviewCard, {borderBottomColor: colors.success}]}>
+        <ThemedView
+          key={index}
+          style={[styles.reviewCard, { borderBottomColor: colors.success }]}
+        >
           <Image source={{ uri: review.avatar }} style={styles.reviewAvatar} />
           <ThemedView style={styles.reviewContent}>
             <ThemedView style={styles.reviewHeader}>
               <ThemedText style={styles.reviewName}>{review.name}</ThemedText>
               <ThemedView style={styles.ratingBox}>
+                <Ionicons name="star" size={12} color={colors.warning}/>
                 <ThemedText style={styles.ratingText}>
                   {review.rating}
                 </ThemedText>
@@ -208,6 +212,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6F8E9",
     paddingHorizontal: 8,
     borderRadius: 12,
+    flexDirection: "row"
   },
   ratingText: {
     color: "#23C865",

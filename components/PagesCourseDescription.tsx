@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons"; // Example for icons
+import { router } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect } from "react";
 import {
@@ -139,7 +140,11 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         )}
       </View>
 
-      {activeTab === "about" && <CourseInfoScreen />}
+      {activeTab === "about" && (
+        <CourseInfoScreen
+          onSeeAll={() => router.navigate("/(pages)/reviews")}
+        />
+      )}
 
       <RoundedActionButton
         text={`Enroll Course   ₦${price}`}

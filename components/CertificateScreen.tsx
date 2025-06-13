@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
 import React from "react";
 import {
     Image,
@@ -11,13 +12,20 @@ import {
 import QRCode from "react-native-qrcode-svg";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 const CertificateScreen = () => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
+  const handleLinkToPDF = () => {
+    WebBrowser.openBrowserAsync(
+      "https://www.adcparty.com/"
+       //   "https://yourdomain.com/certificates/chidi-john.pdf"
+    );
+  };
   return (
-    <>
+    <ThemedView>
       <ImageBackground
         source={require("@/assets/images/certificate.png")}
         style={styles.container}
@@ -77,17 +85,13 @@ const CertificateScreen = () => {
           Issued on November 24, 2022
         </ThemedText>
 
-        <QRCode
-          value="SK24568086" // your dynamic ID or URL
-          size={60}
-          backgroundColor="transparent"
-        />
+        <QRCode value="SK24568086" size={60} backgroundColor="transparent" />
       </ImageBackground>
 
       <RoundedActionButton
         text="Download Certificate"
         icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-        onPress={() => {}}
+        onPress={handleLinkToPDF}
         style={{
           width: "60%",
           alignSelf: "center",
@@ -95,7 +99,7 @@ const CertificateScreen = () => {
           marginVertical: 10,
         }}
       />
-    </>
+    </ThemedView>
   );
 };
 
