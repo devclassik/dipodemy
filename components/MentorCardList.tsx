@@ -1,5 +1,6 @@
+import { Colors } from "@/constants/Colors";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
@@ -16,13 +17,17 @@ const MentorCardList: React.FC<MentorCardListProps> = ({
   avatar,
   onPress,
 }) => {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
+  
   return (
     <TouchableOpacity onPress={onPress}>
-      <ThemedView style={styles.card}>
+      <ThemedView style={[styles.card, {borderBottomColor: colors.success}]}>
         <Image source={avatar} style={styles.avatar} />
         <View>
           <ThemedText style={styles.name}>{name}</ThemedText>
-          <Text style={styles.specialty}>{specialty}</Text>
+          <ThemedText style={styles.specialty}>{specialty}</ThemedText>
         </View>
       </ThemedView>
     </TouchableOpacity>
@@ -35,7 +40,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderBottomColor: "#1A9E4F",
     borderBottomWidth: 1,
   },
   avatar: {

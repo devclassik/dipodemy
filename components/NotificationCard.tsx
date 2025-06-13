@@ -1,11 +1,13 @@
+import { Colors } from "@/constants/Colors";
 import React, { useState } from "react";
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
@@ -63,6 +65,9 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
     new Array(notifications.length).fill(false)
   );
 
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   const toggleExpanded = (globalIndex: number) => {
     const newExpanded = [...expandedItems];
     newExpanded[globalIndex] = !newExpanded[globalIndex];
@@ -91,7 +96,9 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       <ThemedView>
         {groupedData.map((group, groupIndex) => (
           <View key={groupIndex} style={styles.section}>
-            <ThemedText style={styles.sectionHeader}>{group.dateLabel}</ThemedText>
+            <ThemedText style={styles.sectionHeader}>
+              {group.dateLabel}
+            </ThemedText>
             {group.data.map((item, localIndex) => {
               const currentIndex = globalIndex++;
               return (
@@ -119,7 +126,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
                         <TouchableOpacity
                           onPress={() => toggleExpanded(currentIndex)}
                         >
-                          <Text style={styles.readMoreText}>
+                          <Text style={[styles.readMoreText, { color: colors.success }]}>
                             {expandedItems[currentIndex]
                               ? "Read Less"
                               : "Read More"}
@@ -141,7 +148,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 const styles = StyleSheet.create({
   section: {
     marginBottom: 24,
-    marginTop: 10
+    marginTop: 10,
   },
   sectionHeader: {
     fontSize: 16,
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 12,
     padding: 12,
-    elevation: 5
+    elevation: 5,
   },
   readCard: {
     opacity: 0.5,
@@ -182,13 +189,10 @@ const styles = StyleSheet.create({
   subTitle: {
     marginTop: 4,
     fontWeight: "500",
-    fontSize: 14,
     color: "#545454",
   },
   readMoreText: {
     marginTop: 4,
-    fontSize: 13,
-    color: "#007AFF",
     fontWeight: "500",
   },
 });

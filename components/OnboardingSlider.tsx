@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "#fff",
   },
   skip: { position: "absolute", top: 40, right: 20 },
   skipText: {

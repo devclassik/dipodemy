@@ -2,7 +2,6 @@ import { Category } from "@/components/CategoryList";
 import PopularCourseScreen from "@/components/PopularCourseScreen";
 import { router, Stack } from "expo-router";
 import React from "react";
-import { StyleSheet } from "react-native";
 
 const PopularCourse = () => {
   const categories: Category[] = [
@@ -73,4 +72,3 @@ const PopularCourse = () => {
 
 export default PopularCourse;
 
-const styles = StyleSheet.create({});

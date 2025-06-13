@@ -1,16 +1,15 @@
-import {
-  FontAwesome,
-  Ionicons
-} from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  View,
+  useColorScheme,
 } from "react-native";
+import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 interface CourseInfoProps {
   instructor?: string;
@@ -63,60 +62,73 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
   ],
   onSeeAll,
 }) => {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   return (
     <ScrollView style={styles.container}>
-      {/* Instructor */}
-      <Text style={styles.sectionTitle}>Instructor</Text>
-      <View style={styles.instructorContainer}>
+      <ThemedText style={styles.sectionTitle}>Instructor</ThemedText>
+      <ThemedView style={styles.instructorContainer}>
         <Image
           source={instructorAvatar || require("@/assets/images/avatar.png")}
           style={styles.avatar}
         />
-        <View>
-          <Text style={styles.instructorName}>{instructor}</Text>
-          <Text style={styles.instructorRole}>{topic}</Text>
-        </View>
-      </View>
+        <ThemedView>
+          <ThemedText style={styles.instructorName}>{instructor}</ThemedText>
+          <ThemedText style={styles.instructorRole}>{topic}</ThemedText>
+        </ThemedView>
+      </ThemedView>
 
-      {/* What You'll Get */}
-      <Text style={styles.sectionTitle}>What You`ll Get</Text>
-      <View style={styles.features}>
+      <ThemedText style={styles.sectionTitle}>What You`ll Get</ThemedText>
+      <ThemedView style={styles.features}>
         {toGain.map((item, index) => (
-          <View key={index} style={styles.featureItem}>
-            <Ionicons name={item.icon} size={20} color="#333" />
-            <Text style={styles.featureText}>{item.text}</Text>
-          </View>
+          <ThemedView key={index} style={styles.featureItem}>
+            <Ionicons name={item.icon} size={20} color={colors.success} />
+            <ThemedText style={styles.featureText}>{item.text}</ThemedText>
+          </ThemedView>
         ))}
-      </View>
+      </ThemedView>
 
-      {/* Reviews */}
-      <View style={styles.reviewsHeader}>
-        <Text style={styles.sectionTitle}>Reviews</Text>
+      <ThemedView style={styles.reviewsHeader}>
+        <ThemedText style={styles.sectionTitle}>Reviews</ThemedText>
         <TouchableOpacity onPress={onSeeAll}>
-          <Text style={styles.seeAll}>SEE ALL</Text>
+          <ThemedText style={[styles.seeAll, { color: colors.success }]}>
+            SEE ALL
+          </ThemedText>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
 
       {review.map((review, index) => (
-        <View key={index} style={styles.reviewCard}>
+        <ThemedView key={index} style={[styles.reviewCard, {borderBottomColor: colors.success}]}>
           <Image source={{ uri: review.avatar }} style={styles.reviewAvatar} />
-          <View style={styles.reviewContent}>
-            <View style={styles.reviewHeader}>
-              <Text style={styles.reviewName}>{review.name}</Text>
-              <View style={styles.ratingBox}>
-                <Text style={styles.ratingText}>{review.rating}</Text>
-              </View>
-            </View>
-            <Text style={styles.reviewComment}>{review.comment}</Text>
-            <View style={styles.reviewFooter}>
-              <View style={styles.reviewLikes}>
-                <FontAwesome name="heart" size={14} color="red" />
-                <Text style={styles.reviewMetaText}> {review.likes}</Text>
-              </View>
-              <Text style={styles.reviewMetaText}>{review.time}</Text>
-            </View>
-          </View>
-        </View>
+          <ThemedView style={styles.reviewContent}>
+            <ThemedView style={styles.reviewHeader}>
+              <ThemedText style={styles.reviewName}>{review.name}</ThemedText>
+              <ThemedView style={styles.ratingBox}>
+                <ThemedText style={styles.ratingText}>
+                  {review.rating}
+                </ThemedText>
+              </ThemedView>
+            </ThemedView>
+            <ThemedText style={styles.reviewComment}>
+              {review.comment}
+            </ThemedText>
+            <ThemedView style={styles.reviewFooter}>
+              <ThemedView style={styles.reviewLikes}>
+                <FontAwesome name="heart" size={14} color={colors.danger} />
+                <ThemedText style={styles.reviewMetaText}>
+                  {" "}
+                  {review.likes}
+                </ThemedText>
+              </ThemedView>
+              <ThemedText
+                style={[styles.reviewMetaText, { color: colors.primaryDark }]}
+              >
+                {review.time}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
+        </ThemedView>
       ))}
     </ScrollView>
   );
@@ -125,10 +137,8 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#fff",
   },
   sectionTitle: {
-    fontSize: 16,
     fontWeight: "bold",
     marginVertical: 10,
   },
@@ -162,7 +172,6 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: "#333",
   },
   reviewsHeader: {
     flexDirection: "row",
@@ -171,14 +180,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   seeAll: {
-    fontSize: 12,
-    color: "#1A73E8",
+    color: "#167F71",
     fontWeight: "500",
   },
   reviewCard: {
     flexDirection: "row",
     marginBottom: 20,
     gap: 10,
+    borderBottomWidth: 1,
   },
   reviewAvatar: {
     width: 40,
@@ -206,9 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   reviewComment: {
-    fontSize: 13,
     marginVertical: 4,
-    color: "#444",
   },
   reviewFooter: {
     flexDirection: "row",
@@ -219,10 +226,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   reviewMetaText: {
-    fontSize: 12,
-    color: "#888",
+    fontSize: 14,
   },
 });
-
 
 export default CourseInfoScreen;

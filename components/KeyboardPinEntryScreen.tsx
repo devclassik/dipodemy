@@ -87,8 +87,8 @@ const KeyboardPinEntryScreen = () => {
         <CustomModal
           visible={showModal}
           onClose={handleModalClose}
-          lottieSource={require("../assets/lottie/alert.json")}
-          imageSource={require("../assets/images/avatar.png")}
+          lottieSource={require("@/assets/lottie/alert.json")}
+          imageSource={require("@/assets/images/avatar.png")}
           caption="Here is your caption text!"
           subText="Your Account is Ready to Use. You will be redirected to the Home Page in a Few Seconds."
           loading={false}

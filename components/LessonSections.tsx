@@ -1,22 +1,26 @@
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import { curriculum } from "./PagesCourseDescription";
-import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 
 interface LessonSectionsProps {
   curriculum: curriculum[];
-  price: string; // Optional price prop
   onPress: () => void; // Optional onPress function for the button
-  buttonText?: string; // Optional custom button text
 }
 const LessonSections: React.FC<LessonSectionsProps> = ({
   curriculum,
-  price,
   onPress,
-  buttonText = "Enroll Course",
 }) => {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   return (
     <View>
       {curriculum?.map((section, sectionIndex) => (
@@ -35,22 +39,29 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
           </View>
           {section.lessons.map((lesson, lessonIndex) => (
             <View key={lessonIndex} style={styles.lessonRow}>
-              <Text style={styles.lessonIndex}>{lessonIndex + 1}.</Text>
+              <ThemedText style={styles.lessonIndex}>
+                {lessonIndex + 1}.
+              </ThemedText>
               <View style={{ flex: 1, paddingLeft: 10 }}>
-                <Text style={styles.lessonTitle}>{lesson.title}</Text>
-                <Text style={styles.lessonDuration}>{lesson.duration}</Text>
+                <ThemedText style={styles.lessonTitle}>
+                  {lesson.title}
+                </ThemedText>
+                <ThemedText style={styles.lessonDuration}>
+                  {lesson.duration}
+                </ThemedText>
               </View>
-              <Ionicons name="play-outline" color="green" />
+              <TouchableOpacity onPress={onPress}>
+                <Ionicons
+                  name={
+                    lessonIndex > 1 ? "lock-closed-outline" : "play-outline"
+                  }
+                  color={colors.green}
+                />
+              </TouchableOpacity>
             </View>
           ))}
         </View>
       ))}
-      <RoundedActionButton
-        text={`${buttonText}     ₦${price}`}
-        onPress={onPress}
-        style={{ marginVertical: 10 }}
-        icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-      />
     </View>
   );
 };
@@ -61,7 +72,6 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 12,
     fontWeight: "bold",
     marginBottom: 6,
     color: "#222",
@@ -73,7 +83,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   priceText: {
-    fontSize: 14,
     fontWeight: "bold",
     color: "#167F71",
   },
@@ -90,7 +99,7 @@ const styles = StyleSheet.create({
 
   lessonTitle: {
     flex: 1,
-    fontSize: 14,
+    // fontSize: 14,
     color: "#333",
   },
   lessonDuration: {

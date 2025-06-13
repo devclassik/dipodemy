@@ -1,7 +1,7 @@
-// LearnCard.tsx
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 interface LearnCardProps {
   id: string;
@@ -24,14 +24,14 @@ const LearnCard: React.FC<{
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image source={item.image} style={styles.image} />
       <View style={{ flex: 1 }}>
-        <Text style={styles.category}>{item.category}</Text>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>{item.price}</Text>
+        <ThemedText style={styles.category}>{item.category}</ThemedText>
+        <ThemedText style={styles.title}>{item.title}</ThemedText>
+        <ThemedText style={styles.price}>{item.price}</ThemedText>
         <View style={styles.row}>
           <Ionicons name="star" size={14} color="#FFC107" />
-          <Text style={styles.rating}>
+          <ThemedText style={styles.rating}>
             {item.rating} · {item.reviews}
-          </Text>
+          </ThemedText>
         </View>
       </View>
       <Ionicons
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   image: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     borderRadius: 10,
   },
   category: {

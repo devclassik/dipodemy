@@ -1,5 +1,6 @@
 import LearnCardList from "@/components/LearnCardList";
 import MentorCard from "@/components/MentorCard";
+import { TabOptionsScreen } from "@/components/OngoingCourseScreen";
 import Search from "@/components/Search";
 import { ThemedView } from "@/components/ThemedView";
 import { router } from "expo-router";
@@ -7,9 +8,8 @@ import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 export default function Learn() {
-  const [selectedTab, setSelectedTab] = useState<"Courses" | "Mentors">(
-    "Courses"
-  );
+  const [selectedTab, setSelectedTab] =
+    useState<TabOptionsScreen["options"]>("Courses");
 
   const mockCourses = [
     {

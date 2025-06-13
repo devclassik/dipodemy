@@ -153,7 +153,7 @@ export default function HomeScreen() {
       <CourseSection
         title="Earn Your Degree"
         courses={degreeCourses}
-        onSeeAllPress={() => router.navigate("/(pages)/courseContent")}
+        onSeeAllPress={() => router.navigate("/(pages)/courseDetails")}
       />
       <CourseSection
         title="Most Popular Courses"

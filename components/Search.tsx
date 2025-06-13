@@ -1,20 +1,25 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
+import { TabOptionsScreen } from "./OngoingCourseScreen";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 interface SearchProps {
-  selectedTab?: "Courses" | "Mentors";
-  onTabChange?: (tab: "Courses" | "Mentors") => void;
+  selectedTab?: TabOptionsScreen["options"];
+  onTabChange?: (tab: TabOptionsScreen["options"]) => void;
   showFilter?: boolean;
   onFilterPress?: () => void;
+  firstWord?: TabOptionsScreen["options"];
+  secondWord?: TabOptionsScreen["options"];
+  style?: ViewStyle;
 }
 
 const Search: React.FC<SearchProps> = ({
@@ -22,11 +27,14 @@ const Search: React.FC<SearchProps> = ({
   onTabChange,
   showFilter = true,
   onFilterPress,
+  firstWord = "Courses",
+  secondWord = "Mentors",
+  style = { paddingTop: 40 },
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, style]}>
       <View style={styles.searchBox}>
         <Ionicons
           name="search"
@@ -37,10 +45,10 @@ const Search: React.FC<SearchProps> = ({
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder="Graphic Design"
+          placeholder="Graphic Design ..."
           style={{ flex: 1 }}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onFilterPress}>
           <MaterialIcons
             name="tune"
             size={20}
@@ -50,53 +58,53 @@ const Search: React.FC<SearchProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Toggle Buttons */}
       {showFilter && (
         <View style={styles.toggleRow}>
           <TouchableOpacity
             style={[
               styles.toggleBtn,
-              selectedTab === "Courses" && styles.activeToggle,
+              selectedTab === firstWord && styles.activeToggle,
             ]}
-            onPress={() => onTabChange && onTabChange("Courses")}
+            onPress={() => onTabChange && onTabChange?.(firstWord)}
           >
             <Text
               style={[
                 styles.toggleText,
-                selectedTab === "Courses" && styles.activeText,
+                selectedTab === firstWord && styles.activeText,
               ]}
             >
-              Courses
+              {firstWord}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.toggleBtn,
-              selectedTab === "Mentors" && styles.activeToggle,
+              selectedTab === secondWord && styles.activeToggle,
             ]}
-            onPress={() => onTabChange && onTabChange("Mentors")}
+            onPress={() => onTabChange && onTabChange?.(secondWord)}
           >
             <Text
               style={[
                 styles.toggleText,
-                selectedTab === "Mentors" && styles.activeText,
+                selectedTab === secondWord && styles.activeText,
               ]}
             >
-              Mentors
+              {secondWord}
             </Text>
           </TouchableOpacity>
         </View>
       )}
 
-      {/* Search Result Text */}
       <View style={styles.resultRow}>
         <ThemedText>
           Result for{" "}
-          <Text
+          <ThemedText
             style={{ color: "#40E96A", fontWeight: "600" }}
-          >{`"${searchQuery}"`}</Text>
+          >{`"${searchQuery}"`}</ThemedText>
         </ThemedText>
-        <Text style={{ color: "#40E96A", fontWeight: "600" }}>2480 FOUNDS</Text>
+        <ThemedText style={{ color: "#40E96A", fontWeight: "600" }}>
+          2480 FOUND
+        </ThemedText>
       </View>
     </ThemedView>
   );
@@ -105,7 +113,6 @@ const Search: React.FC<SearchProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    paddingTop: 40,
   },
   searchBox: {
     flexDirection: "row",

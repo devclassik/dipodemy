@@ -6,7 +6,7 @@ import ParallaxScrollView from "./ParallaxScrollView";
 import { ThemedView } from "./ThemedView";
 
 interface ContentSectionProps {
-  imageSource?: any; // Optional image source
+  imageSource?: any;
 }
 const ContentSection: React.FC<ContentSectionProps> = ({
   imageSource,
