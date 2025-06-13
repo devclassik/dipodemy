@@ -4,8 +4,9 @@ import { Colors } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from 'react';
 import { TouchableOpacity, useColorScheme } from "react-native";
+
 
 const BoughtCourse = () => {
   const [showModal, setShowModal] = useState(false);

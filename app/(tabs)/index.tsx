@@ -1,10 +1,11 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 
 import CategoryList, { Category } from "@/components/CategoryList";
 import CourseSection from "@/components/CourseSection";
 import Header from "@/components/Header";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
 import { router } from "expo-router";
+import { useState } from "react";
 
 export default function HomeScreen() {
   const newCourses = [
@@ -132,12 +133,30 @@ export default function HomeScreen() {
     // ...add more as needed
   ];
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    // Your reload logic here
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={{ flex: 1, marginBottom: 10 }}>
-        <Header 
-        onSearchPress={()=> router.navigate('/search')}
-        onNotificationsPress={() => router.navigate("/notification")} />
+        <Header
+          onSearchPress={() => router.navigate("/search")}
+          onNotificationsPress={() => router.navigate("/notification")}
+        />
         <SpecialOfferBanner />
       </View>
       <CategoryList

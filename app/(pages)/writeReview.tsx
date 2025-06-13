@@ -1,11 +1,12 @@
-import ReviewCard from "@/components/ReviewCard";
+import WriteReviewCard from "@/components/WriteReviewCard";
 import { Colors } from "@/constants/Colors";
 import { useFocusEffect } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import React, { useCallback, useMemo, useState } from 'react';
 import { useColorScheme } from "react-native";
 
-const Reviews = () => {
+
+const WriteReviews = () => {
   const [showModal, setShowModal] = useState(false);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
@@ -76,6 +77,16 @@ const Reviews = () => {
     []
   );
 
+  const mockCourses = {
+    id: 1,
+    category: "Graphic Design",
+    title: "Graphic Design Advanced",
+    price: "89/-",
+    rating: 4.9,
+    reviews: 7830,
+    image: require("@/assets/images/c1.png"),
+  };
+
   useFocusEffect(
     useCallback(() => {
       if (review.length === 0) {
@@ -91,13 +102,21 @@ const Reviews = () => {
     <>
       <Stack.Screen
         options={{
-          title: "Reviews",
+          title: "Write Review",
           headerShown: true,
         }}
       />
-      <ReviewCard reviews={review} />
+      <WriteReviewCard
+        id={mockCourses.id}
+        category={mockCourses.category}
+        title={mockCourses.title}
+        price={mockCourses.price}
+        rating={mockCourses.rating}
+        reviews={mockCourses.reviews}
+        image={mockCourses.image}
+      />
     </>
   );
 };
 
-export default Reviews;
+export default WriteReviews;

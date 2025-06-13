@@ -21,7 +21,7 @@ const CertificateScreen = () => {
   const handleLinkToPDF = () => {
     WebBrowser.openBrowserAsync(
       "https://www.adcparty.com/"
-       //   "https://yourdomain.com/certificates/chidi-john.pdf"
+      //   "https://yourdomain.com/certificates/chidi-john.pdf"
     );
   };
   return (
@@ -85,7 +85,11 @@ const CertificateScreen = () => {
           Issued on November 24, 2022
         </ThemedText>
 
-        <QRCode value="SK24568086" size={60} backgroundColor="transparent" />
+        <QRCode
+          value="https://www.adcparty.com/"
+          size={60}
+          backgroundColor="transparent"
+        />
       </ImageBackground>
 
       <RoundedActionButton

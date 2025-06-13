@@ -10,7 +10,9 @@ const LandingScreen = () => {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.inner}>
-        <ThemedText style={styles.title}>Let’s you in</ThemedText>
+        <ThemedText style={styles.title}>
+          Let’s you in
+        </ThemedText>
 
         <TouchableOpacity style={styles.socialButton}>
           <ThemedView style={styles.iconWrapper}>
@@ -19,7 +21,9 @@ const LandingScreen = () => {
               style={styles.iconImage}
             />
           </ThemedView>
-          <ThemedText style={styles.socialText}>Continue with Google</ThemedText>
+          <ThemedText style={styles.socialText}>
+            Continue with Google
+          </ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.socialButton}>
@@ -29,7 +33,9 @@ const LandingScreen = () => {
               style={styles.iconImage}
             />
           </ThemedView>
-          <ThemedText style={styles.socialText}>Continue with Facebook</ThemedText>
+          <ThemedText style={styles.socialText}>
+            Continue with Facebook
+          </ThemedText>
         </TouchableOpacity>
 
         <ThemedText style={styles.orText}>( Or )</ThemedText>
@@ -46,7 +52,6 @@ const LandingScreen = () => {
           <RoundedActionButton
             text="Sign In With your Account"
             icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-            bgColor="#27d86c"
             onPress={() => router.navigate("/login")}
           />
         </ThemedView>
@@ -80,7 +85,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 32,
     fontWeight: "bold",
-    marginVertical: 32,
+    marginVertical: 20,
+    lineHeight: 36,
   },
   iconWrapper: {
     width: 40,

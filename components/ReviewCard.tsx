@@ -1,13 +1,15 @@
 import { Colors } from "@/constants/Colors";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
+import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
@@ -38,7 +40,11 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
       contentContainerStyle={styles.scrollContainer}
     >
       <ThemedView
-        style={{ alignItems: "center", paddingHorizontal: 20, paddingVertical: 10 }}
+        style={{
+          alignItems: "center",
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+        }}
       >
         <ThemedView style={{ flexDirection: "row" }}>
           <Ionicons name="star" size={20} color={colors.warning} />
@@ -100,9 +106,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
                 </ThemedText>
               </ThemedView>
             </ThemedView>
-            <ThemedText style={styles.reviewComment}>
-              {item.comment}
-            </ThemedText>
+            <ThemedText style={styles.reviewComment}>{item.comment}</ThemedText>
             <ThemedView style={styles.reviewFooter}>
               <ThemedView style={styles.reviewLikes}>
                 <FontAwesome name="heart" size={14} color={colors.danger} />
@@ -111,10 +115,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
                 </ThemedText>
               </ThemedView>
               <ThemedText
-                style={[
-                  styles.reviewMetaText,
-                  { color: colors.primaryDark },
-                ]}
+                style={[styles.reviewMetaText, { color: colors.primaryDark }]}
               >
                 {item.time}
               </ThemedText>
@@ -122,6 +123,21 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
           </ThemedView>
         </ThemedView>
       ))}
+
+      <RoundedActionButton
+        text="Write a Review"
+        icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
+        bgColor="#27d86c"
+        onPress={
+          () => router.navigate('/(pages)/writeReview')
+        }
+        style={{
+          width: "50%",
+          alignSelf: "center",
+          alignItems: "center",
+          marginVertical: 20,
+        }}
+      />
     </ScrollView>
   );
 };
@@ -185,12 +201,12 @@ const styles = StyleSheet.create({
   },
   reviewMetaText: {
     fontSize: 12,
-    paddingLeft: 8
+    paddingLeft: 8,
   },
   filterScroll: {
     paddingVertical: 10,
     paddingHorizontal: 10,
-    margin: "auto"
+    margin: "auto",
   },
   tab: {
     backgroundColor: "#fff",
