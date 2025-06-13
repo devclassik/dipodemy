@@ -91,12 +91,12 @@ const BoughtCourse = () => {
       {courses.length !== 0 ? (
         <MyCourseScreen
           courses={courses}
-          // onCardPress={(data) =>
-          //   router.navigate({
-          //     pathname: "/(pages)/myCourse",
-          //     params: { data: JSON.stringify(data) },
-          //   })
-          // }
+          onCardPress={(data) =>
+            router.navigate({
+              pathname: "/(pages)/courseContent",
+              params: { data: JSON.stringify(data) },
+            })
+          }
           isCompleted={false}
         />
       ) : (
