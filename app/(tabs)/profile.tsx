@@ -37,7 +37,11 @@ const ProfileScreen = () => {
         <Text style={styles.email}>hernandex.redial@gmail.ac.in</Text>
 
         <View style={styles.optionList}>
-          <OptionItem icon="credit-card" text="Payment Option" />
+          <OptionItem
+            icon="credit-card"
+            text="Payment Option"
+            onPress={() => router.navigate("/(pages)/paymentMethod")}
+          />
           <OptionItem icon="notifications" text="Notifications" />
           <OptionItem
             icon="language"
