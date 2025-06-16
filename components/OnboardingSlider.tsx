@@ -51,7 +51,7 @@ const OnboardingSlider: React.FC<OnboardingSliderProps> = ({
         {slides.map((slide, idx) => (
           <ThemedView style={styles.slide} key={idx}>
             <TouchableOpacity style={styles.skip} onPress={onSkip}>
-              <ThemedText style={styles.skipText}>Skip</ThemedText>
+              <ThemedText style={styles.skipText} type="subtitle">Skip</ThemedText>
             </TouchableOpacity>
             <Image
               source={slide.img}

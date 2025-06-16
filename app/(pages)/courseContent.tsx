@@ -1,6 +1,7 @@
 import AssignmentReview from "@/components/AssigmentReview";
+import FooterAction from "@/components/FooterAction";
 import LessonSections from "@/components/LessonSections";
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { Stack } from "expo-router";
 import React from "react";
 
@@ -43,13 +44,14 @@ const courseContent = () => {
       />
       <AssignmentReview />
 
-      <ThemedText
+      <ThemedView
         style={{
           backgroundColor: "#fff",
+          paddingVertical: 10,
+          paddingHorizontal: 20,
           borderRadius: 10,
-          padding: 15,
-          marginHorizontal: 10,
-          shadowColor: "#000",
+          marginHorizontal: 16,
+          marginVertical: 20,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.1,
           shadowRadius: 4,
@@ -57,7 +59,8 @@ const courseContent = () => {
         }}
       >
         <LessonSections curriculum={curriculum} onPress={() => {}} />
-      </ThemedText>
+      </ThemedView>
+      <FooterAction text="Start Course Again" isFresh={true} />
     </>
   );
 };

@@ -17,7 +17,7 @@ export default function SplashScreen() {
   return (
     <ThemedView style={styles.container}>
       <Image
-        source={require("../assets/images/splash.png")}
+        source={require("@/assets/images/splash.png")}
         style={styles.logo}
       />
       {/* <Text style={styles.text}>Dipodemy</Text> */}

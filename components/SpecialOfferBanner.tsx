@@ -47,7 +47,12 @@ const SpecialOfferBanner: React.FC = () => (
           imageStyle={styles.imageBg}
         >
           <View style={styles.row}>
-            <MaterialCommunityIcons name="tag-outline" size={28} color="#222" style={{paddingLeft: 20}} />
+            <MaterialCommunityIcons
+              name="tag-outline"
+              size={28}
+              color="#222"
+              style={{ paddingLeft: 20 }}
+            />
             <View>
               <Text style={styles.discount}>{offer.discountText}</Text>
               <Text style={styles.validity}>{offer.validity}</Text>
@@ -66,6 +71,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: -40,
     zIndex: 10,
+    shadowOpacity: 0.1,
   },
   banner: {
     flex: 1,
@@ -106,7 +112,7 @@ const styles = StyleSheet.create({
     color: "#222",
     fontSize: 16,
     fontWeight: "bold",
-    paddingLeft: 30
+    paddingLeft: 30,
   },
   dot: {
     backgroundColor: "#fff",

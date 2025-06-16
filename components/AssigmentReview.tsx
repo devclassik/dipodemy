@@ -12,7 +12,7 @@ const AssignmentReview = () => {
   return (
     <ThemedView style={[styles.assCard, { borderColor: colors.border }]}>
       <TouchableOpacity onPress={() => router.navigate("/(pages)/assignment")}>
-        <ThemedText style={[{ color: colors.green }]}>Assignment</ThemedText>
+        <ThemedText style={[{ color: colors.green }]} >Assignment</ThemedText>
         <ThemedText>prepare a photoshop design and upload </ThemedText>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => router.navigate("/(pages)/writeReview")}>
