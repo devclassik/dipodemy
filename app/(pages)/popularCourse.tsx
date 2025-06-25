@@ -5,13 +5,13 @@ import React from "react";
 
 const PopularCourse = () => {
   const categories: Category[] = [
-    { id: "7", label: "All" },
-    { id: "1", label: "Design" },
-    { id: "2", label: "Development" },
-    { id: "3", label: "Business" },
-    { id: "4", label: "Music" },
-    { id: "5", label: "IT & Software" },
-    { id: "6", label: "Health & Fitness" },
+    { id: "7", name: "All" },
+    { id: "1", name: "Design" },
+    { id: "2", name: "Development" },
+    { id: "3", name: "Business" },
+    { id: "4", name: "Music" },
+    { id: "5", name: "IT & Software" },
+    { id: "6", name: "Health & Fitness" },
   ];
 
   const popularCourses = [

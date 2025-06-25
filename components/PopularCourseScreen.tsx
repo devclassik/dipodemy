@@ -46,7 +46,7 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
                   activeId === item.id && styles.activeChipText,
                 ]}
               >
-                {item.label}
+                {item.name}
               </ThemedText>
             </TouchableOpacity>
           ))}

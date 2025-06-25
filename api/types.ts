@@ -4,6 +4,7 @@ export interface ApiResponse<T = any> {
   data: T;
   status: number;
   message?: string;
+  pagination?: T;
 }
 
 export interface ApiError {
@@ -27,6 +28,10 @@ export interface User {
 export interface AuthResponse {
   token: string;
   user: User;
+}
+
+export interface HomeScreenResponse {
+  
 }
 
 // Add more interfaces as needed for your API endpoints 

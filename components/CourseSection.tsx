@@ -4,6 +4,23 @@ import CourseCard from "./CourseCard";
 import SectionHeader from "./SectionHeader";
 import { ThemedView } from "./ThemedView";
 
+export interface CoursesProps {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: string;
+  discount_price: null;
+  rating: string;
+  is_enrolled: boolean;
+  enrollments: number;
+  reviews_count: number;
+  level: string;
+  duration: string;
+  status: string;
+  slug: string;
+  lessons_count: number;
+}
 export interface Course {
   id: string;
   image: any;
@@ -16,7 +33,7 @@ export interface Course {
 
 interface CourseSectionProps {
   title: string;
-  courses?: Course[];
+  courses?: CoursesProps[];
   onSeeAllPress?: () => void;
 }
 
@@ -32,9 +49,9 @@ const CourseSection: React.FC<CourseSectionProps> = ({
         onSeeAll={() => onSeeAllPress && onSeeAllPress()}
       />
       <FlatList
-        data={courses}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CourseCard {...item} />}
+        data={courses || []}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (item ? <CourseCard {...item} /> : null)}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContent}

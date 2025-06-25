@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { CoursesProps } from "./CourseSection";
 import { ThemedView } from "./ThemedView";
 
 interface CourseCardProps {
@@ -12,13 +13,28 @@ interface CourseCardProps {
   reviews: string;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({
-  image,
-  category,
+const CourseCard: React.FC<CoursesProps> = ({
+  // image,
+  // category,
+  // title,
+  // price,
+  // rating,
+  // reviews,
+  id,
   title,
+  description,
+  image,
   price,
+  discount_price,
   rating,
-  reviews,
+  is_enrolled,
+  enrollments,
+  reviews_count,
+  level,
+  duration,
+  status,
+  slug,
+  lessons_count,
 }) => {
   const handlePress = () => {
     router.navigate({
@@ -26,11 +42,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
       params: {
         data: JSON.stringify({
           image,
-          category,
-          title,
-          price,
-          rating,
-          reviews,
+          // category,
+          // title,
+          // price,
+          // rating,
+          // reviews,
         }),
       },
     });
@@ -39,16 +55,16 @@ const CourseCard: React.FC<CourseCardProps> = ({
   return (
     <TouchableOpacity onPress={handlePress}>
       <ThemedView style={styles.card}>
-        <Image source={image} style={styles.image} resizeMode="cover" />
+        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
         <View style={styles.info}>
-          <Text style={styles.category}>{category}</Text>
+          <Text style={styles.category}>{level}</Text>
           <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text>
           <View style={styles.details}>
             <Text style={styles.price}>${price}</Text>
             <Text style={styles.rating}>
-              ⭐ {rating} ({reviews})
+              ⭐ {rating} ({reviews_count})
             </Text>
           </View>
         </View>
@@ -70,6 +86,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 90,
+    resizeMode: "contain"
   },
   info: {
     padding: 8,
@@ -84,7 +101,6 @@ const styles = StyleSheet.create({
     width: "auto",
   },
   title: {
-    fontSize: 14,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 4,

@@ -9,7 +9,9 @@ import { ThemedView } from "./ThemedView";
 
 export interface Category {
   id: string;
-  label: string;
+  name: string;
+  image?: any;
+  status?: string;
 }
 
 interface CategoryListProps {
@@ -38,7 +40,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
           style={styles.chip}
           onPress={() => onCategoryPress?.(category)}
         >
-          <ThemedText style={styles.chipText}>{category.label}</ThemedText>
+          <ThemedText style={styles.chipText}>{category.name}</ThemedText>
         </TouchableOpacity>
       ))}
     </ScrollView>

@@ -1,5 +1,5 @@
 // API Base URL
-export const API_BASE_URL = 'https://api.your-backend.com';
+export const API_BASE_URL = 'https://adcparty.com.ng/api/v1/';
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -18,6 +18,11 @@ export const API_ENDPOINTS = {
     UPDATE_PROFILE: '/users/profile',
     CHANGE_PASSWORD: '/users/change-password',
   },
+  HOME:{
+    HOME_SCREEN: '',
+    HOME_SCREEN_COURSES: '/home/courses',
+    HOME_SCREEN_COURSE_DETAILS: '/home/course-details',
+  }
 
   // Add more endpoint categories as needed
 };

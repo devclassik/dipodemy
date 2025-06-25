@@ -5,6 +5,8 @@ import { API_BASE_URL, API_ERROR_MESSAGES, API_HEADERS, API_TIMEOUT } from '../c
 // Get the API URL from environment variables or use the constant
 const API_URL = Constants.expoConfig?.extra?.apiUrl || API_BASE_URL;
 
+console.log(`API URL: ${API_URL}`); // Log the API URL for debugging
+
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_URL,
@@ -12,11 +14,13 @@ const api = axios.create({
   headers: API_HEADERS,
 });
 
+console.log(`Axios instance created with base URL: ${api.defaults.baseURL}`); // Log the base URL for debugging
+
 // Request interceptor for adding auth token
 api.interceptors.request.use(
   (config) => {
     // You can get the token from your storage here
-    const token = ''; // Add your token retrieval logic here
+    const token = '7|wXqmofY4TtvtowjRQYUhiMplqQi0lLWbqTNEnopr77881f37'; // Add your token retrieval logic here
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }

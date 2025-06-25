@@ -1,7 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import {
-  Dimensions,
   ImageBackground,
   StyleSheet,
   Text,
@@ -9,28 +8,20 @@ import {
 } from "react-native";
 import Swiper from "react-native-swiper";
 
-const { width } = Dimensions.get("window");
 
-const mockOffers = [
-  {
-    discountText: "25% OFF*",
-    validity: "Today's Special",
-    offerDetails:
-      "Get a Discount for Every Course\nOrder only Valid for Today.!",
-  },
-  {
-    discountText: "15% OFF*",
-    validity: "Weekend Deal",
-    offerDetails: "Special discount on all courses\nOnly this weekend!",
-  },
-  {
-    discountText: "30% OFF*",
-    validity: "Flash Sale",
-    offerDetails: "Limited time offer for new users\nHurry up!",
-  },
-];
+interface SpecialOfferBannerProps {
+  specialOffers?: SpecialOffers[];
+}
+export interface SpecialOffers {
+  percentage: string;
+  title: string;
+  description: string;
+  is_active: boolean;
+}
 
-const SpecialOfferBanner: React.FC = () => (
+const SpecialOfferBanner: React.FC<SpecialOfferBannerProps> = ({
+  specialOffers
+}) => (
   <View style={styles.bannerWrapper}>
     <Swiper
       autoplay
@@ -39,7 +30,7 @@ const SpecialOfferBanner: React.FC = () => (
       paginationStyle={styles.pagination}
       loop
     >
-      {mockOffers.map((offer, idx) => (
+      {specialOffers?.map((offer, idx) => (
         <ImageBackground
           key={idx}
           source={require("@/assets/images/special-offer-bg.png")}
@@ -54,11 +45,11 @@ const SpecialOfferBanner: React.FC = () => (
               style={{ paddingLeft: 20 }}
             />
             <View>
-              <Text style={styles.discount}>{offer.discountText}</Text>
-              <Text style={styles.validity}>{offer.validity}</Text>
+              <Text style={styles.discount}>{offer.percentage}</Text>
+              <Text style={styles.validity}>{offer.title}</Text>
             </View>
           </View>
-          <Text style={styles.details}>{offer.offerDetails}</Text>
+          <Text style={styles.details}>{offer.description}</Text>
         </ImageBackground>
       ))}
     </Swiper>

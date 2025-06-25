@@ -1,148 +1,47 @@
+import { useEffect, useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 
-import CategoryList, { Category } from "@/components/CategoryList";
+import { homeService } from "@/api/services/home.service";
+import CategoryList from "@/components/CategoryList";
 import CourseSection from "@/components/CourseSection";
 import Header from "@/components/Header";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
 import { router } from "expo-router";
-import { useState } from "react";
 
 export default function HomeScreen() {
-  const newCourses = [
-    {
-      id: "1",
-      image: require("../../assets/images/c1.png"),
-      category: "Website Development",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: "4.8",
-      reviews: "1,892",
-    },
-    {
-      id: "2",
-      image: require("../../assets/images/c2.png"),
-      category: "Graphics Design",
-      title: "Professional Course",
-      price: "98.00",
-      rating: "4.9",
-      reviews: "2,101",
-    },
-    {
-      id: "3",
-      image: require("../../assets/images/c3.png"),
-      category: "IT Support Specialist",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: "4.8",
-      reviews: "1,812",
-    },
-    {
-      id: "4",
-      image: require("../../assets/images/c4.png"),
-      category: "Marketing",
-      title: "Professional Course",
-      price: "96.00",
-      rating: "4.8",
-      reviews: "1,654",
-    },
-  ];
-  const degreeCourses = [
-    {
-      id: "1",
-      image: require("../../assets/images/c1.png"),
-      category: "Website Development",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: "4.8",
-      reviews: "1,892",
-    },
-    {
-      id: "2",
-      image: require("../../assets/images/c2.png"),
-      category: "Graphics Design",
-      title: "Professional Course",
-      price: "98.00",
-      rating: "4.9",
-      reviews: "2,101",
-    },
-    {
-      id: "3",
-      image: require("../../assets/images/c3.png"),
-      category: "IT Support Specialist",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: "4.8",
-      reviews: "1,812",
-    },
-    {
-      id: "4",
-      image: require("../../assets/images/c4.png"),
-      category: "Marketing",
-      title: "Professional Course",
-      price: "96.00",
-      rating: "4.8",
-      reviews: "1,654",
-    },
-  ];
-  const popularCourses = [
-    {
-      id: "1",
-      image: require("../../assets/images/c1.png"),
-      category: "Website Development",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: "4.8",
-      reviews: "1,892",
-    },
-    {
-      id: "2",
-      image: require("../../assets/images/c2.png"),
-      category: "Graphics Design",
-      title: "Professional Course",
-      price: "98.00",
-      rating: "4.9",
-      reviews: "2,101",
-    },
-    {
-      id: "3",
-      image: require("../../assets/images/c3.png"),
-      category: "IT Support Specialist",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: "4.8",
-      reviews: "1,812",
-    },
-    {
-      id: "4",
-      image: require("../../assets/images/c4.png"),
-      category: "Marketing",
-      title: "Professional Course",
-      price: "96.00",
-      rating: "4.8",
-      reviews: "1,654",
-    },
-  ];
-
-  const categories: Category[] = [
-    { id: "1", label: "Design" },
-    { id: "2", label: "Development" },
-    { id: "3", label: "Business" },
-    { id: "4", label: "Music" },
-    { id: "5", label: "IT & Software" },
-    { id: "6", label: "Health & Fitness" },
-    // ...add more as needed
-  ];
+  const [userdata, setUserdata] = useState<any>(null);
+  
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    // Your reload logic here
+  useEffect(() => {
+    // Log the actual server response on mount for debugging
+    (async () => {
+      const res = await homeService.homeScreen();
+      console.log("Home Screen Data (awaited):", res);
+      setUserdata(res);
+    })();
+  }, []);
 
-    setTimeout(() => {
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      // Your reload logic here
+      const res = await homeService.homeScreen();
+      console.log("Home Screen Data (onRefresh):", res);
+      setUserdata(res);
+    } catch (error) {
+      // Optionally log the error
+      console.error("Refresh failed:", error);
+    } finally {
       setRefreshing(false);
-    }, 2000);
+    }
   };
+
+  if (!userdata) {
+    return <LoadingIndicator />;
+  }
 
   return (
     <ScrollView
@@ -156,29 +55,30 @@ export default function HomeScreen() {
         <Header
           onSearchPress={() => router.navigate("/search")}
           onNotificationsPress={() => router.navigate("/notification")}
+          userName={userdata?.data?.name}
         />
-        <SpecialOfferBanner />
+        <SpecialOfferBanner specialOffers={userdata?.data?.special_offers} />
       </View>
-      <CategoryList
-        categories={categories}
+       <CategoryList
+        categories={userdata?.data?.categories}
         onCategoryPress={(cat) => console.log(cat)}
         onSeeAllPress={() => router.navigate("/search")}
       />
       <CourseSection
         title="New Courses"
-        courses={newCourses}
+        courses={userdata?.data?.newest_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
       />
       <CourseSection
         title="Earn Your Degree"
-        courses={degreeCourses}
+        courses={userdata?.data?.popular_courses}
         onSeeAllPress={() => router.navigate("/(pages)/courseDetails")}
       />
-      <CourseSection
+     <CourseSection
         title="Most Popular Courses"
-        courses={popularCourses}
+        courses={userdata?.data?.degree_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
-      />
+      /> 
     </ScrollView>
   );
 }
