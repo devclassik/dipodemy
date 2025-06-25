@@ -40,7 +40,7 @@ export default function HomeScreen() {
   };
 
   if (!userdata) {
-    return <LoadingIndicator />;
+    return <LoadingIndicator onReload={onRefresh} />;
   }
 
   return (
