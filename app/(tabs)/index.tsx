@@ -16,10 +16,8 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    // Log the actual server response on mount for debugging
     (async () => {
       const res = await homeService.homeScreen();
-      console.log("Home Screen Data (awaited):", res);
       setUserdata(res);
     })();
   }, []);
@@ -27,12 +25,9 @@ export default function HomeScreen() {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      // Your reload logic here
       const res = await homeService.homeScreen();
-      console.log("Home Screen Data (onRefresh):", res);
       setUserdata(res);
     } catch (error) {
-      // Optionally log the error
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Oops",
