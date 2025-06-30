@@ -3,13 +3,18 @@ import api from '../config';
 import { ApiResponse, AuthResponse, User } from '../types';
 
 export const authService = {
-  // Login
   login: async (email: string, password: string): Promise<ApiResponse<AuthResponse>> => {
-    const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, {
-      email,
-      password,
-    });
-    return response.data;
+    try {
+      const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, {
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      // console.error('Login error:', error);
+      throw error; 
+
+    }
   },
 
   // Register

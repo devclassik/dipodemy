@@ -1,3 +1,4 @@
+import { TIMEOUT_MS } from "@/constants/api";
 import { Colors } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Button, View, useColorScheme } from "react-native";
@@ -8,8 +9,6 @@ interface LoadingIndicatorProps {
   color?: string;
   onReload?: () => void;
 }
-
-const TIMEOUT_MS = 120000; // 2 minutes
 
 const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ size = "large", color, onReload }) => {
   const colorScheme = useColorScheme();

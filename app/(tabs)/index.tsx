@@ -8,10 +8,10 @@ import Header from "@/components/Header";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
 import { router } from "expo-router";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 export default function HomeScreen() {
   const [userdata, setUserdata] = useState<any>(null);
-  
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -33,6 +33,11 @@ export default function HomeScreen() {
       setUserdata(res);
     } catch (error) {
       // Optionally log the error
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Oops",
+        textBody: error as any,
+      });
       console.error("Refresh failed:", error);
     } finally {
       setRefreshing(false);
@@ -59,9 +64,16 @@ export default function HomeScreen() {
         />
         <SpecialOfferBanner specialOffers={userdata?.data?.special_offers} />
       </View>
-       <CategoryList
+      <CategoryList
         categories={userdata?.data?.categories}
-        onCategoryPress={(cat) => console.log(cat)}
+        onCategoryPress={(cat) =>
+          router.navigate({
+            pathname: "/search",
+            params: {
+              data: JSON.stringify(cat.name),
+            },
+          })
+        }
         onSeeAllPress={() => router.navigate("/search")}
       />
       <CourseSection
@@ -74,11 +86,11 @@ export default function HomeScreen() {
         courses={userdata?.data?.popular_courses}
         onSeeAllPress={() => router.navigate("/(pages)/courseDetails")}
       />
-     <CourseSection
+      <CourseSection
         title="Most Popular Courses"
         courses={userdata?.data?.degree_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
-      /> 
+      />
     </ScrollView>
   );
 }

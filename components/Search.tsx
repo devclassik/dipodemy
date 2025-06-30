@@ -1,10 +1,12 @@
+import { Colors } from "@/constants/Colors";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
   ViewStyle,
 } from "react-native";
@@ -20,6 +22,10 @@ interface SearchProps {
   firstWord?: TabOptionsScreen["options"];
   secondWord?: TabOptionsScreen["options"];
   style?: ViewStyle;
+  showSearch?: boolean;
+  searchWord?: string;
+  onSearchChange?: (query: string) => void;
+  searchFound?: number;
 }
 
 const Search: React.FC<SearchProps> = ({
@@ -30,8 +36,13 @@ const Search: React.FC<SearchProps> = ({
   firstWord = "Courses",
   secondWord = "Mentors",
   style = { paddingTop: 40 },
+  showSearch = false,
+  searchWord,
+  onSearchChange,
+  searchFound,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
 
   return (
     <ThemedView style={[styles.container, style]}>
@@ -43,8 +54,8 @@ const Search: React.FC<SearchProps> = ({
           style={{ marginRight: 8 }}
         />
         <TextInput
-          value={searchQuery}
-          onChangeText={setSearchQuery}
+          value={searchWord}
+          onChangeText={(text) => onSearchChange?.(text)}
           placeholder="Graphic Design ..."
           style={{ flex: 1 }}
         />
@@ -52,7 +63,7 @@ const Search: React.FC<SearchProps> = ({
           <MaterialIcons
             name="tune"
             size={20}
-            color="#fff"
+            color={colors.white}
             style={styles.filterIcon}
           />
         </TouchableOpacity>
@@ -95,17 +106,19 @@ const Search: React.FC<SearchProps> = ({
         </View>
       )}
 
-      <View style={styles.resultRow}>
-        <ThemedText>
-          Result for{" "}
-          <ThemedText
-            style={{ color: "#40E96A", fontWeight: "600" }}
-          >{`"${searchQuery}"`}</ThemedText>
-        </ThemedText>
-        <ThemedText style={{ color: "#40E96A", fontWeight: "600" }}>
-          2480 FOUND
-        </ThemedText>
-      </View>
+      {showSearch && (
+        <View style={styles.resultRow}>
+          <ThemedText>
+            Result for{" "}
+            <ThemedText
+              style={{ color: "#40E96A", fontWeight: "600" }}
+            >{`"${searchWord}"`}</ThemedText>
+          </ThemedText>
+          <ThemedText style={{ color: "#40E96A", fontWeight: "600" }}>
+            {searchFound} FOUND
+          </ThemedText>
+        </View>
+      )}
     </ThemedView>
   );
 };

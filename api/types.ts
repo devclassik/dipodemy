@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from "axios";
 
 export interface ApiResponse<T = any> {
   data: T;
@@ -26,12 +26,35 @@ export interface User {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: User;
+  // token: string;
+  // user: User;
 }
 
-export interface HomeScreenResponse {
-  
+export interface HomeScreenResponse {}
+
+interface Category {
+  id: number;
+  name: string;
+  image: string;
+  status: string; // Or a literal type like "active" | "inactive" if those are the only possible values
 }
 
-// Add more interfaces as needed for your API endpoints 
+interface Meta {
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+}
+
+interface CategoryData {
+  categories: Category[];
+  meta: Meta;
+}
+
+export interface CategoryScreenResponse {
+  // success: boolean;
+  // message: string;
+  // data: CategoryData
+}
+
+// Add more interfaces as needed for your API endpoints

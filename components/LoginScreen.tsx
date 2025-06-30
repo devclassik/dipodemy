@@ -1,6 +1,9 @@
+import { authService } from "@/api/services/auth.service";
+import { isValidEmail } from "@/utills/validator";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -9,15 +12,82 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isLoginButtonDisabled = !isValidEmail(email);
+
+  useEffect(() => {
+    (async () => {
+      const tokCred = await AsyncStorage.getItem("auth_token");
+      if (tokCred) {
+        router.replace("/(tabs)");
+        return;
+      }
+
+      const credsJson = await AsyncStorage.getItem("user_creds");
+      if (credsJson) {
+        const creds = JSON.parse(credsJson);
+        setEmail(creds.email);
+        setPassword(creds.password);
+        setRememberMe(true);
+      }
+    })();
+  }, []);
+
+  const onLoginPress = async () => {
+    if (!isValidEmail(email)) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Invalid Email address",
+        textBody: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await authService.login(email, password);
+      console.log("Login Response:", res);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "🎉",
+        textBody: res.message,
+      });
+      
+      await AsyncStorage.setItem("auth_token", res.data.token);
+      if (rememberMe) {
+        await AsyncStorage.setItem(
+          "user_creds",
+          JSON.stringify({ email, password })
+        );
+      } else {
+        await AsyncStorage.removeItem("user_creds");
+      }
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.error("Login Error:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Login Failed",
+        textBody: "An error occurred during login.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <Image
         source={require("../assets/images/icon.png")}
         style={styles.logo}
@@ -32,11 +102,17 @@ const LoginScreen = () => {
           size={20}
           color="#888"
           style={styles.inputIcon}
+          value
         />
         <TextInput
           placeholder="Email"
           style={styles.input}
           placeholderTextColor="#444"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+          editable={!isLoading}
         />
       </View>
 
@@ -52,10 +128,14 @@ const LoginScreen = () => {
           secureTextEntry={!passwordVisible}
           style={styles.input}
           placeholderTextColor="#444"
+          autoCapitalize="none"
+          value={password}
+          onChangeText={setPassword}
+          editable={!isLoading}
         />
         <TouchableOpacity
           style={styles.eyeIcon}
-          onPress={() => setPasswordVisible(!passwordVisible)}
+          onPress={() => setPasswordVisible((visible) => !visible)}
         >
           <Ionicons
             name={passwordVisible ? "eye-off" : "eye"}
@@ -68,7 +148,7 @@ const LoginScreen = () => {
       <View style={styles.rememberRow}>
         <TouchableOpacity
           style={styles.rememberCheck}
-          onPress={() => setRememberMe(!rememberMe)}
+          onPress={() => setRememberMe((remember) => !remember)}
         >
           <MaterialCommunityIcons
             name={
@@ -101,10 +181,11 @@ const LoginScreen = () => {
         }}
       >
         <RoundedActionButton
-          text="Sign In"
+          text={isLoading ? "Logging in..." : "Sign In"}
           icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
           bgColor="#27d86c"
-          onPress={() => router.navigate("/(tabs)")}
+          onPress={onLoginPress}
+          disabled={isLoginButtonDisabled}
         />
       </View>
 
@@ -134,7 +215,7 @@ const LoginScreen = () => {
           SIGN UP
         </ThemedText>
       </ThemedText>
-    </View>
+    </ThemedView>
   );
 };
 

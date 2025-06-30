@@ -1,82 +1,165 @@
+import { searchService } from "@/api/services/search.servie";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import Search from "@/components/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { router } from "expo-router";
-import { Image, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { categoryReducer, initialState } from "@/reducers/searchReducer";
+import { debounce } from "@/utills/debouncer";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useReducer, useRef, useState } from "react";
+import {
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+
+interface Category {
+  id: number;
+  name: string;
+  image: string;
+  status: boolean;
+}
 
 export default function SearchScreen() {
-  const categories = [
-    {
-      id: 1,
-      title: "3D Design ",
-      image: require("@/assets/images/3d.png"),
-    },
-    {
-      id: 2,
-      title: "Graphics Design",
-      image: require("@/assets/images/gr.png"),
-    },
-    {
-      id: 3,
-      title: "Web Development",
-      image: require("@/assets/images/wb.png"),
-    },
-    {
-      id: 4,
-      title: "SEO & Marketing",
-      image: require("@/assets/images/seo.png"),
-    },
-    {
-      id: 5,
-      title: "Finance & Accounting",
-      image: require("@/assets/images/fin.png"),
-    },
-    {
-      id: 6,
-      title: "HR Management",
-      image: require("@/assets/images/hr.png"),
-    },
-    {
-      id: 7,
-      title: "Personal Development",
-      image: require("@/assets/images/per.png"),
-    },
-    {
-      id: 8,
-      title: "Office Productivity",
-      image: require("@/assets/images/office.png"),
-    },
-    {
-      id: 8,
-      title: "Artificial Intelligence",
-      image: require("@/assets/images/ai.png"),
-    },
-    {
-      id: 8,
-      title: "Health & Fitness",
-      image: require("@/assets/images/hlth.png"),
-    },
-  ];
+  const { data } = useLocalSearchParams();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [state, dispatch] = useReducer(categoryReducer, initialState);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  // Global debounced handler
+  const debouncedSearchHandler = useRef(
+    debounce((text: string) => {
+      setDebouncedSearch(text);
+      dispatch({ type: "RESET" });
+    }, 500)
+  );
+
+  // Handle initial param value
+  useEffect(() => {
+    if (data === undefined) return;
+
+    try {
+      const parsed = JSON.parse(data as string);
+      const value = typeof parsed === "string" ? parsed : String(parsed);
+      setSearchQuery(value);
+      debouncedSearchHandler.current(value);
+    } catch {
+      setSearchQuery(String(data));
+      debouncedSearchHandler.current(String(data));
+    }
+  }, [data]);
+
+  // Fetch paginated data on debounced search or page change
+  useEffect(() => {
+    if (!debouncedSearch) return;
+
+    const fetchData = async () => {
+      try {
+        dispatch({ type: "FETCH_START" });
+        const res = await searchService.categoryScreenPaginated({
+          search: debouncedSearch,
+          page: state.page,
+          limit: 10,
+        });
+        dispatch({
+          type: "FETCH_SUCCESS",
+          payload: res.data.categories,
+          hasMore: res.data.categories.length >= 10,
+        });
+        setHasLoadedOnce(true); // ✅ Mark data as loaded after success
+      } catch (error) {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: "Failed to load categories",
+        });
+        console.error("Fetch error:", error);
+        setHasLoadedOnce(true); // Avoid infinite loading if it fails
+      }
+    };
+
+    fetchData();
+  }, [debouncedSearch, state.page]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    dispatch({ type: "RESET" });
+
+    try {
+      const res = await searchService.categoryScreenPaginated({
+        search: searchQuery,
+        page: 1,
+        limit: 10,
+      });
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: res.data.categories,
+        hasMore: res.data.categories.length >= 10,
+      });
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Oops",
+        textBody: String(error),
+      });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const loadNextPage = () => {
+    if (!state.loading && state.hasMore) {
+      dispatch({ type: "NEXT_PAGE" });
+    }
+  };
+
+  // ✅ Show loading screen until first successful fetch
+  if (!hasLoadedOnce) {
+    return <LoadingIndicator onReload={onRefresh} />;
+  }
 
   return (
     <ThemedView style={styles.container}>
-      <Search showFilter={false} />
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {categories.map((category, index) => (
+      <Search
+        showFilter={false}
+        showSearch={!!searchQuery}
+        searchWord={searchQuery}
+        searchFound={state.data.length}
+        onSearchChange={(text) => {
+          setSearchQuery(text);
+          debouncedSearchHandler.current(text);
+        }}
+        onFilterPress={() => {
+          debouncedSearchHandler.current(searchQuery);
+        }}
+      />
+
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        onMomentumScrollEnd={loadNextPage}
+      >
+        {state.data.map((category: Category, index: number) => (
           <TouchableOpacity
             key={index}
             style={styles.categoryItem}
-            onPress={() => {
-              console.log(`Selected category: ${category.title}`);
+            onPress={() =>
               router.navigate({
                 pathname: "/learn",
-                params: { category: category.title },
-              });
-            }}
+                params: { category: category.name },
+              })
+            }
           >
-            <Image source={category.image} style={styles.avatar} />
+            <Image source={{ uri: category.image }} style={styles.avatar} />
             <ThemedText style={styles.categoryTitle}>
-              {category.title}
+              {category.name}
             </ThemedText>
           </TouchableOpacity>
         ))}
@@ -106,11 +189,6 @@ const styles = StyleSheet.create({
   categoryTitle: {
     fontSize: 16,
     fontWeight: "bold",
-  },
-  categorySubtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 4,
   },
   avatar: {
     width: 40,

@@ -14,6 +14,7 @@ interface RoundedActionButtonProps {
   onPress: () => void;
   style?: ViewStyle;
   disabled?: boolean;
+  disabledStyle?: ViewStyle;
 }
 
 const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
@@ -23,12 +24,13 @@ const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
   onPress,
   style,
   disabled,
+  disabledStyle = { opacity: 0.5 },
 }) => {
   if (!text) {
     // Icon-only button
     return (
       <TouchableOpacity
-        style={[styles.iconOnlyButton, { backgroundColor: bgColor }, style]}
+        style={[styles.iconOnlyButton, { backgroundColor: bgColor }, style, disabled ? disabledStyle : {}]}
         activeOpacity={0.8}
         onPress={onPress}
         disabled={disabled}
@@ -40,7 +42,7 @@ const RoundedActionButton: React.FC<RoundedActionButtonProps> = ({
   // Text + icon button
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: bgColor }, style]}
+      style={[styles.button, { backgroundColor: bgColor }, style, disabled ? disabledStyle : {}]}
       activeOpacity={0.8}
       onPress={onPress}
       disabled={disabled}

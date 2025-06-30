@@ -14,12 +14,7 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CoursesProps> = ({
-  // image,
-  // category,
-  // title,
-  // price,
-  // rating,
-  // reviews,
+
   id,
   title,
   description,

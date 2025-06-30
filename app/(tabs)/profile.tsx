@@ -1,4 +1,5 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React from "react";
 import {
@@ -11,6 +12,11 @@ import {
 } from "react-native";
 
 const ProfileScreen = () => {
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("auth_token");
+    router.replace("../splash");
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -57,11 +63,7 @@ const ProfileScreen = () => {
               router.navigate("/(auth)/resetPassword?isReset=true")
             }
           />
-          <OptionItem
-            icon="logout"
-            text="Logout"
-            onPress={() => router.replace("../splash")}
-          />
+          <OptionItem icon="logout" text="Logout" onPress={logout} />
         </View>
       </View>
     </ScrollView>
