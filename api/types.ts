@@ -55,9 +55,12 @@ export interface CategoryScreenResponse {
   success?: boolean;
   message?: string;
   data: {
-    categories: any[];
+    categories: Category[];
     meta: Meta;
   };
 }
 
+
+export interface ProfileScreenResponse {
+}
 // Add more interfaces as needed for your API endpoints

@@ -26,6 +26,9 @@ export const API_ENDPOINTS = {
   SEARCH: {
     CATEGORY_LIST: "/categories",
   },
+  PROFILE: {
+    GET_PROFILE: "profile",
+  },
 
   // Add more endpoint categories as needed
 };

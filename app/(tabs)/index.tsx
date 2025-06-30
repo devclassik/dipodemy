@@ -12,7 +12,6 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 export default function HomeScreen() {
   const [userdata, setUserdata] = useState<any>(null);
-
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {

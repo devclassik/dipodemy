@@ -1,24 +1,62 @@
+import { profileService } from "@/api/services/profile.service";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const ProfileScreen = () => {
+  const [userdata, setUserdata] = useState<any>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const logout = async () => {
     await AsyncStorage.removeItem("auth_token");
     router.replace("../splash");
   };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const res = await profileService.profileScreen();
+      setUserdata(res);
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Oops",
+        textBody: error as any,
+      });
+      console.error("Refresh failed:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const res = await profileService.profileScreen();
+      setUserdata(res);
+    })();
+  }, []);
+
+  if (!userdata) {
+    return <LoadingIndicator onReload={onRefresh} />;
+  }
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} />}
+    >
       <View style={styles.header}>
         <Ionicons
           name="arrow-back"
@@ -34,14 +72,17 @@ const ProfileScreen = () => {
       <View style={styles.card}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={require("@/assets/images/avatar.png")}
+            source={{
+              uri: userdata?.data?.user?.image_url,
+            }}
             style={styles.profileImage}
           />
         </View>
 
-        <Text style={styles.name}>John Chidi</Text>
-        <Text style={styles.email}>hernandex.redial@gmail.ac.in</Text>
-
+        <Text style={styles.name}>
+          {userdata?.data?.user?.first_name} {userdata?.data?.user?.last_name}
+        </Text>
+        <Text style={styles.email}>{userdata?.data?.user?.email}</Text>
         <View style={styles.optionList}>
           <OptionItem
             icon="credit-card"
