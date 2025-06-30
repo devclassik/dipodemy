@@ -57,13 +57,12 @@ const LoginScreen = () => {
     setIsLoading(true);
     try {
       const res = await authService.login(email, password);
-      console.log("Login Response:", res);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: "🎉",
         textBody: res.message,
       });
-      
+
       await AsyncStorage.setItem("auth_token", res.data.token);
       if (rememberMe) {
         await AsyncStorage.setItem(

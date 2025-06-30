@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from "axios";
+// import { AxiosRequestConfig } from "axios";
 
 export interface ApiResponse<T = any> {
   data: T;
@@ -13,7 +13,7 @@ export interface ApiError {
   errors?: Record<string, string[]>;
 }
 
-export interface ApiRequestConfig extends AxiosRequestConfig {
+export interface ApiRequestConfig {
   _retry?: boolean;
 }
 
@@ -52,9 +52,12 @@ interface CategoryData {
 }
 
 export interface CategoryScreenResponse {
-  // success: boolean;
-  // message: string;
-  // data: CategoryData
+  success?: boolean;
+  message?: string;
+  data: {
+    categories: any[];
+    meta: Meta;
+  };
 }
 
 // Add more interfaces as needed for your API endpoints

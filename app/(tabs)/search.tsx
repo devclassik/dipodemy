@@ -1,12 +1,11 @@
-import { searchService } from "@/api/services/search.servie";
+import { searchService } from "@/api/services/search.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import Search from "@/components/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { categoryReducer, initialState } from "@/reducers/searchReducer";
-import { debounce } from "@/utills/debouncer";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   Image,
   RefreshControl,
@@ -26,100 +25,75 @@ interface Category {
 export default function SearchScreen() {
   const { data } = useLocalSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [refreshing, setRefreshing] = useState(false);
   const [state, dispatch] = useReducer(categoryReducer, initialState);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
-  // Global debounced handler
-  const debouncedSearchHandler = useRef(
-    debounce((text: string) => {
-      setDebouncedSearch(text);
-      dispatch({ type: "RESET" });
-    }, 500)
-  );
-
-  // Handle initial param value
   useEffect(() => {
-    if (data === undefined) return;
+    if (!data) return;
 
     try {
       const parsed = JSON.parse(data as string);
       const value = typeof parsed === "string" ? parsed : String(parsed);
       setSearchQuery(value);
-      debouncedSearchHandler.current(value);
     } catch {
-      setSearchQuery(String(data));
-      debouncedSearchHandler.current(String(data));
+      const fallback = String(data);
+      setSearchQuery(fallback);
     }
   }, [data]);
 
-  // Fetch paginated data on debounced search or page change
-  useEffect(() => {
-    if (!debouncedSearch) return;
+  const fetchData = async (searchText: string, page: number) => {
+    try {
+      dispatch({ type: "FETCH_START" });
+      const res = await searchService.categoryScreenPaginated({
+        search: searchText,
+        page,
+        limit: 10,
+      });
+       
+      const newItems = res.data.categories;
 
-    const fetchData = async () => {
-      try {
-        dispatch({ type: "FETCH_START" });
-        const res = await searchService.categoryScreenPaginated({
-          search: debouncedSearch,
-          page: state.page,
-          limit: 10,
-        });
-        dispatch({
-          type: "FETCH_SUCCESS",
-          payload: res.data.categories,
-          hasMore: res.data.categories.length >= 10,
-        });
-        setHasLoadedOnce(true); // ✅ Mark data as loaded after success
-      } catch (error) {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: "Failed to load categories",
-        });
-        console.error("Fetch error:", error);
-        setHasLoadedOnce(true); // Avoid infinite loading if it fails
-      }
-    };
+      // Optional: prevent fetch if results are identical
+      const existingIds = new Set(state.data.map((item) => item.id));
+      const filtered = newItems.filter((item) => !existingIds.has(item.id));
 
-    fetchData();
-  }, [debouncedSearch, state.page]);
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: filtered,
+        hasMore: newItems.length >= 10,
+      });
+      setHasLoadedOnce(true);
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: (error as any) || "Failed to load categories",
+      });
+      setHasLoadedOnce(true);
+    }
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
     dispatch({ type: "RESET" });
-
-    try {
-      const res = await searchService.categoryScreenPaginated({
-        search: searchQuery,
-        page: 1,
-        limit: 10,
-      });
-      dispatch({
-        type: "FETCH_SUCCESS",
-        payload: res.data.categories,
-        hasMore: res.data.categories.length >= 10,
-      });
-    } catch (error) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Oops",
-        textBody: String(error),
-      });
-    } finally {
-      setRefreshing(false);
-    }
+    await fetchData(searchQuery, 1);
+    setRefreshing(false);
   };
 
   const loadNextPage = () => {
     if (!state.loading && state.hasMore) {
       dispatch({ type: "NEXT_PAGE" });
+      fetchData(searchQuery, state.page + 1);
     }
   };
 
-  // ✅ Show loading screen until first successful fetch
-  if (!hasLoadedOnce) {
+  const onSearchPress = () => {
+    dispatch({ type: "RESET" });
+    setHasLoadedOnce(false);
+    fetchData(searchQuery, 1);
+  };
+
+  if (state.loading && !hasLoadedOnce) {
     return <LoadingIndicator onReload={onRefresh} />;
   }
 
@@ -130,13 +104,8 @@ export default function SearchScreen() {
         showSearch={!!searchQuery}
         searchWord={searchQuery}
         searchFound={state.data.length}
-        onSearchChange={(text) => {
-          setSearchQuery(text);
-          debouncedSearchHandler.current(text);
-        }}
-        onFilterPress={() => {
-          debouncedSearchHandler.current(searchQuery);
-        }}
+        onSearchChange={(text) => setSearchQuery(text)}
+        onSearchPress={onSearchPress}
       />
 
       <ScrollView
@@ -153,7 +122,7 @@ export default function SearchScreen() {
             onPress={() =>
               router.navigate({
                 pathname: "/learn",
-                params: { category: category.name },
+                params: { data: category.id },
               })
             }
           >

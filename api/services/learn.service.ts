@@ -2,8 +2,8 @@ import { API_ENDPOINTS } from "../../constants/api";
 import api from "../config";
 import { ApiResponse, CategoryScreenResponse } from "../types";
 
-export const searchService = {
-  categoryScreen: async (
+export const learnService = {
+  learnScreen: async (
     data?: string | number
   ): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
@@ -23,12 +23,18 @@ export const searchService = {
     }
   },
 
-  categoryScreenPaginated: async (
-    params: { search?: string; page?: number; limit?: number }
-  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+  learnScreenPaginated: async (params: {
+    id?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
+      console.log("Fetching paginated learn screen data with params:");
+
       let url = API_ENDPOINTS.SEARCH.CATEGORY_LIST;
       const query: string[] = [];
+      if (params.id)  url+= `/${params.id}`;
       if (params.search) query.push(`search=${params.search}`);
       if (params.page) query.push(`page=${params.page}`);
       if (params.limit) query.push(`limit=${params.limit}`);

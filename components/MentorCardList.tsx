@@ -20,10 +20,9 @@ const MentorCardList: React.FC<MentorCardListProps> = ({
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
-  
   return (
     <TouchableOpacity onPress={onPress}>
-      <ThemedView style={[styles.card, {borderBottomColor: colors.success}]}>
+      <ThemedView style={[styles.card, { borderBottomColor: colors.success }]}>
         <Image source={avatar} style={styles.avatar} />
         <View>
           <ThemedText style={styles.name}>{name}</ThemedText>

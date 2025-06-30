@@ -18,7 +18,7 @@ interface SearchProps {
   selectedTab?: TabOptionsScreen["options"];
   onTabChange?: (tab: TabOptionsScreen["options"]) => void;
   showFilter?: boolean;
-  onFilterPress?: () => void;
+  onSearchPress?: () => void;
   firstWord?: TabOptionsScreen["options"];
   secondWord?: TabOptionsScreen["options"];
   style?: ViewStyle;
@@ -32,7 +32,7 @@ const Search: React.FC<SearchProps> = ({
   selectedTab,
   onTabChange,
   showFilter = true,
-  onFilterPress,
+  onSearchPress,
   firstWord = "Courses",
   secondWord = "Mentors",
   style = { paddingTop: 40 },
@@ -59,7 +59,7 @@ const Search: React.FC<SearchProps> = ({
           placeholder="Graphic Design ..."
           style={{ flex: 1 }}
         />
-        <TouchableOpacity onPress={onFilterPress}>
+        <TouchableOpacity onPress={() => {}}>
           <MaterialIcons
             name="tune"
             size={20}
