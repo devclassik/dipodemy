@@ -8,12 +8,16 @@ interface MyCourseScreenProps {
   onCardPress?: (item: MyCourseCardProps) => void;
   isCompleted?: boolean;
   isCompletedAction?: () => void;
+  onEndReached?: () => void;
+  isFetchingMore?: boolean;
 }
 const MyCourseScreen: React.FC<MyCourseScreenProps> = ({
   courses = [],
   onCardPress,
   isCompleted,
-  isCompletedAction
+  isCompletedAction,
+  onEndReached,
+  isFetchingMore
 }) => {
   
   return (

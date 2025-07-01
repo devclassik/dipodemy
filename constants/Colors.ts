@@ -41,7 +41,8 @@ export const Colors = {
     green: '#40E96A',
     activeToggle: '#1A9E4F',
     textDim: "#333",
-    white: "#fff"
+    white: "#fff",
+    themeGreen: '#27d86c',
 
   },
   dark: {
@@ -76,7 +77,8 @@ export const Colors = {
     green: '#40E96A',
     activeToggle: '#1A9E4F',
     textDim: "#333",
-    white: "#fff"
+    white: "#fff",
+    themeGreen: '#27d86c',
 
   },
 };

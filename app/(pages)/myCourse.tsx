@@ -1,70 +1,72 @@
+import { courseService } from "@/api/services/courses.service";
 import CustomModal from "@/components/CustomModal";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import MyCourseScreen from "@/components/MyCourseScreen";
 import { Colors } from "@/constants/Colors";
+import { categoryReducer, initialState } from "@/reducers/searchReducer";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
-import React, { useCallback, useMemo, useState } from 'react';
-import { TouchableOpacity, useColorScheme } from "react-native";
-
+import React, { useCallback, useReducer, useState } from "react";
+import { TouchableOpacity, useColorScheme, View } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const BoughtCourse = () => {
   const [showModal, setShowModal] = useState(false);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const [state, dispatch] = useReducer(categoryReducer, initialState);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  const courses: any = useMemo(
-    () => [
-      {
-        id: "1",
-        image: require("../../assets/images/c1.png"),
-        title: "Mobile UI Essentials",
-        category: "Intermediate",
-        lessons: 28,
-        rating: 4.8,
-        duration: "6h 30min",
-      },
-      {
-        id: "2",
-        image: require("../../assets/images/c2.png"),
-        title: "UI Animation Basics",
-        category: "Beginner",
-        lessons: 24,
-        rating: 4.9,
-        duration: "3h 42min",
-      },
-      {
-        id: "3",
-        image: require("../../assets/images/c3.png"),
-        title: "Web UI Best Practices",
-        category: "Advanced",
-        lessons: 46,
-        rating: 4.8,
-        duration: "8h 43min",
-      },
-      {
-        id: "4",
-        image: require("../../assets/images/c4.png"),
-        title: "Prototype with Figma",
-        category: "Intermediate",
-        lessons: 39,
-        rating: 4.8,
-        duration: "2h 34min",
-      },
-    ],
-    []
-  );
+  const fetchData = async () => {
+    try {
+      if (state.page === 1) dispatch({ type: "FETCH_START" });
+      else setIsFetchingMore(true);
+
+      const res = await courseService.learnScreenPaginated({
+        search: "",
+        page: state.page,
+        limit: 10,
+      });
+
+      console.log("Fetched data:", res.data);
+
+      const newItems = res.data.courses;
+
+      if (newItems.length === 0 && state.page === 1) {
+        dispatch({ type: "FETCH_SUCCESS", payload: [], hasMore: false });
+        setShowModal(true);
+        return;
+      }
+
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: newItems,
+        hasMore: newItems.length >= 10,
+      });
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: (error as any)?.message ?? "Failed to load categories",
+      });
+      dispatch({ type: "FETCH_SUCCESS", payload: [], hasMore: false });
+    } finally {
+      setIsFetchingMore(false);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
-      if (courses.length === 0) {
-        setShowModal(true);
-      }
-      return () => {
-        setShowModal(false);
-      };
-    }, [courses])
+      fetchData();
+    }, [state.page])
   );
+
+  const handleLoadMore = () => {
+    if (!state.loading && !isFetchingMore && state.hasMore) {
+      dispatch({ type: "NEXT_PAGE" });
+    }
+  };
 
   const handleModalClose = () => setShowModal(false);
   const handleFilterPress = () => {
@@ -88,7 +90,17 @@ const BoughtCourse = () => {
         }}
       />
 
-      {courses.length !== 0 ? (
+      {state.loading && state.page === 1 ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <LoadingIndicator
+            size="large"
+            color={colors.accent}
+            onReload={fetchData}
+          />
+        </View>
+      ) : state.data.length !== 0 ? (
         <MyCourseScreen
           courses={courses}
           onCardPress={(data) =>
@@ -98,6 +110,8 @@ const BoughtCourse = () => {
             })
           }
           isCompleted={false}
+          onEndReached={handleLoadMore}
+          isFetchingMore={isFetchingMore}
         />
       ) : (
         <CustomModal

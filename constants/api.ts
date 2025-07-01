@@ -30,6 +30,9 @@ export const API_ENDPOINTS = {
   PROFILE: {
     GET_PROFILE: "profile",
   },
+  COURSE:{
+    ENROLLED_COURSES: "enrollments",
+  }
 
   // Add more endpoint categories as needed
 };

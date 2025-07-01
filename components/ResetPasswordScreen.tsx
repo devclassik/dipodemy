@@ -1,4 +1,5 @@
 import { authService } from "@/api/services/auth.service";
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -9,6 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
@@ -27,6 +29,8 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
   const [current_password, setCurrent_password] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+    const colorScheme = useColorScheme();
+    const colors = Colors[colorScheme ?? "light"];
 
   const handleResetPassword = async () => {
     if (!password || !password_confirmation) {
@@ -181,9 +185,9 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
         text={isLoading ? "Please wait..." : "Continue"}
         icon={
           isLoading ? (
-            <ActivityIndicator size="small" color="#27d86c" /> 
+            <ActivityIndicator size="small" color={colors.themeGreen} /> 
           ) : (
-            <Ionicons name="arrow-forward" size={24} color="#27d86c" />
+            <Ionicons name="arrow-forward" size={24} color={colors.themeGreen}/>
           )
         }
         bgColor="#27d86c"

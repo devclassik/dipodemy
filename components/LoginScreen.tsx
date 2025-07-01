@@ -1,4 +1,5 @@
 import { authService } from "@/api/services/auth.service";
+import { Colors } from "@/constants/Colors";
 import { isValidEmail } from "@/utills/validator";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,6 +12,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
@@ -24,6 +26,8 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
 
   const isLoginButtonDisabled = !isValidEmail(email);
 
@@ -157,7 +161,7 @@ const LoginScreen = () => {
                 : "checkbox-blank-circle-outline"
             }
             size={20}
-            color="#27d86c"
+            color={colors.themeGreen}
           />
           <ThemedText style={styles.rememberText}>
             {" "}
@@ -184,12 +188,16 @@ const LoginScreen = () => {
           text={isLoading ? "Logging in..." : "Sign In"}
           icon={
             isLoading ? (
-              <ActivityIndicator size="small" color="#27d86c" />
+              <ActivityIndicator size="small" color={colors.themeGreen} />
             ) : (
-              <Ionicons name="arrow-forward" size={24} color="#27d86c" />
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={colors.themeGreen}
+              />
             )
           }
-          bgColor="#27d86c"
+          bgColor={colors.themeGreen}
           onPress={onLoginPress}
           disabled={isLoginButtonDisabled}
         />
@@ -286,21 +294,6 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     color: "#888",
-  },
-  signInButton: {
-    flexDirection: "row",
-    backgroundColor: "#27d86c",
-    paddingVertical: 14,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 6,
-    marginBottom: 20,
-  },
-  signInText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
   },
   orText: {
     textAlign: "center",
