@@ -25,12 +25,17 @@ export const API_ENDPOINTS = {
     HOME_SCREEN_COURSE_DETAILS: "/home/course-details",
   },
   SEARCH: {
-    CATEGORY_LIST: "/categories",
+    CATEGORY_LIST: "categories",
   },
   PROFILE: {
     GET_PROFILE: "profile",
   },
-  COURSE:{
+  LEARN: {
+    LEARN_SCREEN: "courses",
+    LEARN_SCREEN_COURSE_DETAILS: "categories/course-details",
+    LEARN_SCREEN_COURSE_LIST: "categories/courses",
+  },
+  COURSE: {
     ENROLLED_COURSES: "enrollments",
   }
 

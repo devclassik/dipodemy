@@ -2,13 +2,14 @@ import { courseService } from "@/api/services/courses.service";
 import CustomModal from "@/components/CustomModal";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import MyCourseScreen from "@/components/MyCourseScreen";
+import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { categoryReducer, initialState } from "@/reducers/searchReducer";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
 import React, { useCallback, useReducer, useState } from "react";
-import { TouchableOpacity, useColorScheme, View } from "react-native";
+import { TouchableOpacity, useColorScheme } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const BoughtCourse = () => {
@@ -29,7 +30,7 @@ const BoughtCourse = () => {
         limit: 10,
       });
 
-      console.log("Fetched data:", res.data);
+      // console.log("Fetched data:", res.data);
 
       const newItems = res.data.courses;
 
@@ -91,7 +92,7 @@ const BoughtCourse = () => {
       />
 
       {state.loading && state.page === 1 ? (
-        <View
+        <ThemedView
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <LoadingIndicator
@@ -99,7 +100,7 @@ const BoughtCourse = () => {
             color={colors.accent}
             onReload={fetchData}
           />
-        </View>
+        </ThemedView>
       ) : state.data.length !== 0 ? (
         <MyCourseScreen
           courses={courses}

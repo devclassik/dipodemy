@@ -27,7 +27,7 @@ export const courseService = {
     params: { search?: string; page?: number; limit?: number }
   ): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
-      console.log("Fetching paginated course screen data with params:",);
+      // console.log("Fetching paginated course screen data with params:",);
       
       let url = API_ENDPOINTS.COURSE.ENROLLED_COURSES;
       const query: string[] = [];

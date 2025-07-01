@@ -1,32 +1,67 @@
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
 import LearnCard from "./LearnCard";
+import { ThemedView } from "./ThemedView";
 
 export interface LearnCardProps {
-  id: string;
-  category: string;
+  id: number;
   title: string;
-  price: string;
-  rating: number;
-  reviews: number;
+  description: string;
   image: any;
+  price: string;
+  discount_price: null | string;
+  rating: string;
+  is_enrolled: boolean;
+  enrollments: number;
+  reviews_count: number;
+  level: string;
+  duration: string;
+  status: string;
+  slug: string;
+  lessons_count: number;
+  category: {
+    id: number;
+    name: string;
+    image: any;
+    status: string;
+  };
 }
 
 export interface LearnCardListProps {
   data: LearnCardProps[];
   onCardPress?: (item: LearnCardProps) => void;
+  refreshing?: boolean;
+  onRefresh?: () => void;
+  onEndReached?: () => void;
 }
 
-const LearnCardList: React.FC<LearnCardListProps> = ({ data, onCardPress }) => {
+const LearnCardList: React.FC<LearnCardListProps> = ({
+  data,
+  onCardPress,
+  refreshing,
+  onRefresh,
+  onEndReached,
+}) => {
   return (
     <FlatList
       data={data}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <LearnCard item={item} onPress={() => onCardPress?.(item)} />
       )}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.list}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={
+        refreshing ? null : (
+          <ThemedView style={{ paddingVertical: 20 }}>
+            <ActivityIndicator size="small"  />
+          </ThemedView>
+        )
+      }
     />
   );
 };

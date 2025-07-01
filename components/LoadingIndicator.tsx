@@ -25,7 +25,7 @@ const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ size = "large", col
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ThemedText>Oops, network issue.</ThemedText>
-        <Button title="Reload" onPress={onReload} color={colors.green}/>
+        <Button title="Reload" onPress={onReload} color={colors.accent}/>
       </View>
     );
   }
@@ -33,7 +33,7 @@ const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ size = "large", col
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <ThemedText>Loading...</ThemedText>
-      <ActivityIndicator size={size} color={color || colors.border} />
+      <ActivityIndicator size={size} color={color || colors.accent} />
     </View>
   );
 };

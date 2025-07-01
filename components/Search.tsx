@@ -18,13 +18,13 @@ interface SearchProps {
   selectedTab?: TabOptionsScreen["options"];
   onTabChange?: (tab: TabOptionsScreen["options"]) => void;
   showFilter?: boolean;
-  onSearchPress?: () => void;
   firstWord?: TabOptionsScreen["options"];
   secondWord?: TabOptionsScreen["options"];
   style?: ViewStyle;
   showSearch?: boolean;
   searchWord?: string;
   onSearchChange?: (query: string) => void;
+  onSearchPress?: () => void;
   searchFound?: number;
 }
 
@@ -56,10 +56,12 @@ const Search: React.FC<SearchProps> = ({
         <TextInput
           value={searchWord}
           onChangeText={(text) => onSearchChange?.(text)}
+          onSubmitEditing={() => onSearchPress?.()}
+          returnKeyType="search"
           placeholder="Graphic Design ..."
           style={{ flex: 1 }}
         />
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => onSearchPress?.()}>
           <MaterialIcons
             name="tune"
             size={20}

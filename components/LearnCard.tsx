@@ -4,13 +4,27 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 
 interface LearnCardProps {
-  id: string;
-  category: string;
+  id: number;
   title: string;
-  price: string;
-  rating: number;
-  reviews: number;
+  description: string;
   image: any;
+  price: string;
+  discount_price: null | string;
+  rating: string;
+  is_enrolled: boolean;
+  enrollments: number;
+  reviews_count: number;
+  level: string;
+  duration: string;
+  status: string;
+  slug: string;
+  lessons_count: number;
+  category: {
+    id: number;
+    name: string;
+    image: any;
+    status: string;
+  };
   onPress?: () => void;
   onBookmarkPress?: () => void;
 }
@@ -22,24 +36,24 @@ const LearnCard: React.FC<{
 }> = ({ item, onPress, onBookmarkPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Image source={item.image} style={styles.image} />
+      <Image source={{ uri: item.image }} style={styles.image} />
       <View style={{ flex: 1 }}>
-        <ThemedText style={styles.category}>{item.category}</ThemedText>
+        <ThemedText style={styles.category}>{item.category.name}</ThemedText>
         <ThemedText style={styles.title}>{item.title}</ThemedText>
         <ThemedText style={styles.price}>{item.price}</ThemedText>
         <View style={styles.row}>
           <Ionicons name="star" size={14} color="#FFC107" />
           <ThemedText style={styles.rating}>
-            {item.rating} · {item.reviews}
+            {item.rating} · {item.reviews_count} reviews
           </ThemedText>
         </View>
       </View>
-      <Ionicons
+      {/* <Ionicons
         name="bookmark-outline"
         size={20}
         color="#999"
         onPress={onBookmarkPress}
-      />
+      /> */}
     </TouchableOpacity>
   );
 };

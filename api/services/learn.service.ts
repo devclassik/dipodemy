@@ -32,7 +32,7 @@ export const learnService = {
     try {
       console.log("Fetching paginated learn screen data with params:");
 
-      let url = API_ENDPOINTS.SEARCH.CATEGORY_LIST;
+      let url = API_ENDPOINTS.LEARN.LEARN_SCREEN;
       const query: string[] = [];
       if (params.id)  url+= `/${params.id}`;
       if (params.search) query.push(`search=${params.search}`);
