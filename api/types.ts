@@ -64,3 +64,8 @@ export interface CategoryScreenResponse {
 export interface ProfileScreenResponse {
 }
 // Add more interfaces as needed for your API endpoints
+
+export interface ResetPasswordResponse {
+  // token: string;
+  // user: User;
+}

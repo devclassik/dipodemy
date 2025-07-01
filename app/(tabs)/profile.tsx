@@ -2,6 +2,7 @@ import { profileService } from "@/api/services/profile.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -18,6 +19,7 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 const ProfileScreen = () => {
   const [userdata, setUserdata] = useState<any>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [media, setMedia] = useState<string | null>(null);
 
   const logout = async () => {
     await AsyncStorage.removeItem("auth_token");
@@ -48,6 +50,34 @@ const ProfileScreen = () => {
     })();
   }, []);
 
+  const pickMedia = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Permission Required",
+        textBody: "Please allow access to your media library.",
+      });
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setMedia(result.assets[0].uri);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Image Selected",
+        textBody: "updating your media.",
+      });
+    }
+  };
+
   if (!userdata) {
     return <LoadingIndicator onReload={onRefresh} />;
   }
@@ -55,7 +85,9 @@ const ProfileScreen = () => {
   return (
     <ScrollView
       contentContainerStyle={styles.container}
-      refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View style={styles.header}>
         <Ionicons
@@ -71,13 +103,25 @@ const ProfileScreen = () => {
 
       <View style={styles.card}>
         <View style={styles.profileImageContainer}>
-          <Image
-            source={{
-              uri: userdata?.data?.user?.image_url,
-            }}
-            style={styles.profileImage}
-          />
+          {media ? (
+            <Image source={{ uri: media }} style={styles.profileImage} />
+          ) : (
+            <Image
+              source={{
+                uri: userdata?.data?.user?.image_url,
+              }}
+              style={styles.profileImage}
+            />
+          )}
         </View>
+        <TouchableOpacity onPress={pickMedia}>
+          <Ionicons
+            name="camera-outline"
+            size={24}
+            color="#000"
+            style={{ position: "absolute", top: -85, left: 25 }}
+          />
+        </TouchableOpacity>
 
         <Text style={styles.name}>
           {userdata?.data?.user?.first_name} {userdata?.data?.user?.last_name}
@@ -89,7 +133,11 @@ const ProfileScreen = () => {
             text="Payment Option"
             onPress={() => router.navigate("/(pages)/paymentMethod")}
           />
-          <OptionItem icon="notifications" text="Notifications" />
+          <OptionItem
+            icon="notifications"
+            text="Notifications"
+            onPress={() => router.navigate("/notification")}
+          />
           <OptionItem
             icon="language"
             text="Language"

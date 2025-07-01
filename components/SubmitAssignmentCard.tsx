@@ -9,6 +9,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
@@ -37,8 +38,17 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
   const colors = Colors[colorScheme ?? "light"];
 
   const pickMedia = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Permission Required",
+        textBody: "Please allow access to your media library.",
+      });
+      return;
+    }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ["images", "videos"],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -52,12 +62,12 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
   return (
     <ThemedView style={styles.container}>
       <TouchableOpacity
-        // onPress={() =>
-        //   router.navigate({
-        //     pathname: "/courseDetails",
-        //     params: { data: JSON.stringify(id) },
-        //   })
-        // }
+      // onPress={() =>
+      //   router.navigate({
+      //     pathname: "/courseDetails",
+      //     params: { data: JSON.stringify(id) },
+      //   })
+      // }
       >
         <ThemedView style={styles.card}>
           <Image source={image} style={styles.image} />

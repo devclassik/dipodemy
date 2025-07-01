@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '../../constants/api';
 import api from '../config';
-import { ApiResponse, AuthResponse, User } from '../types';
+import { ApiResponse, AuthResponse, ResetPasswordResponse, User } from '../types';
 
 export const authService = {
   login: async (email: string, password: string): Promise<ApiResponse<AuthResponse>> => {
@@ -12,8 +12,7 @@ export const authService = {
       return response.data;
     } catch (error) {
       // console.error('Login error:', error);
-      throw error; 
-
+      throw error;
     }
   },
 
@@ -28,6 +27,23 @@ export const authService = {
     const response = await api.get<ApiResponse<User>>(API_ENDPOINTS.AUTH.ME);
     return response.data;
   },
+
+
+  resetPassword: async (password: string, password_confirmation: string, current_password?: string): Promise<ApiResponse<ResetPasswordResponse>> => {
+    try {
+      const response = await api.post<ApiResponse<ResetPasswordResponse>>(API_ENDPOINTS.AUTH.RESET_PASSWORD, {
+        password,
+        password_confirmation,
+        current_password,
+      });
+      return response.data;
+    } catch (error) {
+      // console.error('Reset password error:', error);
+      throw error;
+    }
+
+  },
+
 
   // Logout
   logout: async (): Promise<ApiResponse<void>> => {

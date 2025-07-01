@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   StyleSheet,
   Text,
@@ -181,7 +182,13 @@ const LoginScreen = () => {
       >
         <RoundedActionButton
           text={isLoading ? "Logging in..." : "Sign In"}
-          icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
+          icon={
+            isLoading ? (
+              <ActivityIndicator size="small" color="#27d86c" />
+            ) : (
+              <Ionicons name="arrow-forward" size={24} color="#27d86c" />
+            )
+          }
           bgColor="#27d86c"
           onPress={onLoginPress}
           disabled={isLoginButtonDisabled}
