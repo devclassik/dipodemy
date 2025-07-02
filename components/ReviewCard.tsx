@@ -1,3 +1,4 @@
+import { Reviews } from "@/app/(pages)/reviews";
 import { Colors } from "@/constants/Colors";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -14,7 +15,8 @@ import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 interface ReviewProps {
-  reviews: ReviewCardProps[];
+  reviews: Reviews[];
+  canWrite?: boolean;
 }
 export interface ReviewCardProps {
   id: number;
@@ -26,7 +28,7 @@ export interface ReviewCardProps {
   time: string;
 }
 
-const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
+const ReviewCard: React.FC<ReviewProps> = ({ reviews, canWrite }) => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
@@ -93,16 +95,21 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
             },
           ]}
         >
-          <Image source={{ uri: item.avatar }} style={styles.reviewAvatar} />
+          <Image
+            source={{ uri: item?.user?.image }}
+            style={styles.reviewAvatar}
+          />
           <ThemedView style={styles.reviewContent}>
             <ThemedView style={styles.reviewHeader}>
-              <ThemedText style={styles.reviewName}>{item.name}</ThemedText>
+              <ThemedText style={styles.reviewName}>
+                {item?.user?.name}
+              </ThemedText>
               <ThemedView style={styles.ratingBox}>
                 <Ionicons name="star" size={12} color={colors.warning} />
                 <ThemedText
                   style={[styles.ratingText, { color: colors.success }]}
                 >
-                  {item.rating}
+                  {item?.rating}
                 </ThemedText>
               </ThemedView>
             </ThemedView>
@@ -111,33 +118,33 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews }) => {
               <ThemedView style={styles.reviewLikes}>
                 <FontAwesome name="heart" size={14} color={colors.danger} />
                 <ThemedText style={styles.reviewMetaText}>
-                  {item.likes}
+                  {item?.rating}
                 </ThemedText>
               </ThemedView>
               <ThemedText
                 style={[styles.reviewMetaText, { color: colors.primaryDark }]}
               >
-                {item.time}
+                {item?.time_ago}
               </ThemedText>
             </ThemedView>
           </ThemedView>
         </ThemedView>
       ))}
 
-      <RoundedActionButton
-        text="Write a Review"
-        icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-        bgColor="#27d86c"
-        onPress={
-          () => router.navigate('/(pages)/writeReview')
-        }
-        style={{
-          width: "50%",
-          alignSelf: "center",
-          alignItems: "center",
-          marginVertical: 20,
-        }}
-      />
+      {canWrite && (
+        <RoundedActionButton
+          text="Write a Review"
+          icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
+          bgColor="#27d86c"
+          onPress={() => router.navigate("/(pages)/writeReview")}
+          style={{
+            width: "50%",
+            alignSelf: "center",
+            alignItems: "center",
+            marginVertical: 20,
+          }}
+        />
+      )}
     </ScrollView>
   );
 };

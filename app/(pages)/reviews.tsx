@@ -1,91 +1,73 @@
+import { reviewService } from "@/api/services/review.servce";
+import CustomModal from "@/components/CustomModal";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import ReviewCard from "@/components/ReviewCard";
 import { Colors } from "@/constants/Colors";
-import { useFocusEffect } from "@react-navigation/native";
-import { Stack } from "expo-router";
-import React, { useCallback, useMemo, useState } from 'react';
-import { useColorScheme } from "react-native";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import React, { FC, useCallback, useEffect, useState } from "react";
+import { RefreshControl, ScrollView, useColorScheme } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
-const Reviews = () => {
+export interface Reviews {
+  id: number;
+  user: {
+    name: string;
+    image: string;
+  };
+  rating: number;
+  comment: string;
+  created_at: string;
+  time_ago: string;
+}
+
+interface ReviewProps {
+  canWrite?: boolean;
+}
+
+const Reviews: FC<ReviewProps> = ({ canWrite = false }) => {
+  const { data } = useLocalSearchParams();
+  const courseId = data ? JSON.parse(data as string) : null;
   const [showModal, setShowModal] = useState(false);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
-  const review = useMemo(
-    () => [
-      {
-        id: 1,
-        name: "Will",
-        avatar: "https://i.pravatar.cc/50?img=1",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it.",
-        rating: 4.2,
-        likes: 578,
-        time: "2 Weeks Ago",
-      },
-      {
-        id: 2,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 3,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 4,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 5,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 6,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-    ],
-    []
-  );
+  const [reviews, setReviews] = useState<Reviews[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (review.length === 0) {
+  const fetchReviews = useCallback(async () => {
+    if (!courseId) return;
+    setRefreshing(true);
+    try {
+      const res = await reviewService.reviewScreen(courseId);
+      setReviews(res?.data?.reviews ?? []);
+      if (res?.data?.reviews?.length === 0) {
         setShowModal(true);
-      }
-      return () => {
+      } else {
         setShowModal(false);
-      };
-    }, [review])
-  );
+      }
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Oops",
+        textBody: (error as any)?.message ?? "Failed to fetch reviews",
+      });
+      console.error("Fetch error:", error);
+    } finally {
+      setRefreshing(false);
+      setLoading(false);
+    }
+  }, [courseId]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
+
+  const handleModalClose = () => setShowModal(false);
+
+  if (loading) {
+    return <LoadingIndicator onReload={fetchReviews} />;
+  }
 
   return (
     <>
@@ -95,7 +77,29 @@ const Reviews = () => {
           headerShown: true,
         }}
       />
-      <ReviewCard reviews={review} />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchReviews} />
+        }
+      >
+        {showModal ? (
+          <CustomModal
+            visible={showModal}
+            onClose={handleModalClose}
+            lottieSource={require("@/assets/lottie/alert.json")}
+            imageSource={require("@/assets/images/noCourse.png")}
+            caption="No Review Yet"
+            loading={false}
+            buttonText="ok"
+            onButtonPress={() => {
+              handleModalClose();
+              router.back();
+            }}
+          />
+        ) : (
+          <ReviewCard reviews={reviews} />
+        )}
+      </ScrollView>
     </>
   );
 };

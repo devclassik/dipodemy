@@ -91,7 +91,7 @@ export default function Learn() {
         onCardPress={(data) =>
           router.navigate({
             pathname: "/courseDetails",
-            params: { data: JSON.stringify(data) },
+            params: { data: data.id },
           })
         }
         refreshing={refreshing}

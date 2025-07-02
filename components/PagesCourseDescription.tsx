@@ -1,8 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons"; // Example for icons
 import { router } from "expo-router";
-import * as SystemUI from "expo-system-ui";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -16,6 +15,17 @@ import LessonSections from "./LessonSections";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 
+export interface Review {
+  id: number;
+  user: {
+    name: string;
+    image: any;
+  };
+  rating: string;
+  comment: string;
+  created_at: string;
+  time_ago: string;
+}
 interface CourseCardProps {
   category: string;
   title: string;
@@ -27,6 +37,8 @@ interface CourseCardProps {
   isPaid?: boolean;
   onPress?: () => void;
   curriculum?: curriculum[];
+  review?: Review[];
+  courseId?: number;
 }
 export interface curriculum {
   section: string;
@@ -37,7 +49,7 @@ export interface curriculum {
   }[];
 }
 
-const PagesCourseDescription: React.FC<CourseCardProps> = ({
+const   PagesCourseDescription: React.FC<CourseCardProps> = ({
   category,
   title,
   rating,
@@ -46,8 +58,10 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
   price,
   description,
   isPaid = true,
-  onPress = () => {}, // Default no-op function
-  curriculum = [], // Default to empty array if no curriculum provided
+  onPress = () => {},
+  curriculum = [],
+  review = [],
+  courseId = 0,
 }) => {
   const [activeTab, setActiveTab] = React.useState<"about" | "curriculum">(
     "about"
@@ -55,9 +69,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
-  useEffect(() => {
-    SystemUI.setBackgroundColorAsync("#888");
-  }, []);
+  console.log("category:", category);
 
   return (
     <>
@@ -69,7 +81,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
             <ThemedText style={styles.ratingText}>{rating}</ThemedText>
             {isPaid && (
               <TouchableOpacity style={styles.playButton} onPress={onPress}>
-                <Ionicons name="play" size={24} color="white" />
+                <Ionicons name="play" size={24} color={colors.white} />
               </TouchableOpacity>
             )}
           </View>
@@ -81,14 +93,12 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
           <View style={styles.leftDetails}>
             <View style={styles.detailItem}>
               <Ionicons name="videocam-outline" size={16} color="gray" />
-              <ThemedText style={styles.detailText}>
-                {classes} Class{" "}
-              </ThemedText>
+              <ThemedText style={styles.detailText}>{classes} Class</ThemedText>
             </View>
             <ThemedText style={{ color: "#000" }}>|</ThemedText>
             <View style={styles.detailItem}>
               <Ionicons name="time-outline" size={16} color="gray" />
-              <ThemedText style={styles.detailText}>{hours} Hours</ThemedText>
+              <ThemedText style={styles.detailText}>{hours}</ThemedText>
             </View>
           </View>
           <ThemedText style={styles.priceText}>₦{price}</ThemedText>
@@ -142,7 +152,13 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
 
       {activeTab === "about" && (
         <CourseInfoScreen
-          onSeeAll={() => router.navigate("/(pages)/reviews")}
+          onSeeAll={() =>
+            router.navigate({
+              pathname: "/(pages)/reviews",
+              params: { data: JSON.stringify(courseId) },
+            })
+          }
+          review={review}
         />
       )}
 

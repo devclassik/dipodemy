@@ -30,8 +30,6 @@ const BoughtCourse = () => {
         limit: 10,
       });
 
-      // console.log("Fetched data:", res.data);
-
       const newItems = res.data.courses;
 
       if (newItems.length === 0 && state.page === 1) {

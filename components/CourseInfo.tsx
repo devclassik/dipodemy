@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   useColorScheme,
 } from "react-native";
+import { Review } from "./PagesCourseDescription";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
@@ -16,14 +17,7 @@ interface CourseInfoProps {
   instructorAvatar?: any;
   topic?: string;
   toGain?: { icon: any; text: string }[];
-  review?: {
-    name: string;
-    avatar: string;
-    comment: string;
-    rating: string;
-    likes: string;
-    time: string;
-  }[];
+  review?:Review[];
   onSeeAll?: () => void;
 }
 
@@ -33,33 +27,14 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
   topic = "Graphic Design",
   toGain = [
     { icon: "book-outline", text: "25 Lessons" },
-    { icon: "laptop-outline", text: "Access Mobile, Desktop & TV" },
-    { icon: "trending-up-outline", text: "Beginner Level" },
+    { icon: "laptop-outline", text: "Access on Mobile, Desktop & TV" },
+    { icon: "trending-up-outline", text: "All Level" },
     { icon: "headset-outline", text: "Audio Book" },
     { icon: "infinite-outline", text: "Lifetime Access" },
     { icon: "create-outline", text: "Assignment" },
     { icon: "document-text-outline", text: "Certificate of Completion" },
   ],
-  review = [
-    {
-      name: "Will",
-      avatar: "https://i.pravatar.cc/50?img=1",
-      comment:
-        "This course has been very useful. Mentor was well spoken totally loved it.",
-      rating: 4.2,
-      likes: 578,
-      time: "2 Weeks Ago",
-    },
-    {
-      name: "Martha E. Thompson",
-      avatar: "https://i.pravatar.cc/50?img=3",
-      comment:
-        "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-      rating: 4.6,
-      likes: 598,
-      time: "3 Weeks Ago",
-    },
-  ],
+  review,
   onSeeAll,
 }) => {
   const colorScheme = useColorScheme();
@@ -98,17 +73,22 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
         </TouchableOpacity>
       </ThemedView>
 
-      {review.map((review, index) => (
+      {review?.map((review, index) => (
         <ThemedView
           key={index}
           style={[styles.reviewCard, { borderBottomColor: colors.success }]}
         >
-          <Image source={{ uri: review.avatar }} style={styles.reviewAvatar} />
+          <Image
+            source={{ uri: review?.user?.image }}
+            style={styles.reviewAvatar}
+          />
           <ThemedView style={styles.reviewContent}>
             <ThemedView style={styles.reviewHeader}>
-              <ThemedText style={styles.reviewName}>{review.name}</ThemedText>
+              <ThemedText style={styles.reviewName}>
+                {review?.user?.name}
+              </ThemedText>
               <ThemedView style={styles.ratingBox}>
-                <Ionicons name="star" size={12} color={colors.warning}/>
+                <Ionicons name="star" size={12} color={colors.warning} />
                 <ThemedText style={styles.ratingText}>
                   {review.rating}
                 </ThemedText>
@@ -121,14 +101,13 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
               <ThemedView style={styles.reviewLikes}>
                 <FontAwesome name="heart" size={14} color={colors.danger} />
                 <ThemedText style={styles.reviewMetaText}>
-                  {" "}
-                  {review.likes}
+                  {review.rating} Likes
                 </ThemedText>
               </ThemedView>
               <ThemedText
                 style={[styles.reviewMetaText, { color: colors.primaryDark }]}
               >
-                {review.time}
+                 {review.time_ago}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -212,7 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6F8E9",
     paddingHorizontal: 8,
     borderRadius: 12,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   ratingText: {
     color: "#23C865",

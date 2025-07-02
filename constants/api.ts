@@ -37,6 +37,10 @@ export const API_ENDPOINTS = {
   },
   COURSE: {
     ENROLLED_COURSES: "enrollments",
+  },
+  REVIEW: {
+    REVIEW_SCREEN: "reviews",
+    COURSE_REVIEWS: "courses/reviews",
   }
 
   // Add more endpoint categories as needed

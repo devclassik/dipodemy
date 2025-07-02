@@ -40,7 +40,7 @@ const LearnCard: React.FC<{
       <View style={{ flex: 1 }}>
         <ThemedText style={styles.category}>{item.category.name}</ThemedText>
         <ThemedText style={styles.title}>{item.title}</ThemedText>
-        <ThemedText style={styles.price}>{item.price}</ThemedText>
+        <ThemedText style={styles.price}>₦{item.price}</ThemedText>
         <View style={styles.row}>
           <Ionicons name="star" size={14} color="#FFC107" />
           <ThemedText style={styles.rating}>

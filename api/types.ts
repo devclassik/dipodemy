@@ -69,3 +69,6 @@ export interface ResetPasswordResponse {
   // token: string;
   // user: User;
 }
+
+export interface ReviewResponse {
+}

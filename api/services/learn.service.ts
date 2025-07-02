@@ -34,7 +34,7 @@ export const learnService = {
 
       let url = API_ENDPOINTS.LEARN.LEARN_SCREEN;
       const query: string[] = [];
-      if (params.id)  url+= `/${params.id}`;
+      if (params.id) url += `/${params.id}`;
       if (params.search) query.push(`search=${params.search}`);
       if (params.page) query.push(`page=${params.page}`);
       if (params.limit) query.push(`limit=${params.limit}`);
@@ -45,4 +45,23 @@ export const learnService = {
       throw error;
     }
   },
+
+  courseDetailScreen: async (
+    data?: string | number
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+      let url = API_ENDPOINTS.LEARN.LEARN_SCREEN;
+
+      if (data) {
+        url += `/${data}`;
+      }
+
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching course details screen data:", error);
+      throw error;
+    }
+  },
 };
+

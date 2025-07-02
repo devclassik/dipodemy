@@ -1,14 +1,19 @@
 import { Colors } from "@/constants/Colors";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import { ThemedText } from "./ThemedText";
 
 interface AboutProps {
   description: string;
 }
 const About: React.FC<AboutProps> = ({ description }) => {
-    const colorScheme = useColorScheme();
-    const colors = Colors[colorScheme ?? "light"];
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
 
   const [expanded, setExpanded] = useState(false);
   const maxWords = 25;
@@ -26,7 +31,9 @@ const About: React.FC<AboutProps> = ({ description }) => {
       </ThemedText>
       {description.split(" ").length > maxWords && (
         <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-          <ThemedText style={[styles.readMoreText, {color: colors.primaryDark}]}>
+          <ThemedText
+            style={[styles.readMoreText, { color: colors.primaryDark }]}
+          >
             {expanded ? "Read Less" : "Read More ..."}
           </ThemedText>
         </TouchableOpacity>
