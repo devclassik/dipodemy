@@ -27,7 +27,7 @@ const About: React.FC<AboutProps> = ({ description }) => {
   return (
     <View>
       <ThemedText style={styles.descriptionText}>
-        {expanded ? description : getTrimmedText()}
+        {expanded ? description : getTrimmedText() }
       </ThemedText>
       {description.split(" ").length > maxWords && (
         <TouchableOpacity onPress={() => setExpanded(!expanded)}>

@@ -63,5 +63,23 @@ export const learnService = {
       throw error;
     }
   },
+
+  enrollCourse: async (
+    data?: string | number
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+      let url = API_ENDPOINTS.LEARN.ENROLLED_COURSES;
+
+      const paymentData = {
+        "course_id": data,
+      }
+
+      const response = await api.post<ApiResponse<CategoryScreenResponse>>(url, paymentData);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching course details screen data:", error);
+      throw error;
+    }
+  },
 };
 

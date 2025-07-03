@@ -7,8 +7,7 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
+  useColorScheme
 } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
@@ -61,7 +60,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews, canWrite }) => {
         showsHorizontalScrollIndicator={false}
         style={styles.filterScroll}
       >
-        {filters.map((filter) => (
+        {/* {filters.map((filter) => (
           <TouchableOpacity
             key={filter}
             onPress={() => setSelectedFilter(filter)}
@@ -81,7 +80,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ reviews, canWrite }) => {
               {filter}
             </ThemedText>
           </TouchableOpacity>
-        ))}
+        ))} */}
       </ScrollView>
 
       {reviews.map((item, index) => (

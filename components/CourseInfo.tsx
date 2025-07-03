@@ -23,7 +23,7 @@ interface CourseInfoProps {
 
 const CourseInfoScreen: React.FC<CourseInfoProps> = ({
   instructorAvatar,
-  instructor = "Robert Jr",
+  instructor = "ADC",
   topic = "Graphic Design",
   toGain = [
     { icon: "book-outline", text: "25 Lessons" },
@@ -45,7 +45,7 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
       <ThemedText style={styles.sectionTitle}>Instructor</ThemedText>
       <ThemedView style={styles.instructorContainer}>
         <Image
-          source={instructorAvatar || require("@/assets/images/avatar.png")}
+          source={instructorAvatar || require("@/assets/images/icon.png")}
           style={styles.avatar}
         />
         <ThemedView>

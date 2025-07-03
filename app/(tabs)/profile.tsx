@@ -61,20 +61,30 @@ const ProfileScreen = () => {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setMedia(result.assets[0].uri);
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Image Selected",
-        textBody: "updating your media.",
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
       });
+
+      if (!result.canceled) {
+        setMedia(result.assets[0].uri);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Image Selected",
+          textBody: "updating your media.",
+        });
+      }
+    } catch (error) {
+      console.error("Error requesting media library permissions:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Unable to request media library permissions.",
+      });
+      return;
     }
   };
 
@@ -128,11 +138,11 @@ const ProfileScreen = () => {
         </Text>
         <Text style={styles.email}>{userdata?.data?.user?.email}</Text>
         <View style={styles.optionList}>
-          <OptionItem
+          {/* <OptionItem
             icon="credit-card"
             text="Payment Option"
             onPress={() => router.navigate("/(pages)/paymentMethod")}
-          />
+          /> */}
           <OptionItem
             icon="notifications"
             text="Notifications"

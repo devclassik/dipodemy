@@ -39,6 +39,7 @@ interface CourseCardProps {
   curriculum?: curriculum[];
   review?: Review[];
   courseId?: number;
+  onEnroll?: () => void;
 }
 export interface curriculum {
   section: string;
@@ -49,7 +50,7 @@ export interface curriculum {
   }[];
 }
 
-const   PagesCourseDescription: React.FC<CourseCardProps> = ({
+const PagesCourseDescription: React.FC<CourseCardProps> = ({
   category,
   title,
   rating,
@@ -62,6 +63,7 @@ const   PagesCourseDescription: React.FC<CourseCardProps> = ({
   curriculum = [],
   review = [],
   courseId = 0,
+  onEnroll,
 }) => {
   const [activeTab, setActiveTab] = React.useState<"about" | "curriculum">(
     "about"
@@ -87,7 +89,7 @@ const   PagesCourseDescription: React.FC<CourseCardProps> = ({
           </View>
         </View>
 
-        <ThemedText style={styles.titleText}>{title}</ThemedText>
+        <ThemedText style={styles.titleText}>{description}</ThemedText>
 
         <View style={styles.detailsContainer}>
           <View style={styles.leftDetails}>
@@ -144,7 +146,7 @@ const   PagesCourseDescription: React.FC<CourseCardProps> = ({
         </View>
 
         {activeTab === "about" ? (
-          <About description={description} />
+          <About description={title} />
         ) : (
           <LessonSections curriculum={curriculum} onPress={() => onPress} />
         )}
@@ -155,18 +157,21 @@ const   PagesCourseDescription: React.FC<CourseCardProps> = ({
           onSeeAll={() =>
             router.navigate({
               pathname: "/(pages)/reviews",
-              params: { data: JSON.stringify(courseId) },
+              params: { data: courseId.toString() },
             })
           }
+          topic={category}
           review={review}
         />
       )}
 
       <RoundedActionButton
         text={`Enroll Course   ₦${price}`}
-        icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
+        icon={
+          <Ionicons name="arrow-forward" size={24} color={colors.themeGreen} />
+        }
         bgColor={colors.green}
-        onPress={() => {}}
+        onPress={onEnroll ?? (() => {})}
         style={{
           marginVertical: 20,
           width: 250,

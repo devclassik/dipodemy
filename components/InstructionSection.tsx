@@ -46,7 +46,27 @@ const InstructionSection = () => {
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
-  
+
+  const enrollCourse = async () => {
+    Toast.show({
+      type: ALERT_TYPE.INFO,
+      title: "info",
+      textBody: "Please wait, enrolling in the course...",
+    });
+    console.log("Enrolling in course with ID:", courseId());
+    
+    try {
+      const res = await learnService.enrollCourse(courseId());
+      console.log("Enrollment Response:", res);
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: (error as any)?.message || "Failed to enroll in the course",
+      });
+      console.error("Enrollment Error:", error);
+    }
+  };
 
   if (!courseDetail) {
     return <LoadingIndicator onReload={fetchCourses} />;
@@ -63,7 +83,9 @@ const InstructionSection = () => {
         headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
         headerImage={
           <Image
-            source={{uri: courseDetail.image ||require("@/assets/images/aiBg.png")}}
+            source={{
+              uri: courseDetail.image || require("@/assets/images/aiBg.png"),
+            }}
             style={styles.avatar}
           />
         }
@@ -80,6 +102,7 @@ const InstructionSection = () => {
             // curriculum={curriculum}
             review={courseDetail?.reviews}
             courseId={courseDetail?.id}
+            onEnroll={enrollCourse}
           />
         </ThemedView>
       </ParallaxScrollView>
