@@ -8,10 +8,15 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from "react-native";
@@ -91,119 +96,129 @@ const LoginScreen = () => {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <Image
-        source={require("../assets/images/icon.png")}
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Dipodemy</Text>
-
-      <ThemedText style={styles.loginLabel}>Login!</ThemedText>
-
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="mail-outline"
-          size={20}
-          color="#888"
-          style={styles.inputIcon}
-          value
-        />
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          placeholderTextColor="#444"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-          editable={!isLoading}
-        />
-      </View>
-
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="lock-closed-outline"
-          size={20}
-          color="#888"
-          style={styles.inputIcon}
-        />
-        <TextInput
-          placeholder="Password"
-          secureTextEntry={!passwordVisible}
-          style={styles.input}
-          placeholderTextColor="#444"
-          autoCapitalize="none"
-          value={password}
-          onChangeText={setPassword}
-          editable={!isLoading}
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setPasswordVisible((visible) => !visible)}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <Ionicons
-            name={passwordVisible ? "eye-off" : "eye"}
-            size={20}
-            color="#888"
-          />
-        </TouchableOpacity>
-      </View>
+          <ThemedView style={styles.container}>
+            <Image
+              source={require("../assets/images/icon.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.title}>Dipodemy</Text>
 
-      <View style={styles.rememberRow}>
-        <TouchableOpacity
-          style={styles.rememberCheck}
-          onPress={() => setRememberMe((remember) => !remember)}
-        >
-          <MaterialCommunityIcons
-            name={
-              rememberMe
-                ? "checkbox-marked-circle"
-                : "checkbox-blank-circle-outline"
-            }
-            size={20}
-            color={colors.themeGreen}
-          />
-          <ThemedText style={styles.rememberText}>
-            {" "}
-            Remember Password
-          </ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => router.navigate("/(auth)/forgetPassword")}
-        >
-          <ThemedText style={styles.forgotText}>Forget password</ThemedText>
-        </TouchableOpacity>
-      </View>
+            <ThemedText style={styles.loginLabel}>Login!</ThemedText>
 
-      <View
-        style={{
-          flex: 1,
-          width: "10%",
-          alignSelf: "center",
-          alignItems: "center",
-          marginVertical: 50,
-        }}
-      >
-        <RoundedActionButton
-          text={isLoading ? "Logging in..." : "Sign In"}
-          icon={
-            isLoading ? (
-              <ActivityIndicator size="small" color={colors.themeGreen} />
-            ) : (
+            <View style={styles.inputWrapper}>
               <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={colors.themeGreen}
+                name="mail-outline"
+                size={20}
+                color="#888"
+                style={styles.inputIcon}
+                value
               />
-            )
-          }
-          bgColor={colors.themeGreen}
-          onPress={onLoginPress}
-          disabled={isLoginButtonDisabled}
-        />
-      </View>
+              <TextInput
+                placeholder="Email"
+                style={styles.input}
+                placeholderTextColor="#444"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+                editable={!isLoading}
+              />
+            </View>
 
-      {/* <Text style={styles.orText}>Or Continue With</Text>
+            <View style={styles.inputWrapper}>
+              <Ionicons
+                name="lock-closed-outline"
+                size={20}
+                color="#888"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="Password"
+                secureTextEntry={!passwordVisible}
+                style={styles.input}
+                placeholderTextColor="#444"
+                autoCapitalize="none"
+                value={password}
+                onChangeText={setPassword}
+                editable={!isLoading}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setPasswordVisible((visible) => !visible)}
+              >
+                <Ionicons
+                  name={passwordVisible ? "eye-off" : "eye"}
+                  size={20}
+                  color="#888"
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.rememberRow}>
+              <TouchableOpacity
+                style={styles.rememberCheck}
+                onPress={() => setRememberMe((remember) => !remember)}
+              >
+                <MaterialCommunityIcons
+                  name={
+                    rememberMe
+                      ? "checkbox-marked-circle"
+                      : "checkbox-blank-circle-outline"
+                  }
+                  size={20}
+                  color={colors.themeGreen}
+                />
+                <ThemedText style={styles.rememberText}>
+                  {" "}
+                  Remember Password
+                </ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => router.navigate("/(auth)/forgetPassword")}
+              >
+                <ThemedText style={styles.forgotText}>Forget password</ThemedText>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                width: "10%",
+                alignSelf: "center",
+                alignItems: "center",
+                marginVertical: 50,
+              }}
+            >
+              <RoundedActionButton
+                text={isLoading ? "Logging in..." : "Sign In"}
+                icon={
+                  isLoading ? (
+                    <ActivityIndicator size="small" color={colors.themeGreen} />
+                  ) : (
+                    <Ionicons
+                      name="arrow-forward"
+                      size={24}
+                      color={colors.themeGreen}
+                    />
+                  )
+                }
+                bgColor={colors.themeGreen}
+                onPress={onLoginPress}
+                disabled={isLoginButtonDisabled}
+              />
+            </View>
+
+            {/* <Text style={styles.orText}>Or Continue With</Text>
 
       <View style={styles.socialsRow}>
         <TouchableOpacity style={styles.socialIcon}>
@@ -220,16 +235,19 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View> */}
 
-      <ThemedText style={styles.footerText}>
-        Already have an Account?{" "}
-        <ThemedText
-          style={styles.signUp}
-          onPress={() => router.navigate("/register")}
-        >
-          SIGN UP
-        </ThemedText>
-      </ThemedText>
-    </ThemedView>
+            <ThemedText style={styles.footerText}>
+              Already have an Account?{" "}
+              <ThemedText
+                style={styles.signUp}
+                onPress={() => router.navigate("/register")}
+              >
+                SIGN UP
+              </ThemedText>
+            </ThemedText>
+          </ThemedView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 

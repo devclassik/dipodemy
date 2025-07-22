@@ -8,10 +8,15 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from "react-native";
@@ -45,7 +50,7 @@ const RegisterScreen = () => {
       });
       return;
     }
-    if (password !== repeatPassword || password.length <=7) {
+    if (password !== repeatPassword || password.length <= 7) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Password",
@@ -64,7 +69,7 @@ const RegisterScreen = () => {
         password: password,
         password_confirmation: repeatPassword
       }
-      const res = await authService.register(userdata);      
+      const res = await authService.register(userdata);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: "🎉",
@@ -93,188 +98,198 @@ const RegisterScreen = () => {
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <Image
-        source={require("../assets/images/icon.png")}
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Dipodemy</Text>
-
-      <ThemedText style={styles.loginLabel}>Getting Started!</ThemedText>
-      <ThemedText style={styles.subLabel}>
-        Create an Account to Continue your all Courses
-      </ThemedText>
-
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="person"
-          size={20}
-          color="#000"
-          style={styles.inputIcon}
-        />
-        <TextInput
-          placeholder="First Name"
-          style={styles.input}
-          placeholderTextColor="#444"
-          value={firstName}
-          onChangeText={setFirstName}
-          editable={!isLoading}
-        />
-      </View>
-
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="person"
-          size={20}
-          color="#000"
-          style={styles.inputIcon}
-        />
-        <TextInput
-          placeholder="Last Name"
-          style={styles.input}
-          placeholderTextColor="#444"
-          value={lastName}
-          onChangeText={setLastName}
-          editable={!isLoading}
-        />
-      </View>
-
-      <View style={styles.inputWrapper}>
-        <Ionicons name="mail" size={20} color="#000" style={styles.inputIcon} />
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          placeholderTextColor="#444"
-          value={email}
-          autoCapitalize="none"
-          onChangeText={setEmail}
-          editable={!isLoading}
-        />
-      </View>
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="phone-portrait-outline"
-          size={20}
-          color="#000"
-          style={styles.inputIcon}
-
-        />
-        <TextInput
-          placeholder="Phone Number"
-          style={styles.input}
-          placeholderTextColor="#444"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="number-pad"
-          editable={!isLoading}
-        />
-      </View>
-
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="lock-closed"
-          size={20}
-          color="#000"
-          style={styles.inputIcon}
-        />
-        <TextInput
-          placeholder="Password"
-          secureTextEntry={!passwordVisible}
-          style={styles.input}
-          placeholderTextColor="#444"
-          value={password}
-          autoCapitalize="none"
-          onChangeText={setPassword}
-          editable={!isLoading}
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setPasswordVisible(!passwordVisible)}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <Ionicons
-            name={passwordVisible ? "eye-off" : "eye"}
-            size={20}
-            color="#000"
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.inputWrapper}>
-        <Ionicons
-          name="lock-closed"
-          size={20}
-          color="#000"
-          style={styles.inputIcon}
-        />
-        <TextInput
-          placeholder="Re-enter Password"
-          secureTextEntry={!passwordVisible}
-          style={styles.input}
-          placeholderTextColor="#444"
-          value={repeatPassword}
-          autoCapitalize="none"
-          onChangeText={setRepeatPassword}
-          editable={!isLoading}
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setPasswordVisible(!passwordVisible)}
-        >
-          <Ionicons
-            name={passwordVisible ? "eye-off" : "eye"}
-            size={20}
-            color="#000"
-          />
-        </TouchableOpacity>
-      </View>
+          <ThemedView style={styles.container}>
+            <Image
+              source={require("../assets/images/icon.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.title}>Dipodemy</Text>
 
-      <View style={styles.rememberRow}>
-        <TouchableOpacity
-          style={styles.rememberCheck}
-          onPress={() => setRememberMe(!rememberMe)}
-        >
-          <MaterialCommunityIcons
-            name={
-              rememberMe
-                ? "checkbox-marked-circle"
-                : "checkbox-blank-circle-outline"
-            }
-            size={20}
-            color="#27d86c"
-          />
-          <ThemedText style={styles.rememberText}>Agree to Terms & Condition</ThemedText>
-        </TouchableOpacity>
-      </View>
+            <ThemedText style={styles.loginLabel}>Getting Started!</ThemedText>
+            <ThemedText style={styles.subLabel}>
+              Create an Account to Continue your all Courses
+            </ThemedText>
 
-      <View
-        style={{
-          flex: 1,
-          width: "70%",
-          alignSelf: "center",
-          alignItems: "center",
-          marginVertical: 5,
-        }}
-      >
-        <RoundedActionButton
-          text={isLoading ? "Please wait..." : "Sign up"}
-          icon={
-            isLoading ? (
-              <ActivityIndicator size="small" color={colors.themeGreen} />
-            ) : (
+            <View style={styles.inputWrapper}>
               <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={colors.themeGreen}
+                name="person"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
               />
-            )
-        }
-          onPress={onRegisterPress}
-          disabled={isLoginButtonDisabled && rememberMe}
-        />
-      </View>
+              <TextInput
+                placeholder="First Name"
+                style={styles.input}
+                placeholderTextColor="#444"
+                value={firstName}
+                onChangeText={setFirstName}
+                editable={!isLoading}
+              />
+            </View>
 
-      {/* <Text style={styles.orText}>Or Continue With</Text> */}
+            <View style={styles.inputWrapper}>
+              <Ionicons
+                name="person"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="Last Name"
+                style={styles.input}
+                placeholderTextColor="#444"
+                value={lastName}
+                onChangeText={setLastName}
+                editable={!isLoading}
+              />
+            </View>
 
-      {/* <View style={styles.socialsRow}>
+            <View style={styles.inputWrapper}>
+              <Ionicons name="mail" size={20} color="#000" style={styles.inputIcon} />
+              <TextInput
+                placeholder="Email"
+                style={styles.input}
+                placeholderTextColor="#444"
+                value={email}
+                autoCapitalize="none"
+                onChangeText={setEmail}
+                editable={!isLoading}
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Ionicons
+                name="phone-portrait-outline"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+
+              />
+              <TextInput
+                placeholder="Phone Number"
+                style={styles.input}
+                placeholderTextColor="#444"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="number-pad"
+                editable={!isLoading}
+              />
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <Ionicons
+                name="lock-closed"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="Password"
+                secureTextEntry={!passwordVisible}
+                style={styles.input}
+                placeholderTextColor="#444"
+                value={password}
+                autoCapitalize="none"
+                onChangeText={setPassword}
+                editable={!isLoading}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              >
+                <Ionicons
+                  name={passwordVisible ? "eye-off" : "eye"}
+                  size={20}
+                  color="#000"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputWrapper}>
+              <Ionicons
+                name="lock-closed"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="Re-enter Password"
+                secureTextEntry={!passwordVisible}
+                style={styles.input}
+                placeholderTextColor="#444"
+                value={repeatPassword}
+                autoCapitalize="none"
+                onChangeText={setRepeatPassword}
+                editable={!isLoading}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              >
+                <Ionicons
+                  name={passwordVisible ? "eye-off" : "eye"}
+                  size={20}
+                  color="#000"
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.rememberRow}>
+              <TouchableOpacity
+                style={styles.rememberCheck}
+                onPress={() => setRememberMe(!rememberMe)}
+              >
+                <MaterialCommunityIcons
+                  name={
+                    rememberMe
+                      ? "checkbox-marked-circle"
+                      : "checkbox-blank-circle-outline"
+                  }
+                  size={20}
+                  color="#27d86c"
+                />
+                <ThemedText style={styles.rememberText}>Agree to Terms & Condition</ThemedText>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                width: "70%",
+                alignSelf: "center",
+                alignItems: "center",
+                marginVertical: 5,
+              }}
+            >
+              <RoundedActionButton
+                text={isLoading ? "Please wait..." : "Sign up"}
+                icon={
+                  isLoading ? (
+                    <ActivityIndicator size="small" color={colors.themeGreen} />
+                  ) : (
+                    <Ionicons
+                      name="arrow-forward"
+                      size={24}
+                      color={colors.themeGreen}
+                    />
+                  )
+                }
+                onPress={onRegisterPress}
+                disabled={isLoginButtonDisabled && rememberMe}
+              />
+            </View>
+
+            {/* <Text style={styles.orText}>Or Continue With</Text> */}
+
+            {/* <View style={styles.socialsRow}>
         <TouchableOpacity style={styles.socialIcon}>
           <Image
             source={require("../assets/images/google.png")}
@@ -289,13 +304,17 @@ const RegisterScreen = () => {
         </TouchableOpacity>
       </View> */}
 
-      <ThemedText style={styles.footerText}>
-        Already have an Account?{" "}
-        <ThemedText style={styles.signUp} onPress={() => router.navigate('/(auth)/login')}>
-          SIGN IN
-        </ThemedText>
-      </ThemedText>
-    </ThemedView>
+            <ThemedText style={styles.footerText}>
+              Already have an Account?{" "}
+              <ThemedText style={styles.signUp} onPress={() => router.navigate('/(auth)/login')}>
+                SIGN IN
+              </ThemedText>
+            </ThemedText>
+          </ThemedView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+
   );
 };
 
