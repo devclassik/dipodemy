@@ -4,7 +4,7 @@ import Search from "@/components/Search";
 import { ThemedView } from "@/components/ThemedView";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 export default function Learn() {
@@ -13,45 +13,66 @@ export default function Learn() {
   const [courses, setCourses] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [searchTriggered, setSearchTriggered] = useState(false);
+
   const { data } = useLocalSearchParams();
 
   console.log("na here", data);
 
   useEffect(() => {
-    let value = "";
-    if (data) {
-      try {
-        const parsed = JSON.parse(data as string);
-        value = typeof parsed === "string" ? parsed : String(parsed);
-      } catch {
-        value = String(data);
+    let mounted = true;
+
+    const loadInitial = async () => {
+      let value = "";
+      if (data) {
+        try {
+          const parsed = JSON.parse(data as string);
+          value = typeof parsed === "string" ? parsed : String(parsed);
+        } catch {
+          value = String(data);
+        }
       }
-    }
-    setSearchQuery(value);
-    fetchCourses(1, value, true);
-  }, [data]);
+
+      if (mounted) {
+        setSearchQuery(value);
+        await fetchCourses(1, value, true);
+      }
+    };
+
+    loadInitial();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const fetchCourses = async (
-    pageNum: number,
-    search: string = "",
-    replace: boolean = false
+    pageToFetch: number,
+    query: string = "",
+    isRefresh: boolean = false
   ) => {
-    if (replace) setRefreshing(true);
     try {
+      if (!isRefresh && pageToFetch > 1) {
+        setLoadingMore(true); // start loadingMore
+      }
+
       const res = await learnService.learnScreenPaginated({
-        page: pageNum,
+        page: pageToFetch,
+        search: query,
         limit: 10,
-        search: search || undefined,
       });
 
-      const newCourses = res?.data?.courses ?? [];
-      const currentPage = res?.data?.meta?.current_page ?? pageNum;
-      const lastPage = res?.data?.meta?.last_page ?? currentPage;
+      const results = res.data.courses;
 
-      setCourses((prev) => (replace ? newCourses : [...prev, ...newCourses]));
-      setPage(pageNum);
-      // setHasMore(res?.data?.meta?.current_page < res?.data?.meta?.last_page);
-      setHasMore(currentPage < lastPage);
+      setCourses((prev) =>
+        pageToFetch === 1 ? results : [...prev, ...results]
+      );
+
+      setHasMore(res.data.meta.current_page < res.data.meta.last_page);
+      setPage(pageToFetch);
+
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -60,22 +81,33 @@ export default function Learn() {
       });
       console.error("Fetch failed:", error);
     } finally {
-      if (replace) setRefreshing(false);
+      if (!isRefresh && pageToFetch > 1) setLoadingMore(false);
+      setRefreshing(false);
     }
   };
 
-  const onRefresh = () => {
+  const handleRefresh = () => {
     fetchCourses(1, searchQuery, true);
   };
 
   const loadNextPage = () => {
-    if (hasMore && !refreshing) {
+    if (hasMore && !refreshing && !loadingMore) {
       fetchCourses(page + 1, searchQuery);
     }
   };
 
-  const handleSearchSubmit = () => {
-    fetchCourses(1, searchQuery, true);
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setSearchTriggered(true);
+    setLoading(true);
+    try {
+      const result = await learnService.learnScreenPaginated({ page: 1, search: searchQuery });
+      setCourses(result.data.courses);
+    } finally {
+      setLoading(false);
+      setSearchTriggered(false);
+    }
+    fetchCourses(1, searchQuery);
   };
 
   return (
@@ -84,20 +116,27 @@ export default function Learn() {
         showFilter={false}
         searchWord={searchQuery}
         onSearchChange={setSearchQuery}
-        onSearchPress={handleSearchSubmit}
+        onSearchPress={handleSearch}
       />
-      <LearnCardList
-        data={courses}
-        onCardPress={(data) =>
-          router.navigate({
-            pathname: "/courseDetails",
-            params: { data: data.id },
-          })
-        }
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        onEndReached={loadNextPage}
-      />
+      {loading && data.length === 0 ? (
+        <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>
+          <ActivityIndicator size="large" />
+        </ThemedView>
+      ) : (
+        <LearnCardList
+          data={courses}
+          onCardPress={(data) =>
+            router.navigate({
+              pathname: "/courseDetails",
+              params: { data: data.id },
+            })
+          }
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          onEndReached={loadNextPage}
+          loadingMore={loadingMore}
+        />
+      )}
     </ThemedView>
   );
 }

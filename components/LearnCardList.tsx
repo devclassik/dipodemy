@@ -33,6 +33,8 @@ export interface LearnCardListProps {
   refreshing?: boolean;
   onRefresh?: () => void;
   onEndReached?: () => void;
+  loadingMore?: boolean;
+
 }
 
 const LearnCardList: React.FC<LearnCardListProps> = ({
@@ -41,6 +43,7 @@ const LearnCardList: React.FC<LearnCardListProps> = ({
   refreshing,
   onRefresh,
   onEndReached,
+  loadingMore = false,
 }) => {
   return (
     <FlatList
@@ -56,11 +59,11 @@ const LearnCardList: React.FC<LearnCardListProps> = ({
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
-        refreshing ? null : (
+        loadingMore ? (
           <ThemedView style={{ paddingVertical: 20 }}>
-            <ActivityIndicator size="small"  />
+            <ActivityIndicator size="small" />
           </ThemedView>
-        )
+        ) : null
       }
     />
   );
