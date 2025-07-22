@@ -21,7 +21,11 @@ export interface ApiRequestConfig {
 export interface User {
   id: string;
   email: string;
-  name: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  password: string;
+  password_confirmation: string;
   // Add other user properties
 }
 

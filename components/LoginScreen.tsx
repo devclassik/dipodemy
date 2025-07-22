@@ -203,7 +203,7 @@ const LoginScreen = () => {
         />
       </View>
 
-      <Text style={styles.orText}>Or Continue With</Text>
+      {/* <Text style={styles.orText}>Or Continue With</Text>
 
       <View style={styles.socialsRow}>
         <TouchableOpacity style={styles.socialIcon}>
@@ -218,7 +218,7 @@ const LoginScreen = () => {
             style={styles.socialImg}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <ThemedText style={styles.footerText}>
         Already have an Account?{" "}

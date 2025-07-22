@@ -22,7 +22,7 @@ const ProfileScreen = () => {
   const [media, setMedia] = useState<string | null>(null);
 
   const logout = async () => {
-    await AsyncStorage.removeItem("auth_token");
+    await AsyncStorage.clear();
     router.replace("../splash");
   };
 

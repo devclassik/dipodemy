@@ -3,15 +3,15 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 import Search from "@/components/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { categoryReducer, initialState } from "@/reducers/searchReducer";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   RefreshControl,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
@@ -19,81 +19,81 @@ interface Category {
   id: number;
   name: string;
   image: string;
-  status: boolean;
+  status: string; // Match the type from api/types.ts
 }
 
 export default function SearchScreen() {
   const { data } = useLocalSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [refreshing, setRefreshing] = useState(false);
-  const [state, dispatch] = useReducer(categoryReducer, initialState);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   useEffect(() => {
-    if (!data) return;
-
-    try {
-      const parsed = JSON.parse(data as string);
-      const value = typeof parsed === "string" ? parsed : String(parsed);
-      setSearchQuery(value);
-    } catch {
-      const fallback = String(data);
-      setSearchQuery(fallback);
+    let value = "";
+    if (data) {
+      try {
+        const parsed = JSON.parse(data as string);
+        value = typeof parsed === "string" ? parsed : String(parsed);
+      } catch {
+        value = String(data);
+      }
     }
+    setSearchQuery(value);
+    fetchData(1, value, true);
   }, [data]);
 
-  const fetchData = async (searchText: string, page: number) => {
+  const fetchData = async (
+    pageNum: number,
+    search: string = "",
+    replace: boolean = false
+  ) => {
+    if (replace) setRefreshing(true);
     try {
-      dispatch({ type: "FETCH_START" });
       const res = await searchService.categoryScreenPaginated({
-        search: searchText,
-        page,
+        page: pageNum,
         limit: 10,
+        search: search,
       });
-       
-      const newItems = res.data.categories;
-
-      // Optional: prevent fetch if results are identical
-      const existingIds = new Set(state.data.map((item) => item.id));
-      const filtered = newItems.filter((item) => !existingIds.has(item.id));
-
-      dispatch({
-        type: "FETCH_SUCCESS",
-        payload: filtered,
-        hasMore: newItems.length >= 10,
-      });
+      console.log(res.data.data);
+      
+      const newCategories = res?.data?.data?.categories ?? [];
+      const meta = res?.data?.data?.meta;
+      const currentPage = meta?.current_page ?? pageNum;
+      const lastPage = meta?.last_page ?? currentPage;
+      setCategories((prev) => (replace ? newCategories : [...prev, ...newCategories]));
+      setPage(pageNum);
+      setHasMore(currentPage < lastPage);
       setHasLoadedOnce(true);
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Error",
-        textBody: (error as any) || "Failed to load categories",
+        textBody: (error as any)?.message || "Failed to load categories",
       });
       setHasLoadedOnce(true);
+    } finally {
+      if (replace) setRefreshing(false);
     }
   };
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    dispatch({ type: "RESET" });
-    await fetchData(searchQuery, 1);
-    setRefreshing(false);
+  const onRefresh = () => {
+    fetchData(1, searchQuery, true);
   };
 
   const loadNextPage = () => {
-    if (!state.loading && state.hasMore) {
-      dispatch({ type: "NEXT_PAGE" });
-      fetchData(searchQuery, state.page + 1);
+    if (hasMore && !refreshing) {
+      fetchData(page + 1, searchQuery);
     }
   };
 
-  const onSearchPress = () => {
-    dispatch({ type: "RESET" });
-    setHasLoadedOnce(false);
-    fetchData(searchQuery, 1);
+  const handleSearchSubmit = () => {
+    fetchData(1, searchQuery, true);
   };
 
-  if (state.loading && !hasLoadedOnce) {
+  if (!hasLoadedOnce && refreshing) {
     return <LoadingIndicator onReload={onRefresh} />;
   }
 
@@ -103,11 +103,10 @@ export default function SearchScreen() {
         showFilter={false}
         showSearch={!!searchQuery}
         searchWord={searchQuery}
-        searchFound={state.data.length}
-        onSearchChange={(text) => setSearchQuery(text)}
-        onSearchPress={onSearchPress}
+        searchFound={categories.length}
+        onSearchChange={setSearchQuery}
+        onSearchPress={handleSearchSubmit}
       />
-
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         refreshControl={
@@ -115,9 +114,9 @@ export default function SearchScreen() {
         }
         onMomentumScrollEnd={loadNextPage}
       >
-        {state.data.map((category: Category, index: number) => (
+        {categories.map((category: Category, index: number) => (
           <TouchableOpacity
-            key={index}
+            key={category.id}
             style={styles.categoryItem}
             onPress={() =>
               router.navigate({
@@ -132,6 +131,11 @@ export default function SearchScreen() {
             </ThemedText>
           </TouchableOpacity>
         ))}
+        {categories.length === 0 && hasLoadedOnce && (
+          <View style={{ width: "100%", alignItems: "center", marginTop: 32 }}>
+            <ThemedText>No categories found.</ThemedText>
+          </View>
+        )}
       </ScrollView>
     </ThemedView>
   );

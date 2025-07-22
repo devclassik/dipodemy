@@ -7,17 +7,29 @@ import CourseSection from "@/components/CourseSection";
 import Header from "@/components/Header";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
-import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router, } from "expo-router";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+
 
 export default function HomeScreen() {
   const [userdata, setUserdata] = useState<any>(null);
   const [refreshing, setRefreshing] = useState(false);
 
+
   useEffect(() => {
     (async () => {
-      const res = await homeService.homeScreen();
-      setUserdata(res);
+      try {
+        const res = await homeService.homeScreen();
+        setUserdata(res);
+        
+      } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+          await AsyncStorage.clear();
+          router.navigate('/(auth)/login'); // or whatever your login route is
+        }
+      }
+      
     })();
   }, []);
 

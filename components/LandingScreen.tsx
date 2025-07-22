@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
@@ -14,7 +14,7 @@ const LandingScreen = () => {
           Let’s you in
         </ThemedText>
 
-        <TouchableOpacity style={styles.socialButton}>
+        {/* <TouchableOpacity style={styles.socialButton}>
           <ThemedView style={styles.iconWrapper}>
             <Image
               source={require("../assets/images/google.png")}
@@ -24,9 +24,9 @@ const LandingScreen = () => {
           <ThemedText style={styles.socialText}>
             Continue with Google
           </ThemedText>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <TouchableOpacity style={styles.socialButton}>
+        {/* <TouchableOpacity style={styles.socialButton}>
           <ThemedView style={styles.iconWrapper}>
             <Image
               source={require("../assets/images/fb.png")}
@@ -38,7 +38,7 @@ const LandingScreen = () => {
           </ThemedText>
         </TouchableOpacity>
 
-        <ThemedText style={styles.orText}>( Or )</ThemedText>
+        <ThemedText style={styles.orText}>( Or )</ThemedText> */}
 
         <ThemedView
           style={{
@@ -46,7 +46,7 @@ const LandingScreen = () => {
             width: "70%",
             alignSelf: "center",
             alignItems: "center",
-            marginVertical: 40,
+            marginVertical: 60,
           }}
         >
           <RoundedActionButton

@@ -1,14 +1,21 @@
+import { authService } from "@/api/services/auth.service";
+import { Colors } from "@/constants/Colors";
+import { isValidEmail } from "@/utills/validator";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
@@ -16,6 +23,75 @@ import { ThemedView } from "./ThemedView";
 const RegisterScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
+  const isLoginButtonDisabled = !isValidEmail(email);
+
+  const onRegisterPress = async () => {
+    if (!isValidEmail(email)) {
+
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Invalid Email address",
+        textBody: "Please enter a valid email address.",
+      });
+      return;
+    }
+    if (password !== repeatPassword || password.length <=7) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Password",
+        textBody: "Please same password for both field and min of 8 ",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const userdata = {
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+        phone: phone,
+        password: password,
+        password_confirmation: repeatPassword
+      }
+      const res = await authService.register(userdata);      
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "🎉",
+        textBody: res.message,
+      });
+
+      if (rememberMe) {
+        await AsyncStorage.setItem(
+          "user_creds",
+          JSON.stringify({ email, password })
+        );
+      } else {
+        await AsyncStorage.removeItem("user_creds");
+      }
+      router.replace("/pin");
+    } catch (error) {
+      console.error("Login Error:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Login Failed",
+        textBody: "An error occurred during login.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+
+  }
 
   return (
     <ThemedView style={styles.container}>
@@ -41,6 +117,9 @@ const RegisterScreen = () => {
           placeholder="First Name"
           style={styles.input}
           placeholderTextColor="#444"
+          value={firstName}
+          onChangeText={setFirstName}
+          editable={!isLoading}
         />
       </View>
 
@@ -55,6 +134,9 @@ const RegisterScreen = () => {
           placeholder="Last Name"
           style={styles.input}
           placeholderTextColor="#444"
+          value={lastName}
+          onChangeText={setLastName}
+          editable={!isLoading}
         />
       </View>
 
@@ -64,6 +146,10 @@ const RegisterScreen = () => {
           placeholder="Email"
           style={styles.input}
           placeholderTextColor="#444"
+          value={email}
+          autoCapitalize="none"
+          onChangeText={setEmail}
+          editable={!isLoading}
         />
       </View>
       <View style={styles.inputWrapper}>
@@ -72,11 +158,16 @@ const RegisterScreen = () => {
           size={20}
           color="#000"
           style={styles.inputIcon}
+
         />
         <TextInput
           placeholder="Phone Number"
           style={styles.input}
           placeholderTextColor="#444"
+          value={phone}
+          onChangeText={setPhone}
+          keyboardType="number-pad"
+          editable={!isLoading}
         />
       </View>
 
@@ -92,6 +183,10 @@ const RegisterScreen = () => {
           secureTextEntry={!passwordVisible}
           style={styles.input}
           placeholderTextColor="#444"
+          value={password}
+          autoCapitalize="none"
+          onChangeText={setPassword}
+          editable={!isLoading}
         />
         <TouchableOpacity
           style={styles.eyeIcon}
@@ -116,6 +211,10 @@ const RegisterScreen = () => {
           secureTextEntry={!passwordVisible}
           style={styles.input}
           placeholderTextColor="#444"
+          value={repeatPassword}
+          autoCapitalize="none"
+          onChangeText={setRepeatPassword}
+          editable={!isLoading}
         />
         <TouchableOpacity
           style={styles.eyeIcon}
@@ -157,15 +256,26 @@ const RegisterScreen = () => {
         }}
       >
         <RoundedActionButton
-          text="Sign Up"
-          icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
-          onPress={() => router.navigate("/pin")}
+          text={isLoading ? "Please wait..." : "Sign up"}
+          icon={
+            isLoading ? (
+              <ActivityIndicator size="small" color={colors.themeGreen} />
+            ) : (
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={colors.themeGreen}
+              />
+            )
+        }
+          onPress={onRegisterPress}
+          disabled={isLoginButtonDisabled && rememberMe}
         />
       </View>
 
-      <Text style={styles.orText}>Or Continue With</Text>
+      {/* <Text style={styles.orText}>Or Continue With</Text> */}
 
-      <View style={styles.socialsRow}>
+      {/* <View style={styles.socialsRow}>
         <TouchableOpacity style={styles.socialIcon}>
           <Image
             source={require("../assets/images/google.png")}
@@ -178,7 +288,7 @@ const RegisterScreen = () => {
             style={styles.socialImg}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <ThemedText style={styles.footerText}>
         Already have an Account?{" "}
@@ -300,6 +410,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#444",
     fontSize: 13,
+    top: 20
   },
   signUp: {
     color: "#ff9900",
