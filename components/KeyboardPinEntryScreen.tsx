@@ -1,12 +1,18 @@
+import { authService } from "@/api/services/auth.service";
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
+  ActivityIndicator,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View
 } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import CustomModal from "./CustomModal";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
@@ -15,7 +21,72 @@ import { ThemedView } from "./ThemedView";
 const KeyboardPinEntryScreen = () => {
   const [pin, setPin] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<TextInput>(null);
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
+  const onConfirmOtp = async () => {
+    setIsLoading(true);
+    try {
+      const jsonValue = await AsyncStorage.getItem("user_creds");
+      if (jsonValue !== null) {
+        const { email, password } = JSON.parse(jsonValue);
+        const userdata = {
+          email: email,
+          otp: pin
+        }
+        const res = await authService.verifyOtp(userdata);
+        console.log(res.data);
+        if (res.data.status ===200) {
+          setShowModal(true);
+        }
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "🎉",
+          textBody: res.message,
+        });
+      }
+
+    } catch (error) {
+      console.error("OTP Error:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Login Failed",
+        textBody: "An error occurred during login.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const onResendOtp = async () => {
+    setIsLoading(true);
+    try {
+      const jsonValue = await AsyncStorage.getItem("user_creds");
+      if (jsonValue !== null) {
+        const { email, password } = JSON.parse(jsonValue);
+        const userdata = {
+          email: email
+        }
+        const res = await authService.resendOtp(userdata);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "🎉",
+          textBody: res.message,
+        });
+      }
+
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Login Failed",
+        textBody: "An error occurred during login.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   // Focus the hidden TextInput when user taps the pin boxes
   const handlePress = () => {
@@ -24,7 +95,7 @@ const KeyboardPinEntryScreen = () => {
 
   // Only allow numeric input and max length 4
   const handleChange = (value: string) => {
-    if (/^\d*$/.test(value) && value.length <= 4) {
+    if (/^\d*$/.test(value) && value.length <= 6) {
       setPin(value);
     }
   };
@@ -33,7 +104,7 @@ const KeyboardPinEntryScreen = () => {
   const handleContinue = () => {
     console.log("PIN entered:", pin);
     // TODO: Add navigation or submit logic here
-    setShowModal(true);
+    onConfirmOtp();
   };
 
   const handleModalClose = () => setShowModal(false);
@@ -51,7 +122,7 @@ const KeyboardPinEntryScreen = () => {
         onPress={handlePress}
         activeOpacity={1}
       >
-        {[0, 1, 2, 3].map((i) => (
+        {[0, 1, 2, 3, 4, 5,].map((i) => (
           <View key={i} style={styles.pinBox}>
             {/* Show dot if pin character exists */}
             <ThemedText style={styles.pinText}>{pin[i] ? "•" : ""}</ThemedText>
@@ -64,15 +135,34 @@ const KeyboardPinEntryScreen = () => {
           value={pin}
           onChangeText={handleChange}
           keyboardType="number-pad"
-          maxLength={4}
+          maxLength={6}
           style={styles.hiddenInput}
           // You can add autoFocus here if you want
           autoFocus={true}
         />
       </TouchableOpacity>
 
+      {pin.length <= 5 && (
+        <RoundedActionButton
+          text={isLoading ? "Please wait..." : "Resend OTP"}
+          icon={
+            isLoading ? (
+              <ActivityIndicator size="small" color={colors.themeGreen} />
+            ) : (
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={colors.themeGreen}
+              />
+            )
+          }
+          onPress={onResendOtp}
+          style={{ backgroundColor: colors.warning }}
+        />
+      )}
+
       {/* Show Continue button only when pin is 4 digits */}
-      {pin.length === 4 && (
+      {pin.length === 6 && (
         <View>
           <RoundedActionButton
             disabled={pin.length < 4}
@@ -89,7 +179,7 @@ const KeyboardPinEntryScreen = () => {
           onClose={handleModalClose}
           lottieSource={require("@/assets/lottie/alert.json")}
           imageSource={require("@/assets/images/avatar.png")}
-          caption="Here is your caption text!"
+          caption="Welcome to ADC campus!"
           subText="Your Account is Ready to Use. You will be redirected to the Home Page in a Few Seconds."
           loading={false}
           buttonText="OK"

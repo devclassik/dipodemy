@@ -22,7 +22,27 @@ export const authService = {
       const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.REGISTER, userData);
       return response.data;
     } catch (error) {
-      console.error('Login error:', error);
+      // console.error('Login error:', error);
+      throw error;
+    }
+  },
+
+  resendOtp: async (userData: Partial<User>): Promise<ApiResponse<AuthResponse>> => {
+    try {
+      const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.RESEND_OTP, userData);
+      return response.data;
+    } catch (error) {
+      // console.error('Login error:', error);
+      throw error;
+    }
+  },
+
+  verifyOtp: async (userData: Partial<User>): Promise<ApiResponse<AuthResponse>> => {
+    try {
+      const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.VERIFY_OTP, userData);
+      return response.data;
+    } catch (error) {
+      // console.error('Login error:', error);
       throw error;
     }
   },
