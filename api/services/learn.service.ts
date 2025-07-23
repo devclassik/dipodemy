@@ -1,3 +1,4 @@
+import axios from "axios";
 import { API_ENDPOINTS } from "../../constants/api";
 import api from "../config";
 import { ApiResponse, CategoryScreenResponse } from "../types";
@@ -13,7 +14,7 @@ export const learnService = {
       } else if (typeof data === "string" && data.trim() !== "") {
         url += `?search=${data}`;
       }
-      console.log("Fetching search screen data from:", url);
+      // console.log("Fetching search screen data from:", url);
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
       // console.log('Raw server response:', response);
       return response.data;
@@ -30,7 +31,6 @@ export const learnService = {
     limit?: number;
   }): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
-      console.log("Fetching paginated learn screen data with params:");
 
       let url = API_ENDPOINTS.LEARN.LEARN_SCREEN;
       const query: string[] = [];
@@ -97,3 +97,41 @@ export const learnService = {
   },
 };
 
+export const paystackService = {
+  initiatePayment: async (data: any): Promise<ApiResponse<any>> => {
+    try {
+      const PAYSTACK_SECRET_KEY = "sk_test_1f508aae89a73e82eb038c0cf8e3952564ca7fff";
+      const PAYSTACK_PUBLIC_KEY = "pk_test_2190ecf3bf99d361967255d38c775490418038bf";
+
+      const response = await axios.post<ApiResponse<any>>(`https://api.paystack.co/transaction/initialize`, data,
+        {
+          headers: {
+            Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      throw error;
+    }
+  },
+
+  verifyPayment: async (reference: string): Promise<ApiResponse<any>> => {
+    const PAYSTACK_SECRET_KEY = "sk_test_1f508aae89a73e82eb038c0cf8e3952564ca7fff";
+    const PAYSTACK_PUBLIC_KEY = "pk_test_2190ecf3bf99d361967255d38c775490418038bf";
+    try {
+      const response = await axios.get<ApiResponse<any>>(`https://api.paystack.co/transaction/verify/${reference}`, {
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      throw error;
+    }
+  },
+};

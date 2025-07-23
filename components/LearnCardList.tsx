@@ -1,7 +1,8 @@
 import React from "react";
-import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { Category } from "./CategoryList";
 import LearnCard from "./LearnCard";
+import LoadingIndicator from "./LoadingIndicator";
 import { ThemedView } from "./ThemedView";
 
 export interface LearnCardProps {
@@ -57,7 +58,7 @@ const LearnCardList: React.FC<LearnCardListProps> = ({
       ListFooterComponent={
         loadingMore ? (
           <ThemedView style={{ paddingVertical: 20 }}>
-            <ActivityIndicator size="small" />
+            <LoadingIndicator size="small" />
           </ThemedView>
         ) : null
       }

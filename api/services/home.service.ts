@@ -7,7 +7,6 @@ export const homeService = {
     // Home Screen API
     homeScreen: async (): Promise<ApiResponse<HomeScreenResponse>> => {
         try {
-            console.log('Fetching home screen data from:', API_ENDPOINTS.HOME.HOME_SCREEN);
             const response = await api.get<ApiResponse<HomeScreenResponse>>(API_ENDPOINTS.HOME.HOME_SCREEN);
             // console.log('Raw server response:', response);
             return response.data;

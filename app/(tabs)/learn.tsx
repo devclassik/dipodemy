@@ -1,10 +1,11 @@
 import { learnService } from "@/api/services/learn.service";
 import LearnCardList from "@/components/LearnCardList";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import Search from "@/components/Search";
 import { ThemedView } from "@/components/ThemedView";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 export default function Learn() {
@@ -18,8 +19,6 @@ export default function Learn() {
   const [searchTriggered, setSearchTriggered] = useState(false);
 
   const { data } = useLocalSearchParams();
-
-  console.log("na here", data);
 
   useEffect(() => {
     let mounted = true;
@@ -120,7 +119,7 @@ export default function Learn() {
       />
       {loading && data.length === 0 ? (
         <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>
-          <ActivityIndicator size="large" />
+          <LoadingIndicator  size="large"/>
         </ThemedView>
       ) : (
         <LearnCardList

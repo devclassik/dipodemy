@@ -45,7 +45,11 @@ export const API_ENDPOINTS = {
   REVIEW: {
     REVIEW_SCREEN: "reviews",
     COURSE_REVIEWS: "courses/reviews",
-  }
+  },
+  PAYSTACK: {
+    INITIATE: "paystack/initiate",
+    VERIFY: "paystack/verify",
+  },
 
   // Add more endpoint categories as needed
 };

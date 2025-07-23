@@ -1,5 +1,5 @@
-import { learnService } from "@/api/services/learn.service";
-import { useLocalSearchParams } from "expo-router";
+import { learnService, paystackService } from "@/api/services/learn.service";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, StyleSheet } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
@@ -23,14 +23,10 @@ const InstructionSection = () => {
     }
   }, [data]);
 
-  console.log("Course passed from url:", data);
-
   const fetchCourses = useCallback(async () => {
     setRefreshing(true);
     try {
       const res = await learnService.courseDetailScreen(courseId());
-      console.log("Fetched data:", res.data);
-
       setCourseDetail(res?.data.course || null);
     } catch (error) {
       Toast.show({
@@ -45,7 +41,6 @@ const InstructionSection = () => {
   }, [courseId]);
 
   const onCorriculumPress = async () => {
-
     setIsLoading(true);
     try {
       const res = await learnService.currriculumScreen(courseId());
@@ -73,11 +68,32 @@ const InstructionSection = () => {
       title: "info",
       textBody: "Please wait, enrolling in the course...",
     });
-    console.log("Enrolling in course with ID:", courseId());
 
     try {
       const res = await learnService.enrollCourse(courseId());
-      console.log("Enrollment Response:", res);
+
+      if (res?.success) {
+        const authorizationUrl = await paystackService.initiatePayment({
+          amount: res.data.paymentDetails.amount,
+          email: res.data.paymentDetails.email,
+          metadata: {
+            reference: res.data.paymentDetails.reference,
+            currency: res.data.paymentDetails.currency,
+            courseId: courseId(),
+          },
+        });
+
+        if (authorizationUrl.status) {
+          router.navigate({
+            pathname: "/webView",
+            params: {
+              url: authorizationUrl.data.authorization_url,
+            },
+          });
+        } else {
+          throw new Error("No payment link returned");
+        }
+      }
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   ScrollView,
@@ -10,6 +9,7 @@ import {
 import { Category } from "./CategoryList";
 import LearnCard from "./LearnCard";
 import { LearnCardProps } from "./LearnCardList";
+import LoadingIndicator from "./LoadingIndicator";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
@@ -65,7 +65,7 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
 
       {isFetching || isLoading && (
         <ThemedView>
-          <ActivityIndicator size="large" color="green" />
+          <LoadingIndicator size="large" />
         </ThemedView>
       )}
 
@@ -89,7 +89,7 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
         ListFooterComponent={
           isFetching ? (
             <ThemedView style={styles.footerLoader}>
-              <ActivityIndicator size="small" color="green" />
+              <LoadingIndicator size="small" />
             </ThemedView>
           ) : <ThemedView style={{ height: 60 }} /> 
         }

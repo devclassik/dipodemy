@@ -71,8 +71,6 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
-  console.log("category:", category);
-
   return (
     <>
       <View style={styles.cardContainer}>
