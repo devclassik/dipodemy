@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
   LEARN: {
     LEARN_SCREEN: "courses",
     ENROLLED_COURSES: "enrollments",
+    LESSONS: "lessons",
     LEARN_SCREEN_COURSE_DETAILS: "categories/course-details",
     LEARN_SCREEN_COURSE_LIST: "categories/courses",
   },

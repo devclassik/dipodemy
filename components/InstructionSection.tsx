@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, StyleSheet } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import LoadingIndicator from "./LoadingIndicator";
-// import PagesCourseDescription from "./PagesCourseDescription";
 import PagesCourseDescription from "./PagesCourseDescription";
 import ParallaxScrollView from "./ParallaxScrollView";
 import { ThemedView } from "./ThemedView";
@@ -13,6 +12,8 @@ const InstructionSection = () => {
   const { data } = useLocalSearchParams();
   const [courseDetail, setCourseDetail] = useState<any>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [curriculum, setCurriculum] = useState(false);
 
   const courseId = useCallback(() => {
     try {
@@ -43,8 +44,27 @@ const InstructionSection = () => {
     }
   }, [courseId]);
 
+  const onCorriculumPress = async () => {
+
+    setIsLoading(true);
+    try {
+      const res = await learnService.currriculumScreen(courseId());
+      setCurriculum(res.data.lessons);
+    } catch (error) {
+      console.error("Login Error:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Login Failed",
+        textBody: "An error occurred during login.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchCourses();
+    // onCorriculumPress();
   }, [fetchCourses]);
 
   const enrollCourse = async () => {
@@ -54,7 +74,7 @@ const InstructionSection = () => {
       textBody: "Please wait, enrolling in the course...",
     });
     console.log("Enrolling in course with ID:", courseId());
-    
+
     try {
       const res = await learnService.enrollCourse(courseId());
       console.log("Enrollment Response:", res);

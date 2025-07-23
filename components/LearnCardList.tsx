@@ -1,5 +1,6 @@
 import React from "react";
 import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { Category } from "./CategoryList";
 import LearnCard from "./LearnCard";
 import { ThemedView } from "./ThemedView";
 
@@ -19,12 +20,7 @@ export interface LearnCardProps {
   status: string;
   slug: string;
   lessons_count: number;
-  category: {
-    id: number;
-    name: string;
-    image: any;
-    status: string;
-  };
+  category: Category
 }
 
 export interface LearnCardListProps {

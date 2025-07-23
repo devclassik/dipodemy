@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Category } from "./CategoryList";
 import { ThemedText } from "./ThemedText";
 
 interface LearnCardProps {
@@ -19,12 +20,7 @@ interface LearnCardProps {
   status: string;
   slug: string;
   lessons_count: number;
-  category: {
-    id: number;
-    name: string;
-    image: any;
-    status: string;
-  };
+  category:Category;
   onPress?: () => void;
   onBookmarkPress?: () => void;
 }

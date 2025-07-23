@@ -64,6 +64,20 @@ export const learnService = {
     }
   },
 
+  currriculumScreen: async (
+    data: string | number
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+
+      const url = `${API_ENDPOINTS.LEARN.LEARN_SCREEN}/${data}/${API_ENDPOINTS.LEARN.LESSONS}`;
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching course details screen data:", error);
+      throw error;
+    }
+  },
+
   enrollCourse: async (
     data?: string | number
   ): Promise<ApiResponse<CategoryScreenResponse>> => {

@@ -1,74 +1,130 @@
+import { learnService } from "@/api/services/learn.service";
+import { searchService } from "@/api/services/search.service";
 import { Category } from "@/components/CategoryList";
 import PopularCourseScreen from "@/components/PopularCourseScreen";
 import { router, Stack } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+
+export interface CourseItem {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: string;
+  discount_price: string | null;
+  rating: string;
+  is_enrolled: boolean;
+  enrollments: number;
+  reviews_count: number;
+  level: string;
+  duration: string;
+  status: string;
+  slug: string;
+  lessons_count: number;
+  category: Category;
+}
 
 const PopularCourse = () => {
-  const categories: Category[] = [
-    { id: "7", name: "All" },
-    { id: "1", name: "Design" },
-    { id: "2", name: "Development" },
-    { id: "3", name: "Business" },
-    { id: "4", name: "Music" },
-    { id: "5", name: "IT & Software" },
-    { id: "6", name: "Health & Fitness" },
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [courses, setCourses] = useState<CourseItem[]>([]);
+  const [query, setQuery] = useState(""); 
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  const popularCourses = [
-    {
-      id: "1",
-      image: require("../../assets/images/c1.png"),
-      category: "Website Development",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: 4.8,
-      reviews: 1892,
-    },
-    {
-      id: "2",
-      image: require("../../assets/images/c2.png"),
-      category: "Graphics Design",
-      title: "Professional Course",
-      price: "98.00",
-      rating: 4.9,
-      reviews: 2101,
-    },
-    {
-      id: "3",
-      image: require("../../assets/images/c3.png"),
-      category: "IT Support Specialist",
-      title: "Professional Certificate",
-      price: "120.00",
-      rating: 4.8,
-      reviews: 1812,
-    },
-    {
-      id: "4",
-      image: require("../../assets/images/c4.png"),
-      category: "Marketing",
-      title: "Professional Course",
-      price: "96.00",
-      rating: 4.8,
-      reviews: 1654,
-    },
-  ];
+
+  const fetchCategory = async () => {
+    try {
+      const res = await searchService.categoryScreenPaginated({ page: 1, limit: 20 });
+      const newCategories = res?.data?.categories ?? [];
+      setCategories(newCategories);
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: (error as any)?.message || "Failed to load categories",
+      });
+    }
+  };
+
+  const fetchCourses = async (pageNum: number = 1, replace = false) => {
+    if (replace) setIsInitialLoading(true);
+    else setIsFetchingMore(true);
+
+    try {
+      const res = await learnService.learnScreenPaginated({
+        search: query,
+        page: pageNum,
+        limit: 20,
+      });
+
+      const newCourses = res?.data?.courses ?? [];
+      const meta = res?.data?.meta;
+      const currentPage = meta?.current_page ?? pageNum;
+      const lastPage = meta?.last_page ?? currentPage;
+
+      setCourses((prev) => (replace ? newCourses : [...prev, ...newCourses]));
+      setHasMore(currentPage < lastPage);
+      setPage(currentPage);
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: (error as any)?.message ?? "Failed to load courses",
+      });
+    } finally {
+      setIsInitialLoading(false);
+      setIsFetchingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+    fetchCourses(1, true);
+  }, []);
+
+
+  const handleLoadMore = () => {
+    if (!isFetchingMore && hasMore) {
+      fetchCourses(page + 1,);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setPage(1);
+    fetchCourses(1, true);
+  };
+
+  const handleSearchSectionPress = (category: Category) => {
+    if (category.name === query) return; 
+    setQuery(category.name);
+    setPage(1);
+    fetchCourses(1, true);
+  };
 
   return (
     <>
       <Stack.Screen options={{ title: "Popular Course", headerShown: true }} />
       <PopularCourseScreen
         sections={categories}
-        courses={popularCourses}
+        onSectionPress={handleSearchSectionPress}
+        courses={courses}
         onCardPress={(data) =>
           router.navigate({
             pathname: "/(pages)/courseDetails",
-            params: { data: JSON.stringify(data) },
+            params: { data: data.id },
+            
           })
         }
+        isLoading={isInitialLoading}
+        isFetching={isFetchingMore}
+        handleRefresh={handleRefresh}
+        fetchMoreCourse={handleLoadMore}
       />
     </>
   );
 };
 
 export default PopularCourse;
-

@@ -32,18 +32,9 @@ const CourseCard: React.FC<CoursesProps> = ({
   lessons_count,
 }) => {
   const handlePress = () => {
-    router.navigate({
-      pathname: "/courseDetails",
-      params: {
-        data: JSON.stringify({
-          image,
-          // category,
-          // title,
-          // price,
-          // rating,
-          // reviews,
-        }),
-      },
+      router.navigate({
+        pathname: "/(pages)/courseDetails",
+        params: { data: id },
     });
   };
 

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import {
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity
 } from "react-native";
 import { Category } from "./CategoryList";
 import LearnCard from "./LearnCard";
@@ -13,15 +15,23 @@ import { ThemedView } from "./ThemedView";
 
 interface PopularCourseScreenProps {
   sections: Category[];
+  onSectionPress?: (item: Category) => void;
   courses: LearnCardProps[];
   onCardPress?: (item: LearnCardProps) => void;
-  onSectionPress?: (item: Category) => void;
+  isLoading?: boolean;
+  isFetching?: boolean;
+  handleRefresh?: () => void;
+  fetchMoreCourse?: () => void;
 }
 const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
   sections,
+  onSectionPress,
   courses,
   onCardPress,
-  onSectionPress,
+  isFetching = false,
+  isLoading = false,
+  handleRefresh,
+  fetchMoreCourse,
 }) => {
   const [activeId, setActiveId] = useState("all");
 
@@ -53,18 +63,42 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
         </ScrollView>
       </ThemedView>
 
+      {isFetching || isLoading && (
+        <ThemedView>
+          <ActivityIndicator size="large" color="green" />
+        </ThemedView>
+      )}
+
       <FlatList
         data={courses}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <LearnCard
             item={item}
             onPress={() => onCardPress?.(item)}
-            onBookmarkPress={() => {}}
+            onBookmarkPress={() => { }}
           />
         )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.list}
+        ListEmptyComponent={
+          <ThemedView style={styles.emptyView}>
+            <ThemedText>No courses found</ThemedText>
+          </ThemedView>
+        }
+        ListFooterComponent={
+          isFetching ? (
+            <ThemedView style={styles.footerLoader}>
+              <ActivityIndicator size="small" color="green" />
+            </ThemedView>
+          ) : <ThemedView style={{ height: 60 }} /> 
+        }
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
+        }
+        onEndReached={fetchMoreCourse}
+        onEndReachedThreshold={0.3}
+
       />
     </ThemedView>
   );
@@ -101,6 +135,13 @@ const styles = StyleSheet.create({
   },
   activeChipText: {
     color: "#fff",
+  },
+  emptyView: {
+    marginVertical: 40,
+    alignItems: "center",
+  },
+  footerLoader: {
+    paddingVertical: 16,
   },
 });
 
