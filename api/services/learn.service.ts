@@ -64,12 +64,12 @@ export const learnService = {
     }
   },
 
-  currriculumScreen: async (
+  curriculumScreen: async (
     data: string | number
   ): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
 
-      const url = `${API_ENDPOINTS.LEARN.LEARN_SCREEN}/${data}/${API_ENDPOINTS.LEARN.LESSONS}`;
+      const url = `${API_ENDPOINTS.LEARN.SECTIONS}/${data}`;
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
       return response.data;
     } catch (error) {

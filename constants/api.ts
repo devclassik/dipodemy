@@ -38,6 +38,7 @@ export const API_ENDPOINTS = {
     LESSONS: "lessons",
     LEARN_SCREEN_COURSE_DETAILS: "categories/course-details",
     LEARN_SCREEN_COURSE_LIST: "categories/courses",
+    SECTIONS: "sections",
   },
   COURSE: {
     ENROLLED_COURSES: "enrollments",

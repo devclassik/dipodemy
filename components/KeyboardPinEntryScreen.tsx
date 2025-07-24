@@ -38,7 +38,7 @@ const KeyboardPinEntryScreen = () => {
         }
         const res = await authService.verifyOtp(userdata);
         console.log(res.data);
-        if (res.data.status ===200) {
+        if (res.data.status === 200 || res.data.status === 409) {
           setShowModal(true);
         }
         Toast.show({

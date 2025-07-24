@@ -82,7 +82,12 @@ const LoginScreen = () => {
       } else {
         await AsyncStorage.removeItem("user_creds");
       }
-      router.replace("/(tabs)");
+
+      if (res.data.user.isEmailVerified) {
+        router.replace("/(tabs)");
+      } else {
+        router.replace("/(auth)/pin");
+      }
     } catch (error) {
       console.error("Login Error:", error);
       Toast.show({
@@ -97,9 +102,9 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
@@ -186,7 +191,9 @@ const LoginScreen = () => {
               <TouchableOpacity
                 onPress={() => router.navigate("/(auth)/forgetPassword")}
               >
-                <ThemedText style={styles.forgotText}>Forget password</ThemedText>
+                <ThemedText style={styles.forgotText}>
+                  Forget password
+                </ThemedText>
               </TouchableOpacity>
             </View>
 

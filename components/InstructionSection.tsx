@@ -8,12 +8,31 @@ import PagesCourseDescription from "./PagesCourseDescription";
 import ParallaxScrollView from "./ParallaxScrollView";
 import { ThemedView } from "./ThemedView";
 
+export interface Lesson {
+  id: number;
+  title: string;
+  description: string;
+  video_url: string;
+  pdf_url: string;
+  order: string;
+  status: boolean;
+  content_type: string;
+}
+
+export interface Section {
+  id: number;
+  title: string;
+  description: string;
+  order: string;
+  status: string;
+  lessons: Lesson[];
+}
 const InstructionSection = () => {
   const { data } = useLocalSearchParams();
   const [courseDetail, setCourseDetail] = useState<any>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [curriculum, setCurriculum] = useState(false);
+  const [curriculum, setCurriculum] = useState<Section[]>([]);
 
   const courseId = useCallback(() => {
     try {
@@ -43,8 +62,8 @@ const InstructionSection = () => {
   const onCorriculumPress = async () => {
     setIsLoading(true);
     try {
-      const res = await learnService.currriculumScreen(courseId());
-      setCurriculum(res.data.lessons);
+      const res = await learnService.curriculumScreen(courseId());      
+      setCurriculum(res.data.sections);
     } catch (error) {
       console.error("Login Error:", error);
       Toast.show({
@@ -59,7 +78,7 @@ const InstructionSection = () => {
 
   useEffect(() => {
     fetchCourses();
-    // onCorriculumPress();
+    onCorriculumPress();
   }, [fetchCourses]);
 
   const enrollCourse = async () => {
@@ -135,10 +154,11 @@ const InstructionSection = () => {
             hours={courseDetail?.duration}
             price={courseDetail?.price}
             description={courseDetail?.title}
-            // curriculum={curriculum}
+            curriculum={curriculum}
             review={courseDetail?.reviews}
             courseId={courseDetail?.id}
             onEnroll={enrollCourse}
+            onPress={enrollCourse}
           />
         </ThemedView>
       </ParallaxScrollView>

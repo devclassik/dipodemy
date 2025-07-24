@@ -41,4 +41,27 @@ export const searchService = {
       throw error;
     }
   },
+
+  categoryScreenIdPaginated: async (
+    id: any,
+    params: { search?: string; page?: number; limit?: number }
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+      console.log("Fetching paginated category screen data with params:",);
+      
+      let url = API_ENDPOINTS.SEARCH.CATEGORY_LIST;
+      if (id) {
+        url += `/${id}`;
+      }
+      const query: string[] = [];
+      if (params.search) query.push(`search=${params.search}`);
+      if (params.page) query.push(`page=${params.page}`);
+      if (params.limit) query.push(`per_page=${params.limit}`);
+      if (query.length) url += `?${query.join("&")}`;
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);      
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

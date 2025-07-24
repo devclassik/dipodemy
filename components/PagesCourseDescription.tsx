@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import About from "./About";
 import CourseInfoScreen from "./CourseInfo";
+import { Section } from "./InstructionSection";
 import LessonSections from "./LessonSections";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
@@ -36,18 +37,10 @@ interface CourseCardProps {
   description: string;
   isPaid?: boolean;
   onPress?: () => void;
-  curriculum?: curriculum[];
+  curriculum?: Section[];
   review?: Review[];
   courseId?: number;
   onEnroll?: () => void;
-}
-export interface curriculum {
-  section: string;
-  duration: string;
-  lessons: {
-    title: string;
-    duration: string;
-  }[];
 }
 
 const PagesCourseDescription: React.FC<CourseCardProps> = ({
@@ -59,7 +52,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
   price,
   description,
   isPaid = true,
-  onPress = () => {},
+  onPress,
   curriculum = [],
   review = [],
   courseId = 0,
@@ -77,7 +70,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         <View style={styles.header}>
           <ThemedText style={styles.categoryText}>{category}</ThemedText>
           <View style={styles.ratingAndButton}>
-            <Ionicons name="star" size={14} color="#FFC107" />
+            <Ionicons name="star" size={14} color={colors.accent}/>
             <ThemedText style={styles.ratingText}>{rating}</ThemedText>
             {isPaid && (
               <TouchableOpacity style={styles.playButton} onPress={onPress}>
@@ -92,12 +85,12 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         <View style={styles.detailsContainer}>
           <View style={styles.leftDetails}>
             <View style={styles.detailItem}>
-              <Ionicons name="videocam-outline" size={16} color="gray" />
+              <Ionicons name="videocam-outline" size={16} color={colors.green} />
               <ThemedText style={styles.detailText}>{classes} Class</ThemedText>
             </View>
             <ThemedText style={{ color: "#000" }}>|</ThemedText>
             <View style={styles.detailItem}>
-              <Ionicons name="time-outline" size={16} color="gray" />
+              <Ionicons name="time-outline" size={16} color={colors.green} />
               <ThemedText style={styles.detailText}>{hours}</ThemedText>
             </View>
           </View>
@@ -200,7 +193,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoryText: {
-    fontSize: 12,
     color: "#FF6B00",
     fontWeight: "bold",
   },

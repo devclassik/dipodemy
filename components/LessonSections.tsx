@@ -7,12 +7,13 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import { curriculum } from "./PagesCourseDescription";
+import { Section } from "./InstructionSection";
 import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 interface LessonSectionsProps {
-  curriculum: curriculum[];
-  onPress: () => void; // Optional onPress function for the button
+  curriculum: Section[];
+  onPress: () => void;
 }
 const LessonSections: React.FC<LessonSectionsProps> = ({
   curriculum,
@@ -32,33 +33,36 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
               alignItems: "center",
             }}
           >
-            <ThemedText style={styles.sectionTitle}>
-              {section.section}
+            <ThemedText style={styles.sectionTitle}>{section.title}</ThemedText>
+            <ThemedText style={styles.priceText}>
+              {section.duration || "N/A"}{" "}
             </ThemedText>
-            <ThemedText style={styles.priceText}>{section.duration}</ThemedText>
           </View>
           {section.lessons.map((lesson, lessonIndex) => (
-            <View key={lessonIndex} style={styles.lessonRow}>
-              <ThemedText style={styles.lessonIndex}>
-                {lessonIndex + 1}.
-              </ThemedText>
-              <View style={{ flex: 1, paddingLeft: 10 }}>
-                <ThemedText style={styles.lessonTitle}>
-                  {lesson.title}
+            <>
+              <View key={lessonIndex} style={styles.lessonRow}>
+                <ThemedText style={styles.lessonIndex}>
+                  {lessonIndex + 1}.
                 </ThemedText>
-                <ThemedText style={styles.lessonDuration}>
-                  {lesson.duration}
-                </ThemedText>
+                <View style={{ flex: 1, paddingLeft: 10 }}>
+                  <ThemedText style={styles.lessonTitle}>
+                    {lesson.title}
+                  </ThemedText>
+                  <ThemedText style={styles.lessonDuration}>
+                    {lesson.duration || "N/A"}
+                  </ThemedText>
+                </View>
+                <TouchableOpacity onPress={onPress}>
+                  <Ionicons
+                    name={
+                      lessonIndex > 1 ? "lock-closed-outline" : "play-outline"
+                    }
+                    color={colors.green}
+                  />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={onPress}>
-                <Ionicons
-                  name={
-                    lessonIndex > 1 ? "lock-closed-outline" : "play-outline"
-                  }
-                  color={colors.green}
-                />
-              </TouchableOpacity>
-            </View>
+              <ThemedView style={styles.lessonSeparator} />
+            </>
           ))}
         </View>
       ))}
@@ -94,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8F1FF",
     borderRadius: 10,
     textAlign: "center",
-    textAlignVertical: "center", // works on Android
+    textAlignVertical: "center",
   },
 
   lessonTitle: {
@@ -105,6 +109,11 @@ const styles = StyleSheet.create({
   lessonDuration: {
     marginLeft: 8,
     color: "gray",
+  },
+  lessonSeparator: {
+    height: 1,
+    backgroundColor: "green",
+    marginTop: 10,
   },
 });
 

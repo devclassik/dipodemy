@@ -19,7 +19,7 @@ interface Category {
   id: number;
   name: string;
   image: string;
-  status: string; // Match the type from api/types.ts
+  status: string;
 }
 
 export default function SearchScreen() {
@@ -59,8 +59,8 @@ export default function SearchScreen() {
       });
       console.log(res.data.data);
       
-      const newCategories = res?.data?.data?.categories ?? [];
-      const meta = res?.data?.data?.meta;
+      const newCategories = res?.data?.categories ?? [];
+      const meta = res?.data?.meta;
       const currentPage = meta?.current_page ?? pageNum;
       const lastPage = meta?.last_page ?? currentPage;
       setCategories((prev) => (replace ? newCategories : [...prev, ...newCategories]));
@@ -120,8 +120,8 @@ export default function SearchScreen() {
             style={styles.categoryItem}
             onPress={() =>
               router.navigate({
-                pathname: "/learn",
-                params: { data: category.id },
+                pathname: "/(pages)/courseCategory",
+                params: { data: JSON.stringify({ categoryName: category.name, id: category.id }) },
               })
             }
           >
