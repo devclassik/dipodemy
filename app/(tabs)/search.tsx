@@ -1,4 +1,5 @@
 import { searchService } from "@/api/services/search.service";
+import { Category } from "@/components/CategoryList";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import Search from "@/components/Search";
 import { ThemedText } from "@/components/ThemedText";
@@ -15,12 +16,6 @@ import {
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
-interface Category {
-  id: number;
-  name: string;
-  image: string;
-  status: string;
-}
 
 export default function SearchScreen() {
   const { data } = useLocalSearchParams();

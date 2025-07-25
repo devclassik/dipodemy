@@ -12,7 +12,7 @@ export default function PaystackWebView() {
   const handleNavigationChange = (navState: any) => {
     if (navState.url.includes("verify")) {
       //   router.replace("/payment-success"); // or goBack() or a toast
-      router.navigate("/(tabs)/course");
+      router.replace("/(tabs)/course");
     }
   };
 

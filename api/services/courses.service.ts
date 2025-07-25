@@ -24,18 +24,21 @@ export const courseService = {
   },
 
   learnScreenPaginated: async (
-    params: { search?: string; page?: number; limit?: number }
+    params: { search?: string; status?: string; page?: number; limit?: number }
   ): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
-      // console.log("Fetching paginated course screen data with params:",);
       
       let url = API_ENDPOINTS.COURSE.ENROLLED_COURSES;
       const query: string[] = [];
       if (params.search) query.push(`search=${params.search}`);
       if (params.page) query.push(`page=${params.page}`);
-      if (params.limit) query.push(`limit=${params.limit}`);
+      if (params.status) query.push(`status=${params.status}`);
+      if (params.limit) query.push(`per_page=${params.limit}`);
       if (query.length) url += `?${query.join("&")}`;
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
+
+      // console.log("hahahaaaahha", url);
+      
       return response.data;
     } catch (error) {
       throw error;

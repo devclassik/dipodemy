@@ -1,32 +1,41 @@
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
-import MyCourseCard, { MyCourseCardProps } from "./MyCourseCard";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+} from "react-native";
+import MyCourseCard, { Course } from "./MyCourseCard";
 import { ThemedView } from "./ThemedView";
 
 interface MyCourseScreenProps {
-  courses: MyCourseCardProps[];
-  onCardPress?: (item: MyCourseCardProps) => void;
+  courses: Course[];
   isCompleted?: boolean;
+  onCardPress?: (item: Course) => void;
   isCompletedAction?: () => void;
   onEndReached?: () => void;
   isFetchingMore?: boolean;
+  isLoading: boolean;
+  handleRefresh?: () => void;
 }
 const MyCourseScreen: React.FC<MyCourseScreenProps> = ({
   courses = [],
   onCardPress,
-  isCompleted,
+  isCompleted = false,
   isCompletedAction,
   onEndReached,
-  isFetchingMore
+  isFetchingMore,
+  isLoading,
+  handleRefresh,
 }) => {
-  
   return (
     <ThemedView>
       <FlatList
         data={courses}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <MyCourseCard
+            key={item.id}
             item={item}
             onPress={() => onCardPress?.(item)}
             onBookmarkPress={() => {}}
@@ -34,8 +43,14 @@ const MyCourseScreen: React.FC<MyCourseScreenProps> = ({
             isCompletedAction={isCompletedAction}
           />
         )}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.list}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={
+          isFetchingMore ? <ActivityIndicator size="small" /> : null
+        }
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
+        }
       />
     </ThemedView>
   );

@@ -2,15 +2,72 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    TouchableOpacity,
-    useColorScheme,
-    View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
 } from "react-native";
+import { Category } from "./CategoryList";
 import ProgressBar from "./CustomProgressbar";
 import { ThemedText } from "./ThemedText";
 
+interface Lesson {
+    id: number;
+    title: string;
+    description: string;
+    video_url: string;
+    pdf_url: string;
+    order: string; // Or number, if always numeric
+    status: boolean;
+    content_type: string; // Assuming these are the possible values
+    is_completed: boolean;
+}
+
+// Define the structure for a Section
+interface Section {
+    id: number;
+    title: string;
+    description: string;
+    order: string; // Or number, if always numeric
+    status: string; // e.g., "published", "draft"
+    lessons: Lesson[];
+}
+
+// Define the structure for EnrollmentStatus
+interface EnrollmentStatus {
+    status: string; // e.g., "enrolled", "completed"
+    completed_at: string | null; // Assuming it could be a date string or null
+    progress: string; // e.g., "0.00%"
+}
+
+// Define the structure for a Course
+export interface Course {
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    price: string; // Or number, if always numeric
+    discount_price: string | null; // Or number, if always numeric, and could be null
+    rating: string; // Or number
+    is_enrolled: boolean;
+    enrollments: number;
+    reviews_count: number;
+    level: string; // e.g., "intermediate"
+    duration: string; // e.g., "16 weeks"
+    status: string; // e.g., "published"
+    slug: string;
+    lessons_count: number;
+    progress: string; // e.g., "0%"
+    enrollment_status: EnrollmentStatus;
+    category: Category;
+    sections: Section[];
+}
+
+// If you have an array of courses, you can define it as:
+export interface CoursesData {
+    courses: Course[];
+}
 export interface MyCourseCardProps {
   id: string;
   image: any;
@@ -25,7 +82,7 @@ export interface MyCourseCardProps {
 }
 
 const MyCourseCard: React.FC<{
-  item: MyCourseCardProps;
+  item: Course;
   certificates?: string;
   onPress?: () => void;
   onBookmarkPress?: () => void;
@@ -46,18 +103,18 @@ const MyCourseCard: React.FC<{
   const [save, setSave] = useState(Boolean);
 
   const handlePress = () => {
-    console.log("item pressed", item);
+    // console.log("item pressed", item);
     setSave(!save);
     onBookmarkPress;
   };
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Image source={item.image} style={styles.image} />
+      <Image source={{ uri: item.image }} style={styles.image} />
       <View style={{ flex: 1 }}>
         <ThemedText style={styles.title}>{item.title}</ThemedText>
         <ThemedText style={[styles.category, { color: colors.icon }]}>
-          {item.category}/{item.lessons} lessons
+          {item.category.name}/{item.lessons_count} lessons
         </ThemedText>
         <View style={styles.row}>
           <Ionicons name="star" size={14} color={colors.warning} />
@@ -99,6 +156,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 12,
     elevation: 2,
+    marginHorizontal: 12
   },
   image: {
     width: 80,

@@ -56,7 +56,6 @@ const ForgetPasswordScreen = () => {
       });
     } finally {
       setIsLoading(false);
-      // router.navigate("/(auth)/resetPassword?isReset=false");
     }
   };
 

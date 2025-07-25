@@ -19,8 +19,6 @@ export default function Learn() {
 
   const { data } = useLocalSearchParams();
 
-  // console.log("na here", data);
-
   useEffect(() => {
     let mounted = true;
 

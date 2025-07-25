@@ -1,4 +1,4 @@
-import { learnService, paystackService } from "@/api/services/learn.service";
+import { learnService } from "@/api/services/learn.service";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, RefreshControl, ScrollView, StyleSheet } from "react-native";
@@ -59,10 +59,10 @@ const InstructionSection = () => {
     }
   }, [courseId]);
 
-  const onCorriculumPress = async () => {
+  const onCurriculumPress = async () => {
     setIsLoading(true);
     try {
-      const res = await learnService.curriculumScreen(courseId());      
+      const res = await learnService.curriculumScreen(courseId());
       setCurriculum(res.data.sections);
     } catch (error) {
       console.error("Login Error:", error);
@@ -78,40 +78,35 @@ const InstructionSection = () => {
 
   useEffect(() => {
     fetchCourses();
-    onCorriculumPress();
+    onCurriculumPress();
   }, [fetchCourses]);
 
   const enrollCourse = async () => {
     Toast.show({
       type: ALERT_TYPE.INFO,
-      title: "info",
+      title: "🫥",
       textBody: "Please wait, enrolling in the course...",
     });
 
     try {
       const res = await learnService.enrollCourse(courseId());
-
       if (res?.success) {
-        const authorizationUrl = await paystackService.initiatePayment({
-          amount: res.data.paymentDetails.amount,
-          email: res.data.paymentDetails.email,
-          metadata: {
-            reference: res.data.paymentDetails.reference,
-            currency: res.data.paymentDetails.currency,
-            courseId: courseId(),
+        // const authorizationUrl = await paystackService.initiatePayment({
+        //   amount: res.data.paymentDetails.amount,
+        //   email: res.data.paymentDetails.email,
+        //   metadata: {
+        //     reference: res.data.paymentDetails.reference,
+        //     currency: res.data.paymentDetails.currency,
+        //     courseId: courseId(),
+        //   },
+        // });
+
+        router.navigate({
+          pathname: "/webView",
+          params: {
+            url: res.data.payment_data.authorization_url,
           },
         });
-
-        if (authorizationUrl.status) {
-          router.navigate({
-            pathname: "/webView",
-            params: {
-              url: authorizationUrl.data.authorization_url,
-            },
-          });
-        } else {
-          throw new Error("No payment link returned");
-        }
       }
     } catch (error) {
       Toast.show({
