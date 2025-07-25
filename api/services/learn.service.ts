@@ -39,7 +39,7 @@ export const learnService = {
       if (params.page) query.push(`page=${params.page}`);
       if (params.limit) query.push(`limit=${params.limit}`);
       if (query.length) url += `?${query.join("&")}`;
-      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);      
       return response.data;
     } catch (error) {
       throw error;

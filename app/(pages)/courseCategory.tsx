@@ -21,7 +21,6 @@ export default function CourseCategory() {
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
   const { data } = useLocalSearchParams();
-  console.log("Search Data:", data);
 
   useEffect(() => {
     let mounted = true;
@@ -33,24 +32,13 @@ export default function CourseCategory() {
           parsedData = JSON.parse(data as string);
           setSearchQuery(parsedData.categoryName ?? "");
           setCategoryId(parsedData.id ?? null);
-          console.log(
-            "Parsed Search Data:",
-            parsedData.categoryName,
-            parsedData.id
-          );
         } catch (e) {
           console.error("Invalid param data", e);
-          setSearchQuery(parsedData.categoryName ?? "");
         }
       }
 
-      if (mounted) {
-        setSearchQuery(parsedData.categoryName ?? "");
-        await fetchCoursesByCategory(
-          parsedData.id,
-          parsedData.categoryName,
-          true
-        );
+      if (mounted && parsedData.id) {
+        await fetchCoursesByCategory(parsedData.id, true);
       }
     };
 
@@ -62,63 +50,66 @@ export default function CourseCategory() {
   }, []);
 
   const fetchCoursesByCategory = async (
-    idToFetch: number,
-    query: string = "",
+    id: number,
     isRefresh: boolean = false
   ) => {
     try {
-      if (!isRefresh && idToFetch > 0) {
-        setLoadingMore(true);
+      if (isRefresh) {
+        setLoading(true);
       }
 
-      const res = await searchService.categoryScreenIdPaginated(categoryId, {
-        page: idToFetch,
-        search: query,
-        limit: 10,
-      });
+      const res = await searchService.categoryScreenIdPaginated(id);
+      const results = res.data?.courses.map((course: any) => ({
+        ...course,
+        category: res.data?.category,
+      }));
 
-      const results = res.data.courses;
-      setCourses((prev) => (idToFetch === 1 ? results : [...prev, ...results]));
-      setHasMore(res.data.meta.current_page < res.data.meta.last_page);
-      setPage(idToFetch);
+      setCourses(results);
+      setHasMore(false);
+      setPage(1);
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Oops",
         textBody: (error as any)?.message ?? "Failed to fetch courses",
       });
-      console.error("Fetch failed:", error);
     } finally {
-      if (!isRefresh && idToFetch > 0) setLoadingMore(false);
+      setLoading(false);
       setRefreshing(false);
     }
   };
 
   const handleRefresh = () => {
-    fetchCoursesByCategory(categoryId as number, searchQuery, true);
-  };
-
-  const loadNextPage = () => {
-    if (hasMore && !refreshing && !loadingMore) {
-      if (categoryId) fetchCoursesByCategory(page + 1, categoryId.toString());
+    if (searchTriggered) {
+      fetchCourses(1, searchQuery, true);
+    } else if (categoryId) {
+      fetchCoursesByCategory(categoryId, true);
     }
   };
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
+    router.setParams({});
     setSearchTriggered(true);
     setLoading(true);
+
     try {
-      const result = await learnService.learnScreenPaginated({
+      const res = await learnService.learnScreenPaginated({
         page: 1,
         search: searchQuery,
       });
-      setCourses(result.data.courses);
+      console.log(res.data.courses);
+      setCourses(res.data.courses);
     } finally {
       setLoading(false);
       setSearchTriggered(false);
     }
-    fetchCourses(1, searchQuery);
+  };
+
+  const loadNextPage = () => {
+    if (searchTriggered && hasMore && !refreshing && !loadingMore) {
+      fetchCourses(page + 1, searchQuery);
+    }
   };
 
   const fetchCourses = async (
@@ -127,9 +118,7 @@ export default function CourseCategory() {
     isRefresh: boolean = false
   ) => {
     try {
-      if (!isRefresh && pageToFetch > 1) {
-        setLoadingMore(true); // start loadingMore
-      }
+      if (!isRefresh && pageToFetch > 1) setLoadingMore(true);
 
       const res = await learnService.learnScreenPaginated({
         page: pageToFetch,
@@ -151,7 +140,6 @@ export default function CourseCategory() {
         title: "Oops",
         textBody: (error as any)?.message ?? "Failed to fetch courses",
       });
-      console.error("Fetch failed:", error);
     } finally {
       if (!isRefresh && pageToFetch > 1) setLoadingMore(false);
       setRefreshing(false);
@@ -168,7 +156,7 @@ export default function CourseCategory() {
           onSearchChange={setSearchQuery}
           onSearchPress={handleSearch}
         />
-        {loading && data.length === 0 ? (
+        {loading ? (
           <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>
             <LoadingIndicator size="large" />
           </ThemedView>
@@ -195,5 +183,6 @@ export default function CourseCategory() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    top: -80,
   },
 });
