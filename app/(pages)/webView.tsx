@@ -6,12 +6,11 @@ import React from "react";
 import { WebView } from "react-native-webview";
 
 export default function PaystackWebView() {
-  const { url, reference } = useLocalSearchParams();
+  const { url, reference, pageTitle } = useLocalSearchParams();
   const router = useRouter();
 
   const handleNavigationChange = (navState: any) => {
     if (navState.url.includes("verify")) {
-      //   router.replace("/payment-success"); // or goBack() or a toast
       router.replace("/(tabs)/course");
     }
   };
@@ -20,7 +19,7 @@ export default function PaystackWebView() {
     <>
       <Stack.Screen
         options={{
-          title: "Paystack Payment",
+          title: typeof pageTitle === "string" ? pageTitle : "Paystack Payment",
           headerShown: true,
         }}
       />

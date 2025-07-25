@@ -1,19 +1,23 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import {
+  Pressable,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
-import { Section } from "./InstructionSection";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { Lesson, Section } from "./InstructionSection";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 interface LessonSectionsProps {
   curriculum: Section[];
-  onPress: () => void;
+  onPress: (item: Lesson) => void;
 }
 const LessonSections: React.FC<LessonSectionsProps> = ({
   curriculum,
@@ -22,51 +26,80 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
+  const handlePdfPress = (url: string) => {
+    Toast.show({
+      type: ALERT_TYPE.INFO,
+      title: "🥳 PDF Loading",
+      textBody: "Please wait while we load the PDF.",
+    });
+    router.navigate({
+      pathname: "/(pages)/webView",
+      params: { url, pageTitle: "PDF Viewer" },
+    });
+  };
+
   return (
-    <View>
-      {curriculum?.map((section, sectionIndex) => (
-        <View key={sectionIndex} style={styles.sectionBlock}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <ThemedText style={styles.sectionTitle}>{section.title}</ThemedText>
-            <ThemedText style={styles.priceText}>
-              {section.duration || "N/A"}{" "}
-            </ThemedText>
-          </View>
-          {section.lessons.map((lesson, lessonIndex) => (
-            <>
-              <View key={lessonIndex} style={styles.lessonRow}>
-                <ThemedText style={styles.lessonIndex}>
-                  {lessonIndex + 1}.
-                </ThemedText>
-                <View style={{ flex: 1, paddingLeft: 10 }}>
-                  <ThemedText style={styles.lessonTitle}>
-                    {lesson.title}
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+    >
+      <View>
+        {curriculum?.map((section, sectionIndex) => (
+          <View key={sectionIndex} style={styles.sectionBlock}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText style={styles.sectionTitle}>
+                {section.title}
+              </ThemedText>
+              <ThemedText style={styles.priceText}>
+                {section.lessons.length || "N/A"}{" "}
+                {section.lessons.length > 1 ? "Lessons" : "Lesson"}
+              </ThemedText>
+            </View>
+            {section.lessons.map((lesson, lessonIndex) => (
+              <>
+                <View key={lessonIndex} style={styles.lessonRow}>
+                  <ThemedText style={styles.lessonIndex}>
+                    {lessonIndex + 1}.
                   </ThemedText>
-                  <ThemedText style={styles.lessonDuration}>
-                    {lesson.duration || "N/A"}
-                  </ThemedText>
+                  <View style={{ flex: 1, paddingLeft: 10 }}>
+                    <ThemedText style={styles.lessonTitle}>
+                      {lesson.title}
+                    </ThemedText>
+                    <ThemedText style={styles.lessonDuration}>
+                      {lesson.title || "N/A"}
+                    </ThemedText>
+                    {lesson.pdf_url && (
+                      <Pressable onPress={() => handlePdfPress(lesson.pdf_url)}>
+                        <ThemedText
+                          style={[
+                            styles.lessonDuration,
+                            {
+                              color: colors.themeGreen,
+                              textDecorationLine: "underline",
+                            },
+                          ]}
+                        >
+                          Click to read pdf
+                        </ThemedText>
+                      </Pressable>
+                    )}
+                  </View>
+                  <TouchableOpacity onPress={() => onPress(lesson)}>
+                    <Ionicons name="play-outline" color={colors.green} />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={onPress}>
-                  <Ionicons
-                    name={
-                      lessonIndex > 1 ? "lock-closed-outline" : "play-outline"
-                    }
-                    color={colors.green}
-                  />
-                </TouchableOpacity>
-              </View>
-              <ThemedView style={styles.lessonSeparator} />
-            </>
-          ))}
-        </View>
-      ))}
-    </View>
+                <ThemedView style={styles.lessonSeparator} />
+              </>
+            ))}
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -107,6 +140,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   lessonDuration: {
+    // fontSize: 12,
     marginLeft: 8,
     color: "gray",
   },

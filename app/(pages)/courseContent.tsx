@@ -2,37 +2,37 @@ import AssignmentReview from "@/components/AssigmentReview";
 import FooterAction from "@/components/FooterAction";
 import LessonSections from "@/components/LessonSections";
 import { ThemedView } from "@/components/ThemedView";
-import { Stack } from "expo-router";
-import React from "react";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const courseContent = () => {
-  const curriculum = [
-    {
-      section: "Introduction",
-      duration: "15 mins",
-      lessons: [
-        { title: "Welcome to the course", duration: "5 mins" },
-        { title: "Course overview", duration: "10 mins" },
-      ],
-    },
-    {
-      section: "Getting Started with React Native",
-      duration: "45 mins",
-      lessons: [
-        { title: "Setting up the environment", duration: "15 mins" },
-        { title: "Exploring core components", duration: "20 mins" },
-        { title: "Running your first app", duration: "10 mins" },
-      ],
-    },
-    {
-      section: "Navigation & Routing",
-      duration: "30 mins",
-      lessons: [
-        { title: "Using React Navigation", duration: "15 mins" },
-        { title: "Stack & Tab navigation", duration: "15 mins" },
-      ],
-    },
-  ];
+  const { data } = useLocalSearchParams();
+  const [courses, setCourses] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      try {
+        const parsed = JSON.parse(data as string);
+        setCourses(parsed);
+      } catch {
+        console.log("Failed to parse course data");
+      }
+    }
+  }, [data]);
+
+  const handlePlayPress = (url: string) => {
+    Toast.show({
+      type: ALERT_TYPE.INFO,
+      title: "🥳 Video Loading",
+      textBody: "Please wait while we load the video.",
+    });
+    router.navigate({
+      pathname: "/(pages)/videoPlayer",
+      params: { url },
+    });
+  };
 
   return (
     <>
@@ -42,25 +42,37 @@ const courseContent = () => {
           headerShown: true,
         }}
       />
-      <AssignmentReview />
-
-      <ThemedView
-        style={{
-          backgroundColor: "#fff",
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          borderRadius: 10,
-          marginHorizontal: 16,
-          marginVertical: 20,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 3,
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 100,
         }}
       >
-        <LessonSections curriculum={curriculum} onPress={() => {}} />
-      </ThemedView>
-      <FooterAction text="Start Course Again" isFresh={true} />
+        <AssignmentReview />
+
+        <ThemedView
+          style={{
+            backgroundColor: "#fff",
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 10,
+            marginHorizontal: 16,
+            marginVertical: 20,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
+          <LessonSections
+            curriculum={courses.sections}
+            onPress={(item) => {
+              console.log("Selected lesson:", item);
+              handlePlayPress(item.video_url);
+            }}
+          />
+        </ThemedView>
+        <FooterAction text="Start Course Again" isFresh={true} />
+      </ScrollView>
     </>
   );
 };
