@@ -47,6 +47,26 @@ export const authService = {
     }
   },
 
+  forgotPassword: async (userData: Partial<User>): Promise<ApiResponse<AuthResponse>> => {
+    try {
+      const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, userData);
+      return response.data;
+    } catch (error) {
+      // console.error('Login error:', error);
+      throw error;
+    }
+  },
+
+  resetForgotPassword: async (userData: Partial<User>): Promise<ApiResponse<AuthResponse>> => {
+    try {
+      const response = await api.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.RESET_FORGOTTEN_PASSWORD, userData);
+      return response.data;
+    } catch (error) {
+      // console.error('Login error:', error);
+      throw error;
+    }
+  },
+
   // Get current user
   getCurrentUser: async (): Promise<ApiResponse<User>> => {
     const response = await api.get<ApiResponse<User>>(API_ENDPOINTS.AUTH.ME);

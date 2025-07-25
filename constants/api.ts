@@ -13,6 +13,8 @@ export const API_ENDPOINTS = {
     ME: "/auth/me",
     REFRESH_TOKEN: "/auth/refresh-token",
     RESET_PASSWORD: "change-password",
+    FORGOT_PASSWORD: "forgot-password",
+    RESET_FORGOTTEN_PASSWORD: "reset-password",
   },
 
   // User endpoints

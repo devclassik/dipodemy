@@ -26,6 +26,7 @@ export interface User {
   phone: string;
   password: string;
   password_confirmation: string;
+  otp?: string;
   // Add other user properties
 }
 
