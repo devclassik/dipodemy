@@ -35,8 +35,6 @@ export const courseService = {
       if (params.limit) query.push(`per_page=${params.limit}`);
       if (query.length) url += `?${query.join("&")}`;
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
-
-      console.log("hahahaaaahha", url);
       
       return response.data;
     } catch (error) {

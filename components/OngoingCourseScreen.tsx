@@ -1,7 +1,8 @@
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import MyCourseCard, { MyCourseCardProps } from "./MyCourseCard";
 import Search from "./Search";
+import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 interface OngoingCourseScreenProps {
@@ -14,6 +15,10 @@ interface OngoingCourseScreenProps {
   isProgress?: boolean;
   setSearchQuery?: (query: string) => void;
   handleSearch?: () => void;
+  refreshing?: boolean;
+  onRefresh?: () => void;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
 }
 export interface TabOptionsScreen {
   options: "completed" | "ongoing" | "Courses" | "Mentors";
@@ -28,6 +33,10 @@ const OngoingCourseScreen: React.FC<OngoingCourseScreenProps> = ({
   isProgress,
   setSearchQuery,
   handleSearch,
+  refreshing = false,
+  onRefresh = () => {},
+  loadingMore = false,
+  onLoadMore = () => {},
 }) => {
   return (
     <ThemedView style={styles.container}>
@@ -53,20 +62,31 @@ const OngoingCourseScreen: React.FC<OngoingCourseScreenProps> = ({
             isCompletedAction={isCompletedActions}
             isProgress={isProgress}
             totalLessons={item.sections.length || 0}
-            completedLessons={item.sections.filter((section) =>
-              section.lessons.some((lesson) => lesson.is_completed)
-            ).length}
+            completedLessons={
+              item.sections.filter((section) =>
+                section.lessons.some((lesson) => lesson.is_completed)
+              ).length
+            }
           />
         )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.list}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        ListEmptyComponent={() => (
+          <ThemedView style={{ padding: 20, alignItems: "center" }}>
+            <ThemedText>No courses found.</ThemedText>
+          </ThemedView>
+        )}
+        onEndReachedThreshold={0.5}
       />
     </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
+  container: {
     flex: 1,
   },
   list: {

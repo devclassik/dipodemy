@@ -102,7 +102,7 @@ const OngoingCourse = () => {
       />
       {loading ? (
         <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>
-          <LoadingIndicator size="large" />
+          <LoadingIndicator size="large" onReload={handleRefresh} />
         </ThemedView>
       ) : (
         <OngoingCourseScreen
@@ -120,6 +120,16 @@ const OngoingCourse = () => {
           isProgress={selectedTab === "ongoing"}
           setSearchQuery={(query) => setSearchQuery(query)}
           handleSearch={handleSearch}
+          refreshing={loading}
+          onRefresh={handleRefresh}
+          loadingMore={loadingMore}
+          onLoadMore={handleLoadMore}
+          onCardPress={(data) => 
+            router.navigate({
+              pathname: "/(pages)/courseContent",
+              params: { data: JSON.stringify(data) },
+            })
+          }
         />
       )}
     </>
