@@ -51,9 +51,7 @@ export default function SearchScreen() {
         page: pageNum,
         limit: 10,
         search: search,
-      });
-      console.log(res.data.data);
-      
+      });      
       const newCategories = res?.data?.categories ?? [];
       const meta = res?.data?.meta;
       const currentPage = meta?.current_page ?? pageNum;

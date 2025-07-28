@@ -1,91 +1,98 @@
+import { courseService } from "@/api/services/courses.service";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import OngoingCourseScreen, {
   TabOptionsScreen,
 } from "@/components/OngoingCourseScreen";
+import { ThemedView } from "@/components/ThemedView";
 import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const OngoingCourse = () => {
   const [programs, setPrograms] = useState<any[]>([]);
   const [selectedTab, setSelectedTab] =
-    useState<TabOptionsScreen["options"]>("Completed");
-
-  const mockPrograms = [
-    {
-      id: "1",
-      image: require("../../assets/images/c1.png"),
-      title: "Mobile UI Essentials",
-      category: "Intermediate",
-      lessons: 28,
-      rating: 4.8,
-      duration: "6h 30min",
-    },
-    {
-      id: "2",
-      image: require("../../assets/images/c2.png"),
-      title: "UI Animation Basics",
-      category: "Beginner",
-      lessons: 24,
-      rating: 4.9,
-      duration: "3h 42min",
-    },
-    {
-      id: "3",
-      image: require("../../assets/images/c3.png"),
-      title: "Web UI Best Practices",
-      category: "Advanced",
-      lessons: 46,
-      rating: 4.8,
-      duration: "8h 43min",
-    },
-    {
-      id: "4",
-      image: require("../../assets/images/c4.png"),
-      title: "Prototype with Figma",
-      category: "Intermediate",
-      lessons: 39,
-      rating: 4.8,
-      duration: "2h 34min",
-    },
-    {
-      id: "5",
-      image: require("../../assets/images/c4.png"),
-      title: "Prototype with Figma",
-      category: "Intermediate",
-      lessons: 39,
-      rating: 4.8,
-      duration: "2h 34min",
-    },
-    {
-      id: "6",
-      image: require("../../assets/images/c4.png"),
-      title: "Prototype with Figma",
-      category: "Intermediate",
-      lessons: 39,
-      rating: 4.8,
-      duration: "2h 34min",
-    },
-  ];
+    useState<TabOptionsScreen["options"]>("ongoing");
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
-    fetchData(selectedTab);
+    loadCourses(1, selectedTab, { initial: true });
   }, []);
 
-  const fetchData = async (tab: TabOptionsScreen["options"]) => {
+  const loadCourses = async (
+    pageNum: number,
+    status: string = "",
+    options: { refresh?: boolean; initial?: boolean } = {}
+  ) => {
+    const isRefresh = options.refresh;
+    const isInitial = options.initial;
+    setIsLoading(true);
     try {
-      // Replace this mock logic with actual API calls in the future:
-      // const data = tab === "Completed"
-      //   ? await getCompletedCourses()
-      //   : await getProgressCourses();
-      const data = mockPrograms;
-      setPrograms(data);
+      if (isInitial) setLoading(true);
+      if (isRefresh) setRefreshing(true);
+      if (!isInitial && !isRefresh) setLoadingMore(true);
+
+      const res = await courseService.learnScreenPaginated({
+        page: pageNum,
+        status,
+        limit: 10,
+      });
+
+      const newCourses = res.data.courses;
+      const meta = res.data.meta;
+
+      setCourses((prev) =>
+        pageNum === 1 ? newCourses : [...prev, ...newCourses]
+      );
+      setHasMore(meta.current_page < meta.last_page);
+      setPage(meta.current_page);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: (error as any)?.message ?? "Failed to load courses",
+      });
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+      setLoadingMore(false);
+      setIsLoading(false);
     }
   };
 
   const handleTabChange = async (newTab: TabOptionsScreen["options"]) => {
     setSelectedTab(newTab);
-    await fetchData(newTab);
+    await loadCourses(1, newTab, { initial: true });
+  };
+
+  const handleRefresh = () => {
+    loadCourses(1, selectedTab, { refresh: true });
+  };
+
+  const handleLoadMore = () => {
+    if (hasMore && !loading && !refreshing) {
+      loadCourses(page + 1, status);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setLoading(true);
+    try {
+      const result = await courseService.learnScreenPaginated({
+        page: 1,
+        search: searchQuery,
+      });
+      setCourses(result.data.courses);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -93,20 +100,28 @@ const OngoingCourse = () => {
       <Stack.Screen
         options={{ title: "Ongoing/Completed Course", headerShown: true }}
       />
-      <OngoingCourseScreen
-        courses={programs}
-        selectedTab={selectedTab}
-        onTabChange={handleTabChange}
-        isCompleted={selectedTab === "Completed"}
-        isCompletedActions={
-          () => router.navigate("/(pages)/certificate")
-          //             router.navigate({
-          //   pathname: "/(pages)/myCourse",
-          //   params: { data: JSON.stringify(data) },
-          // })
-        }
-        isProgress={selectedTab === "Ongoing"}
-      />
+      {loading ? (
+        <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>
+          <LoadingIndicator size="large" />
+        </ThemedView>
+      ) : (
+        <OngoingCourseScreen
+          courses={courses}
+          selectedTab={selectedTab}
+          onTabChange={handleTabChange}
+          isCompleted={selectedTab === "completed"}
+          isCompletedActions={
+            () => router.navigate("/(pages)/certificate")
+            //             router.navigate({
+            //   pathname: "/(pages)/myCourse",
+            //   params: { data: JSON.stringify(data) },
+            // })
+          }
+          isProgress={selectedTab === "ongoing"}
+          setSearchQuery={(query) => setSearchQuery(query)}
+          handleSearch={handleSearch}
+        />
+      )}
     </>
   );
 };

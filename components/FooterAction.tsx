@@ -2,10 +2,10 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
-    Image,
-    StyleSheet,
-    TouchableOpacity,
-    useColorScheme,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedView } from "./ThemedView";
@@ -14,7 +14,7 @@ interface FooterActionProps {
   avatar?: any;
   text?: string;
   onCertPress?: () => void;
-  onButtonPress?: () => void;
+  onButtonPress: () => void;
   isFresh?: boolean;
 }
 
@@ -37,7 +37,7 @@ const FooterAction: React.FC<FooterActionProps> = ({
       </TouchableOpacity>
       <RoundedActionButton
         icon={<Ionicons name="arrow-forward" size={24} color={colors.green} />}
-        onPress={() => onButtonPress}
+        onPress={onButtonPress}
         text={text}
       />
     </ThemedView>

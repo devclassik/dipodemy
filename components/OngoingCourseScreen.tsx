@@ -12,9 +12,11 @@ interface OngoingCourseScreenProps {
   isCompleted?: boolean;
   isCompletedActions?: () => void;
   isProgress?: boolean;
+  setSearchQuery?: (query: string) => void;
+  handleSearch?: () => void;
 }
 export interface TabOptionsScreen {
-  options: "Completed" | "Ongoing" | "Courses" | "Mentors";
+  options: "completed" | "ongoing" | "Courses" | "Mentors";
 }
 const OngoingCourseScreen: React.FC<OngoingCourseScreenProps> = ({
   courses = [],
@@ -24,15 +26,19 @@ const OngoingCourseScreen: React.FC<OngoingCourseScreenProps> = ({
   isCompleted,
   isCompletedActions,
   isProgress,
+  setSearchQuery,
+  handleSearch,
 }) => {
   return (
     <ThemedView style={styles.container}>
       <Search
         selectedTab={selectedTab}
         onTabChange={onTabChange}
-        firstWord="Completed"
-        secondWord="Ongoing"
+        firstWord="completed"
+        secondWord="ongoing"
         style={{ marginTop: -40 }}
+        onSearchChange={setSearchQuery}
+        onSearchPress={handleSearch}
       />
 
       <FlatList
@@ -46,6 +52,10 @@ const OngoingCourseScreen: React.FC<OngoingCourseScreenProps> = ({
             isCompleted={isCompleted}
             isCompletedAction={isCompletedActions}
             isProgress={isProgress}
+            totalLessons={item.sections.length || 0}
+            completedLessons={item.sections.filter((section) =>
+              section.lessons.some((lesson) => lesson.is_completed)
+            ).length}
           />
         )}
         showsVerticalScrollIndicator={false}

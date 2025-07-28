@@ -5,17 +5,35 @@ import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
-const AssignmentReview = () => {
+interface AssignmentReviewProps {
+  courseId?: number | null;
+}
+
+const AssignmentReview: React.FC<AssignmentReviewProps> = ({ courseId }) => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
-
+  
   return (
     <ThemedView style={[styles.assCard, { borderColor: colors.border }]}>
-      <TouchableOpacity onPress={() => router.navigate("/(pages)/assignment")}>
-        <ThemedText style={[{ color: colors.green }]} >Assignment</ThemedText>
+      <TouchableOpacity
+        onPress={() =>
+          router.navigate({
+            pathname: "/(pages)/assignment",
+            params: { data: courseId },
+          })
+        }
+      >
+        <ThemedText style={[{ color: colors.green }]}>Assignment</ThemedText>
         <ThemedText>prepare a photoshop design and upload </ThemedText>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.navigate("/(pages)/writeReview")}>
+      <TouchableOpacity
+        onPress={() =>
+          router.navigate({
+            pathname: "/(pages)/writeReview",
+            params: { data: courseId },
+          })
+        }
+      >
         <ThemedText style={[{ color: colors.green }]}>Review</ThemedText>
         <ThemedText>Write your reviews </ThemedText>
       </TouchableOpacity>

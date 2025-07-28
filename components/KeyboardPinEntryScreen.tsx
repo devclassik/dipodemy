@@ -37,7 +37,6 @@ const KeyboardPinEntryScreen = () => {
           otp: pin
         }
         const res = await authService.verifyOtp(userdata);
-        console.log(res.data);
         if (res.data.status === 200 || res.data.status === 409) {
           setShowModal(true);
         }
@@ -102,7 +101,6 @@ const KeyboardPinEntryScreen = () => {
 
   // Action on pressing Continue
   const handleContinue = () => {
-    console.log("PIN entered:", pin);
     // TODO: Add navigation or submit logic here
     onConfirmOtp();
   };

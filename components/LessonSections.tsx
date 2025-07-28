@@ -53,7 +53,7 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
               }}
             >
               <ThemedText style={styles.sectionTitle}>
-                {section.title}
+                section {sectionIndex + 1}
               </ThemedText>
               <ThemedText style={styles.priceText}>
                 {section.lessons.length || "N/A"}{" "}

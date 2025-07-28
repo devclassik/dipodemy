@@ -13,7 +13,6 @@ export const courseService = {
       } else if (typeof data === "string" && data.trim() !== "") {
         url += `?search=${data}`;
       }
-      console.log("Fetching search screen data from:", url);
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
       // console.log('Raw server response:', response);
       return response.data;
@@ -37,7 +36,7 @@ export const courseService = {
       if (query.length) url += `?${query.join("&")}`;
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
 
-      // console.log("hahahaaaahha", url);
+      console.log("hahahaaaahha", url);
       
       return response.data;
     } catch (error) {

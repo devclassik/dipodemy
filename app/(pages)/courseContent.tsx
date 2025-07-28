@@ -10,12 +10,14 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 const courseContent = () => {
   const { data } = useLocalSearchParams();
   const [courses, setCourses] = useState<any[]>([]);
+  const [courseId, setCourseId] = useState<number | null>(null);
 
   useEffect(() => {
     if (data) {
       try {
         const parsed = JSON.parse(data as string);
         setCourses(parsed);
+        setCourseId(parsed.category.id ?? null);
       } catch {
         console.log("Failed to parse course data");
       }
@@ -47,7 +49,7 @@ const courseContent = () => {
           paddingBottom: 100,
         }}
       >
-        <AssignmentReview />
+        <AssignmentReview courseId={courseId} />
 
         <ThemedView
           style={{
@@ -71,7 +73,13 @@ const courseContent = () => {
             }}
           />
         </ThemedView>
-        <FooterAction text="Start Course Again" isFresh={true} />
+        <FooterAction
+          text="Start Course Again here"
+          isFresh={true}
+          onButtonPress={() => {
+            handlePlayPress(courses.sections[0].lessons[0].video_url);
+          }}
+        />
       </ScrollView>
     </>
   );

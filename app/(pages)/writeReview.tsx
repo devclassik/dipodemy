@@ -1,102 +1,70 @@
+import { learnService } from "@/api/services/learn.service";
+import { reviewService } from "@/api/services/review.servce";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import { ThemedView } from "@/components/ThemedView";
 import WriteReviewCard from "@/components/WriteReviewCard";
 import { Colors } from "@/constants/Colors";
-import { useFocusEffect } from "@react-navigation/native";
-import { Stack } from "expo-router";
-import React, { useCallback, useMemo, useState } from 'react';
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
-
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const WriteReviews = () => {
-  const [showModal, setShowModal] = useState(false);
+  const { data } = useLocalSearchParams();
+
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const [course, setCourse] = useState<any>(null);
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
-  const review = useMemo(
-    () => [
-      {
-        id: 1,
-        name: "Will",
-        avatar: "https://i.pravatar.cc/50?img=1",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it.",
-        rating: 4.2,
-        likes: 578,
-        time: "2 Weeks Ago",
-      },
-      {
-        id: 2,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 3,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 4,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 5,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-      {
-        id: 6,
-        name: "Martha E. Thompson",
-        avatar: "https://i.pravatar.cc/50?img=3",
-        comment:
-          "This course has been very useful. Mentor was well spoken totally loved it. It had fun sessions as well.",
-        rating: 4.6,
-        likes: 598,
-        time: "3 Weeks Ago",
-      },
-    ],
-    []
-  );
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await learnService.fetchCourseScreen(
+          data as string | number
+        );
+        setCourse(res.data.course);
+      } catch (error) {
+        console.error("Failed to load course data:", error);
+      } finally {
+        setLoading(false); // ✅ done loading
+      }
+    };
 
-  const mockCourses = {
-    id: 1,
-    category: "Graphic Design",
-    title: "Graphic Design Advanced",
-    price: "89/-",
-    rating: 4.9,
-    reviews: 7830,
-    image: require("@/assets/images/c1.png"),
+    fetchCourse();
+  }, [data]);
+
+  const submitReview = async (
+    id: number,
+    imageUri: string | null,
+    comment: string
+  ) => {
+    try {
+      await reviewService.addReviewScreen(
+        data as string | number,
+        comment,
+        imageUri
+      );
+      router.navigate("/(tabs)/course");
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Oops",
+        textBody: "Review already submitted by you",
+      });
+    }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (review.length === 0) {
-        setShowModal(true);
-      }
-      return () => {
-        setShowModal(false);
-      };
-    }, [review])
-  );
+  if (loading || !course) {
+    return (
+      <ThemedView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <LoadingIndicator />
+      </ThemedView>
+    );
+  }
 
   return (
     <>
@@ -107,13 +75,14 @@ const WriteReviews = () => {
         }}
       />
       <WriteReviewCard
-        id={mockCourses.id}
-        category={mockCourses.category}
-        title={mockCourses.title}
-        price={mockCourses.price}
-        rating={mockCourses.rating}
-        reviews={mockCourses.reviews}
-        image={mockCourses.image}
+        id={course?.id}
+        category={course?.category?.name}
+        title={course?.title}
+        price={course?.price}
+        rating={course?.rating}
+        reviews={course?.reviews.length || 0}
+        image={course?.image}
+        submitReview={submitReview}
       />
     </>
   );

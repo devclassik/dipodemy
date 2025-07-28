@@ -15,13 +15,14 @@ import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 export interface SubmitAssignmentCardProps {
-  id: number;
-  category: string;
-  title: string;
-  price: string;
-  rating: number;
-  reviews: number;
-  image: any;
+  id?: number;
+  category?: string;
+  title?: string;
+  price?: string;
+  rating?: number;
+  reviews?: number;
+  image?: any;
+  submitAssignment?: (id: number, mediaUri: string | null) => void;
 }
 
 const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
@@ -32,10 +33,24 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
   rating,
   reviews,
   image,
+  submitAssignment,
 }) => {
   const [media, setMedia] = useState<string | null>(null);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+
+  const handleSubmit = () => {
+    if (media === null) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Please select a media file before submitting.",
+      });
+      return;
+    }
+    submitAssignment?.(id, media);
+    setMedia(null);
+  };
 
   const pickMedia = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -70,7 +85,7 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
       // }
       >
         <ThemedView style={styles.card}>
-          <Image source={image} style={styles.image} />
+          <Image source={{ uri: image }} style={styles.image} />
           <View style={{ flex: 1 }}>
             <ThemedText style={styles.category}>{category}</ThemedText>
             <ThemedText style={styles.title}>{title}</ThemedText>
@@ -78,7 +93,7 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
             <View style={styles.row}>
               <Ionicons name="star" size={14} color="#FFC107" />
               <ThemedText style={styles.rating}>
-                {rating} · {reviews}
+                {rating} points | {reviews}
               </ThemedText>
             </View>
           </View>
@@ -102,7 +117,7 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
       <RoundedActionButton
         text="Submit Assignment"
         icon={<Ionicons name="arrow-forward" size={24} color={colors.green} />}
-        onPress={() => {}}
+        onPress={handleSubmit}
         style={{
           width: "60%",
           alignSelf: "center",

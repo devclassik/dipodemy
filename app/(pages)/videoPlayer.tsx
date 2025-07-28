@@ -1,10 +1,10 @@
-import LoadingIndicator from "@/components/LoadingIndicator";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { ResizeMode, Video } from "expo-av";
+// import { ResizeMode, Video } from "expo-av";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function VideoPlayerScreen() {
   const { url } = useLocalSearchParams();
@@ -43,6 +43,13 @@ export default function VideoPlayerScreen() {
     }
   };
 
+  const getVideoId = (youtubeUrl: string) => {
+    const regex = /[?&]v=([^&#]+)/;
+    const match = youtubeUrl.match(regex);
+    return match?.[1] || "";
+  };
+  const videoId = getVideoId(url as string);
+
   return (
     <>
       <Stack.Screen
@@ -52,7 +59,7 @@ export default function VideoPlayerScreen() {
         }}
       />
       <ThemedView style={styles.container}>
-        {isLoading && <LoadingIndicator />}
+        {/* {isLoading && <LoadingIndicator />} */}
 
         {hasError ? (
           <ThemedView
@@ -63,17 +70,21 @@ export default function VideoPlayerScreen() {
             </ThemedText>
           </ThemedView>
         ) : (
-          <Video
-            style={styles.video}
-            source={{ uri: url as string }}
-            useNativeControls
-            resizeMode={ResizeMode.CONTAIN}
-            isLooping
-            shouldPlay
-            onLoadStart={() => setIsLoading(true)}
-            onReadyForDisplay={handleLoadSuccess}
-            onError={handleLoadError}
-          />
+          // <Video
+          //   style={styles.video}
+          //   source={{ uri: url as string }}
+          //   useNativeControls
+          //   resizeMode={ResizeMode.CONTAIN}
+          //   isLooping
+          //   shouldPlay
+          //   onLoadStart={() => setIsLoading(true)}
+          //   onReadyForDisplay={handleLoadSuccess}
+          //   onError={handleLoadError}
+          // />
+
+          //  <View style={{ flex: 1, justifyContent: "center" }}>
+          <YoutubePlayer height={250} play={true} videoId={videoId} />
+          // </View>
         )}
         {/* <VideoView
           style={styles.video}

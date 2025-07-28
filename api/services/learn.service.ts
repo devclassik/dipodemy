@@ -39,7 +39,7 @@ export const learnService = {
       if (params.page) query.push(`page=${params.page}`);
       if (params.limit) query.push(`limit=${params.limit}`);
       if (query.length) url += `?${query.join("&")}`;
-      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);      
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
       return response.data;
     } catch (error) {
       throw error;
@@ -90,11 +90,42 @@ export const learnService = {
 
       const response = await api.post<ApiResponse<CategoryScreenResponse>>(url, paymentData);
       console.log("Enroll course response:", response.data);
-      
+
       return response.data;
     } catch (error) {
       console.error("Error fetching course details screen data:", error);
       throw error;
+    }
+  },
+
+  fetchCourseScreen: async (
+    data?: string | number
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+      let url = API_ENDPOINTS.LEARN.LEARN_SCREEN;
+      if (data) {
+        url += `/${data}`;
+      }
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching search screen data:", error);
+      throw error; // or handle as needed
+    }
+  },
+  fetchAssignmentScreen: async (
+    data?: string | number
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+      let url = API_ENDPOINTS.LEARN.ASSIGNMENT;
+      if (data) {
+        url += `/${data}`;
+      }
+      const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching search screen data:", error);
+      throw error; // or handle as needed
     }
   },
 };
@@ -136,4 +167,6 @@ export const paystackService = {
       throw error;
     }
   },
+
+
 };

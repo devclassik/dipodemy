@@ -1,21 +1,60 @@
+import { learnService } from "@/api/services/learn.service";
+import { reviewService } from "@/api/services/review.servce";
+import LoadingIndicator from "@/components/LoadingIndicator";
 import SubmitAssignmentCard from "@/components/SubmitAssignmentCard";
-import { Stack, useLocalSearchParams } from "expo-router";
-import React from 'react';
+import { ThemedView } from "@/components/ThemedView";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const Assignment = () => {
-
   const { data } = useLocalSearchParams();
-  const courseData = data ? JSON.parse(data as string) : null;
+  const [course, setCourse] = useState<any>(null);
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
-  const mockCourses = {
-    id: 1,
-    category: "Graphic Design",
-    title: "Graphic Design Advanced",
-    price: "89/-",
-    rating: 4.9,
-    reviews: 7830,
-    image: require("@/assets/images/c1.png"),
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await learnService.fetchAssignmentScreen(
+          data as string | number
+        );
+        setCourse(res.data.assignment);
+      } catch (error) {
+        console.error("Failed to load course data:", error);
+      } finally {
+        setLoading(false); // ✅ done loading
+      }
+    };
+
+    fetchCourse();
+  }, [data]);
+
+  const submitAssignment = async (id: number, imageUri: string | null) => {
+    try {
+      await reviewService.addReviewScreen(
+        data as string | number,
+        imageUri as string
+      );
+      router.navigate("/(tabs)/course");
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Oops",
+        textBody: "Assignment already submitted by you",
+      });
+    }
   };
+
+  if (loading || !course) {
+    return (
+      <ThemedView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <LoadingIndicator />
+      </ThemedView>
+    );
+  }
 
   return (
     <>
@@ -24,17 +63,18 @@ const Assignment = () => {
           title: "Upload Assignment",
           headerShown: true,
           gestureEnabled: true,
-          gestureDirection: 'horizontal',
+          gestureDirection: "horizontal",
         }}
       />
       <SubmitAssignmentCard
-        id={mockCourses.id}
-        category={mockCourses.category}
-        title={mockCourses.title}
-        price={mockCourses.price}
-        rating={mockCourses.rating}
-        reviews={mockCourses.reviews}
-        image={mockCourses.image}
+        id={course.id}
+        category={course.instructions}
+        title={course.title}
+        price={course.description}
+        rating={course.points}
+        // reviews={course.reviews.length || 0}
+        // image={course.image}
+        submitAssignment={submitAssignment}
       />
     </>
   );

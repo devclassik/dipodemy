@@ -1,28 +1,28 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    useColorScheme,
-    View,
+  Image,
+  StyleSheet,
+  TextInput,
+  useColorScheme,
+  View
 } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 export interface WriteReviewCardProps {
-  id: number;
-  category: string;
-  title: string;
-  price: string;
-  rating: number;
-  reviews: number;
-  image: any;
+  id?: number;
+  category?: string;
+  title?: string;
+  price?: string;
+  rating?: number;
+  reviews?: number;
+  image?: any;
+  submitReview?: (id: number, imageUri: string | null, comment: string) => void;
 }
 
 const MAX_CHARACTERS = 250;
@@ -35,6 +35,7 @@ const WriteReviewCard: React.FC<WriteReviewCardProps> = ({
   rating,
   reviews,
   image,
+  submitReview,
 }) => {
   const [reviewText, setReviewText] = useState("");
   const [media, setMedia] = useState<string | null>(null);
@@ -53,11 +54,24 @@ const WriteReviewCard: React.FC<WriteReviewCardProps> = ({
       setMedia(result.assets[0].uri);
     }
   };
+  const handleSubmit = () => {
+    if (reviewText.trim() === "") {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Please write a review before submitting.",
+      });
+      return;
+    }
+    submitReview?.(id, media, reviewText);
+    setMedia(null);
+    setReviewText("");
+  };
 
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.card}>
-        <Image source={image} style={styles.image} />
+        <Image source={{ uri: image }} style={styles.image} />
         <View style={{ flex: 1 }}>
           <ThemedText style={styles.category}>{category}</ThemedText>
           <ThemedText style={styles.title}>{title}</ThemedText>
@@ -65,13 +79,13 @@ const WriteReviewCard: React.FC<WriteReviewCardProps> = ({
           <View style={styles.row}>
             <Ionicons name="star" size={14} color="#FFC107" />
             <ThemedText style={styles.rating}>
-              {rating} · {reviews}
+              {rating} | {reviews} reviews
             </ThemedText>
           </View>
         </View>
       </ThemedView>
-      <ThemedText style={styles.label}>Add Photo (or) Video</ThemedText>
-      <TouchableOpacity
+      {/* <ThemedText style={styles.label}>Add Photo (or) Video</ThemedText> */}
+      {/* <TouchableOpacity
         style={[styles.uploadBox, { backgroundColor: colors.border }]}
         onPress={pickMedia}
       >
@@ -83,7 +97,7 @@ const WriteReviewCard: React.FC<WriteReviewCardProps> = ({
             resizeMode="contain"
           />
         )}
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <ThemedText style={styles.label}>Write you Review</ThemedText>
 
       <ThemedView style={styles.textBoxContainer}>
@@ -102,7 +116,7 @@ const WriteReviewCard: React.FC<WriteReviewCardProps> = ({
       <RoundedActionButton
         text="Submit Review"
         icon={<Ionicons name="arrow-forward" size={24} color={colors.green} />}
-        onPress={() => router.navigate("/(pages)/assignment")}
+        onPress={handleSubmit}
         style={{
           width: "50%",
           alignSelf: "center",
