@@ -16,8 +16,10 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "We need access to your photo library to update your profile picture"
-      }
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library to update your profile picture",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.devclassik.dipodemy"
     },
     "android": {
       "adaptiveIcon": {

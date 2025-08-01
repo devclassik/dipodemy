@@ -109,9 +109,9 @@ const KeyboardPinEntryScreen = () => {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>Create New Pin</ThemedText>
+      <ThemedText style={styles.title}>Verify Email</ThemedText>
       <ThemedText style={styles.subtitle}>
-        Add a Pin Number to Make Your Account more Secure
+        Input the Pin sent to your email
       </ThemedText>
 
       {/* Pin boxes container */}

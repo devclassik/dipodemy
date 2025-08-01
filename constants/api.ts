@@ -45,6 +45,7 @@ export const API_ENDPOINTS = {
   },
   COURSE: {
     ENROLLED_COURSES: "enrollments",
+    PROGRESS: "progress",
   },
   REVIEW: {
     REVIEW_SCREEN: "reviews",

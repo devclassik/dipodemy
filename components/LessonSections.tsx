@@ -71,7 +71,7 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
                       {lesson.title}
                     </ThemedText>
                     <ThemedText style={styles.lessonDuration}>
-                      {lesson.title || "N/A"}
+                      {lesson.description || "N/A"}
                     </ThemedText>
                     {lesson.pdf_url && (
                       <Pressable onPress={() => handlePdfPress(lesson.pdf_url)}>
@@ -84,7 +84,7 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
                             },
                           ]}
                         >
-                          Click to read pdf
+                          View PDF
                         </ThemedText>
                       </Pressable>
                     )}

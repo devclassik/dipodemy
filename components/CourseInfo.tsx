@@ -26,10 +26,10 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
   instructor = "ADC",
   topic = "Graphic Design",
   toGain = [
-    { icon: "book-outline", text: "25 Lessons" },
+    { icon: "book-outline", text: "Lessons" },
     { icon: "laptop-outline", text: "Access on Mobile, Desktop & TV" },
-    { icon: "trending-up-outline", text: "All Level" },
-    { icon: "headset-outline", text: "Audio Book" },
+    // { icon: "trending-up-outline", text: "All Level" },
+    // { icon: "headset-outline", text: "Audio Book" },
     { icon: "infinite-outline", text: "Lifetime Access" },
     { icon: "create-outline", text: "Assignment" },
     { icon: "document-text-outline", text: "Certificate of Completion" },

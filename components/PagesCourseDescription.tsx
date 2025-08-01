@@ -86,7 +86,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
           <View style={styles.leftDetails}>
             <View style={styles.detailItem}>
               <Ionicons name="videocam-outline" size={16} color={colors.green} />
-              <ThemedText style={styles.detailText}>{classes} Class</ThemedText>
+              <ThemedText style={styles.detailText}>{classes} Classes</ThemedText>
             </View>
             <ThemedText style={{ color: "#000" }}>|</ThemedText>
             <View style={styles.detailItem}>

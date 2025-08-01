@@ -30,6 +30,7 @@ const CourseCard: React.FC<CoursesProps> = ({
   status,
   slug,
   lessons_count,
+  type,
 }) => {
   const handlePress = () => {
       router.navigate({
@@ -43,12 +44,12 @@ const CourseCard: React.FC<CoursesProps> = ({
       <ThemedView style={styles.card}>
         <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
         <View style={styles.info}>
-          <Text style={styles.category}>{level}</Text>
+          <Text style={styles.category}>{level || type}</Text>
           <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text>
           <View style={styles.details}>
-            <Text style={styles.price}>${price}</Text>
+            <Text style={styles.price}>₦{price}</Text>
             <Text style={styles.rating}>
               ⭐ {rating} ({reviews_count})
             </Text>
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 4,
     width: "auto",
+    textTransform: "uppercase",
   },
   title: {
     fontWeight: "bold",

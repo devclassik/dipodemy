@@ -112,7 +112,7 @@ const InstructionSection = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Error",
-        textBody: (error as any)?.message || "Failed to enroll in the course",
+        textBody: (error as any)?.error || "You are already enrolled in this course",
       });
       console.error("Enrollment Error:", error);
     }

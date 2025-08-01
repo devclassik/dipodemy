@@ -16,6 +16,7 @@ export interface CoursesProps {
   enrollments: number;
   reviews_count: number;
   level: string;
+  type?: string;
   duration: string;
   status: string;
   slug: string;

@@ -26,7 +26,7 @@ export const courseService = {
     params: { search?: string; status?: string; page?: number; limit?: number }
   ): Promise<ApiResponse<CategoryScreenResponse>> => {
     try {
-      
+
       let url = API_ENDPOINTS.COURSE.ENROLLED_COURSES;
       const query: string[] = [];
       if (params.search) query.push(`search=${params.search}`);
@@ -35,10 +35,27 @@ export const courseService = {
       if (params.limit) query.push(`per_page=${params.limit}`);
       if (query.length) url += `?${query.join("&")}`;
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
-      
+
       return response.data;
     } catch (error) {
       throw error;
+    }
+  },
+
+  progressScreen: async (
+    data?: string | number
+  ): Promise<ApiResponse<CategoryScreenResponse>> => {
+    try {
+      const url = API_ENDPOINTS.COURSE.PROGRESS;
+
+      let dataToSubmit = {
+        lesson_id: data
+      }
+      const response = await api.post<ApiResponse<CategoryScreenResponse>>(url, dataToSubmit);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching search screen data:", error);
+      throw error; // or handle as needed
     }
   },
 };

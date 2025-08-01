@@ -1,5 +1,7 @@
+import { courseService } from "@/api/services/courses.service";
 import AssignmentReview from "@/components/AssigmentReview";
 import FooterAction from "@/components/FooterAction";
+import { Lesson } from "@/components/InstructionSection";
 import LessonSections from "@/components/LessonSections";
 import { ThemedView } from "@/components/ThemedView";
 import { router, Stack, useLocalSearchParams } from "expo-router";
@@ -36,6 +38,15 @@ const courseContent = () => {
     });
   };
 
+  const handleAsCompleted = async (url: Lesson) => {
+    try {
+      const data = await courseService.progressScreen(url.id);
+      // console.log(data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
   return (
     <>
       <Stack.Screen
@@ -68,13 +79,14 @@ const courseContent = () => {
           <LessonSections
             curriculum={courses.sections}
             onPress={(item) => {
-              console.log("Selected lesson:", item);
+              // console.log("Selected lesson:", item);
+              handleAsCompleted(item);
               handlePlayPress(item.video_url);
             }}
           />
         </ThemedView>
         <FooterAction
-          text="Start Course Again here"
+          text="Start Course Again"
           isFresh={true}
           onButtonPress={() => {
             handlePlayPress(courses.sections[0].lessons[0].video_url);
