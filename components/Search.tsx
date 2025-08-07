@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   searchBox: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "#cbcbcb",
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 8,

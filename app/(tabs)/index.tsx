@@ -7,7 +7,6 @@ import CourseSection from "@/components/CourseSection";
 import Header from "@/components/Header";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, } from "expo-router";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
@@ -22,14 +21,12 @@ export default function HomeScreen() {
       try {
         const res = await homeService.homeScreen();
         setUserdata(res);
-        
+
       } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-          await AsyncStorage.clear();
-          router.navigate('/(auth)/login'); // or whatever your login route is
-        }
+        console.log("Home screen error:", error);
+
       }
-      
+
     })();
   }, []);
 

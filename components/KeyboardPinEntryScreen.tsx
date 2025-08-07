@@ -37,7 +37,7 @@ const KeyboardPinEntryScreen = () => {
           otp: pin
         }
         const res = await authService.verifyOtp(userdata);
-        if (res.data.status === 200 || res.data.status === 409) {
+        if (res.data.status === 200) {
           setShowModal(true);
         }
         Toast.show({
@@ -48,12 +48,16 @@ const KeyboardPinEntryScreen = () => {
       }
 
     } catch (error) {
-      console.error("OTP Error:", error);
+
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Login Failed",
-        textBody: "An error occurred during login.",
+        title: "Oops!",
+        textBody: error?.response?.data?.error,
       });
+
+      if (error?.response?.data?.error === undefined || error?.response?.data?.error === "Your email is already verified") {
+        router.replace("/(tabs)");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -164,8 +168,18 @@ const KeyboardPinEntryScreen = () => {
         <View>
           <RoundedActionButton
             disabled={pin.length < 4}
-            text="Continue"
-            icon={<Ionicons name="arrow-forward" size={24} color="#27d86c" />}
+            text={isLoading ? "Please wait..." : "Continue"}
+            icon={
+              isLoading ? (
+                <ActivityIndicator size="small" color={colors.themeGreen} />
+              ) : (
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={colors.themeGreen}
+                />
+              )
+            }
             onPress={handleContinue}
           />
         </View>

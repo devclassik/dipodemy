@@ -75,5 +75,13 @@ export interface ResetPasswordResponse {
   // user: User;
 }
 
+export interface NotificationScreenResponse {
+}
+export interface NotificationScreenRequest{
+}
+// Add more interfaces as needed for your API endpoints
+
+
+
 export interface ReviewResponse {
 }

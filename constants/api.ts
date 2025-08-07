@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
     RESEND_OTP: "resend-token",
     VERIFY_OTP: "verify-email",
     LOGOUT: "/auth/logout",
-    ME: "/auth/me",
+    ME: "auth/profile",
     REFRESH_TOKEN: "/auth/refresh-token",
     RESET_PASSWORD: "change-password",
     FORGOT_PASSWORD: "forgot-password",
@@ -27,6 +27,7 @@ export const API_ENDPOINTS = {
     HOME_SCREEN: "",
     HOME_SCREEN_COURSES: "/home/courses",
     HOME_SCREEN_COURSE_DETAILS: "/home/course-details",
+    NOTIFICATION: "notifications"
   },
   SEARCH: {
     CATEGORY_LIST: "categories",
@@ -63,6 +64,9 @@ export const API_ENDPOINTS = {
 export const API_HEADERS = {
   "Content-Type": "application/json",
   Accept: "application/json",
+  'Cache-Control': 'no-cache',
+  Pragma: 'no-cache',
+  Expires: '0',
 };
 
 // API Timeouts

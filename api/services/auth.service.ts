@@ -73,6 +73,19 @@ export const authService = {
     return response.data;
   },
 
+  // Validate token by making a simple API call
+  validateToken: async (): Promise<boolean> => {
+    try {
+      const response = await api.get(API_ENDPOINTS.AUTH.ME);
+      console.log("from test me", response);
+      
+      return response.status === 200;
+    } catch (error) {
+      console.error('Token validation failed:', error);
+      return false;
+    }
+  },
+
 
   resetPassword: async (password: string, password_confirmation: string, current_password?: string): Promise<ApiResponse<ResetPasswordResponse>> => {
     try {

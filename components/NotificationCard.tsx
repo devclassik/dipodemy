@@ -4,24 +4,22 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  useColorScheme,
-  View,
+  useColorScheme
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 interface Notification {
   image?: any;
-  title: string;
-  subtitle: string;
-  date: Date;
+  title?: string;
+  subtitle?: string;
+  date?: Date;
   isRead?: boolean;
 }
 
 interface NotificationCardProps {
-  notifications: Notification[];
+  notifications?: Notification[];
 }
 
 const getDateLabel = (date: Date): string => {
@@ -40,8 +38,9 @@ const getDateLabel = (date: Date): string => {
 // Group notifications by label
 const groupByDate = (notifications: Notification[]) => {
   const groups: { [key: string]: Notification[] } = {};
-  notifications.forEach((item) => {
-    const label = getDateLabel(new Date(item.date));
+  notifications?.forEach((item) => {
+    if (!item.date) return; // skip if date is undefined
+    const label = getDateLabel(item.date instanceof Date ? item.date : new Date(item.date));
     if (!groups[label]) groups[label] = [];
     groups[label].push(item);
   });
@@ -62,7 +61,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   notifications,
 }) => {
   const [expandedItems, setExpandedItems] = useState<boolean[]>(
-    new Array(notifications.length).fill(false)
+    new Array(notifications?.length).fill(false)
   );
 
   const colorScheme = useColorScheme();
@@ -87,58 +86,58 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       : words.slice(0, maxWords).join(" ") + "...";
   };
 
-  const groupedData = groupByDate(notifications);
+  const groupedData = groupByDate(notifications ?? []);
 
   let globalIndex = 0; // to track expanded index across groups
 
   return (
     <ScrollView>
       <ThemedView>
-        {groupedData.map((group, groupIndex) => (
-          <View key={groupIndex} style={styles.section}>
+        {groupedData?.map((group, groupIndex) => (
+          <ThemedView key={groupIndex} style={styles.section}>
             <ThemedText style={styles.sectionHeader}>
               {group.dateLabel}
             </ThemedText>
-            {group.data.map((item, localIndex) => {
+            {group?.data?.map((item, localIndex) => {
               const currentIndex = globalIndex++;
               return (
                 <TouchableOpacity
                   key={currentIndex}
                   onPress={() => markAsRead(currentIndex)}
                 >
-                  <View style={[styles.card, item.isRead && styles.readCard]}>
+                  <ThemedView style={[styles.card, item.isRead && styles.readCard]}>
                     <Image
                       source={
                         item.image || require("@/assets/images/credit-card.png")
                       }
                       style={styles.image}
                     />
-                    <View style={styles.categoryWrapper}>
+                    <ThemedView style={styles.categoryWrapper}>
                       <ThemedText style={styles.CategoryTitle}>
                         {item.title}
                       </ThemedText>
                       <ThemedText style={styles.subTitle}>
                         {expandedItems[currentIndex]
-                          ? item.subtitle
-                          : getTrimmedText(item.subtitle)}
+                          ? item?.subtitle ?? ""
+                          : getTrimmedText(item?.subtitle ?? "")}
                       </ThemedText>
-                      {item.subtitle.split(" ").length > maxWords && (
+                      {(item?.subtitle?.split(" ")?.length ?? 0) > maxWords && (
                         <TouchableOpacity
                           onPress={() => toggleExpanded(currentIndex)}
                         >
-                          <Text style={[styles.readMoreText, { color: colors.success }]}>
+                          <ThemedText style={[styles.readMoreText, { color: colors.success }]}>
                             {expandedItems[currentIndex]
                               ? "Read Less"
                               : "Read More"}
-                          </Text>
+                          </ThemedText>
                         </TouchableOpacity>
                       )}
-                    </View>
-                  </View>
+                    </ThemedView>
+                  </ThemedView>
                 </TouchableOpacity>
               );
             })}
-          </View>
+          </ThemedView>
         ))}
       </ThemedView>
     </ScrollView>

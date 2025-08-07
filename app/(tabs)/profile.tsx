@@ -1,16 +1,22 @@
 import { profileService } from "@/api/services/profile.service";
+import { tokenService } from "@/api/services/token.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Image,
+  Modal,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -20,9 +26,13 @@ const ProfileScreen = () => {
   const [userdata, setUserdata] = useState<any>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [media, setMedia] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const logout = async () => {
     await AsyncStorage.clear();
+    await tokenService.clearAll();
     router.replace("../splash");
   };
 
@@ -70,7 +80,22 @@ const ProfileScreen = () => {
       });
 
       if (!result.canceled) {
-        setMedia(result.assets[0].uri);
+        const uri = result.assets[0].uri;
+        setMedia(uri);
+
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const dataUri = `data:image/jpeg;base64,${base64}`;
+
+        const data = {
+          first_name: userdata?.data?.user?.first_name,
+          last_name: userdata?.data?.user?.last_name,
+          image: dataUri,
+        }
+        await profileService.updateProfileScreen(data)
+
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Image Selected",
@@ -88,11 +113,19 @@ const ProfileScreen = () => {
     }
   };
 
+  const openEditProfileModal = () => {
+    setFirstName(userdata?.data?.user?.first_name || "");
+    setLastName(userdata?.data?.user?.last_name || "");
+    setIsModalVisible(true);
+  };
+
+
   if (!userdata) {
     return <LoadingIndicator onReload={onRefresh} />;
   }
 
   return (
+
     <ScrollView
       contentContainerStyle={styles.container}
       refreshControl={
@@ -144,6 +177,12 @@ const ProfileScreen = () => {
             onPress={() => router.navigate("/(pages)/paymentMethod")}
           /> */}
           <OptionItem
+            icon="update-profile"
+            text="Edit profile"
+            onPress={openEditProfileModal}
+
+          />
+          <OptionItem
             icon="notifications"
             text="Notifications"
             onPress={() => router.navigate("/notification")}
@@ -165,6 +204,67 @@ const ProfileScreen = () => {
           <OptionItem icon="logout" text="Logout" onPress={logout} />
         </View>
       </View>
+
+      {isModalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <ThemedView style={modalStyles.modalContainer}>
+            <ThemedView style={modalStyles.modalContent}>
+              <ThemedText style={modalStyles.modalTitle}>Edit Profile</ThemedText>
+
+              <TextInput
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={setFirstName}
+                style={modalStyles.input}
+              />
+              <TextInput
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={setLastName}
+                style={modalStyles.input}
+              />
+
+              <ThemedView style={modalStyles.buttonRow}>
+                <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+                  <ThemedText style={modalStyles.cancelButton}>Cancel</ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async () => {
+                    try {
+                      const data = {
+                        first_name: firstName,
+                        last_name: lastName,
+                      };
+                      await profileService.updateProfileScreen(data);
+                      setIsModalVisible(false);
+                      onRefresh(); // Refresh profile data
+                      Toast.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: "Updated",
+                        textBody: "Profile updated successfully.",
+                      });
+                    } catch (error) {
+                      Toast.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: "Failed",
+                        textBody: "Could not update profile.",
+                      });
+                    }
+                  }}
+                >
+                  <ThemedText style={modalStyles.saveButton}>Save</ThemedText>
+                </TouchableOpacity>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+        </Modal>
+      )}
+
     </ScrollView>
   );
 };
@@ -186,6 +286,8 @@ const OptionItem = ({
 }) => {
   const getIconComponent = () => {
     switch (icon) {
+      case "update-profile":
+        return <FontAwesome5 name="user" size={20} color={iconColor} />;
       case "credit-card":
         return <FontAwesome5 name="credit-card" size={20} color={iconColor} />;
       case "notifications":
@@ -308,5 +410,47 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+
+const modalStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 16,
+    marginTop: 10,
+  },
+  cancelButton: {
+    color: "#999",
+    fontWeight: "bold",
+  },
+  saveButton: {
+    color: "#0066cc",
+    fontWeight: "bold",
+  },
+});
+
 
 export default ProfileScreen;

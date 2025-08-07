@@ -1,124 +1,100 @@
-import NotificationCard from "@/components/NotificationCard";
-import React from "react";
-import { StyleSheet } from "react-native";
+import { profileService } from "@/api/services/profile.service";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Stack } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { RefreshControl, ScrollView, StyleSheet } from "react-native";
+import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 export default function NotificationScreen() {
-  const notification = [
-    {
-      title: "Payment Successful",
-      image: require("@/assets/images/offer.png"),
-      subtitle: "Your course has been activated.",
-      date: new Date(),
-      isRead: false,
-    },
-    {
-      title: "Reminder",
-      subtitle: "You have a class at 3 PM.",
-      date: new Date(),
-      isRead: true,
-    },
-    {
-      title: "Payment Successful",
-      image: require("@/assets/images/offer.png"),
-      subtitle: "Your course has been activated.",
-      date: new Date(),
-      isRead: false,
-    },
-    {
-      title: "Reminder",
-      subtitle: "You have a class at 3 PM.",
-      date: new Date(),
-      isRead: true,
-    },
-    {
-      title: "Payment Successful",
-      image: require("@/assets/images/offer.png"),
-      subtitle: "Your course has been activated.",
-      date: new Date(),
-      isRead: false,
-    },
-    {
-      title: "Reminder",
-      subtitle: "You have a class at 3 PM.",
-      date: new Date(),
-      isRead: true,
-    },
-    {
-      title: "Payment Successful",
-      image: require("@/assets/images/offer.png"),
-      subtitle: "Your course has been activated.",
-      date: new Date(),
-      isRead: false,
-    },
-    {
-      title: "Reminder",
-      subtitle: "You have a class at 3 PM.",
-      date: new Date(),
-      isRead: true,
-    },
-    {
-      title: "Course Reminder",
-      subtitle: "Your design class starts soon!",
-      date: new Date(), // Today
-      isRead: false,
-    },
-    {
-      title: "New Assignment",
-      subtitle: "Upload your latest portfolio update.",
-      date: new Date(), // Today
-      isRead: false,
-    },
-    {
-      title: "Class Cancelled",
-      subtitle: "Instructor is unavailable today.",
-      date: new Date(new Date().setDate(new Date().getDate() - 1)), // Yesterday
-      isRead: true,
-    },
-    {
-      title: "Exam Results",
-      subtitle: "You scored 85% on your last test!",
-      date: new Date("2025-06-05"),
-      isRead: true,
-    },
-    {
-      title: "Welcome Aboard",
-      subtitle: "Thanks for joining the Graphic Design course!",
-      date: new Date("2025-06-03"),
-      isRead: false,
-    },
-    {
-      title: "Project Feedback",
-      subtitle: "Great work on your recent logo redesign.",
-      date: new Date("2025-06-02"),
-      isRead: false,
-    },
-    {
-      title: "Live Q&A",
-      subtitle: "Join us at 6pm for a live Q&A with mentors.",
-      date: new Date("2025-06-01"),
-      isRead: true,
-    },
-    {
-      title: "New Mentor",
-      subtitle: "Meet Sarah, your new UI/UX mentor.",
-      date: new Date("2025-05-30"),
-      isRead: false,
-    },
-    {
-      title: "App Update",
-      subtitle: "We’ve rolled out new features in the app.",
-      date: new Date("2025-05-29"),
-      isRead: true,
-    },
-    {
-      title: "Class Materials",
-      subtitle: "New course materials have been uploaded.",
-      date: new Date("2025-05-25"),
-      isRead: false,
-    },
-  ];
 
-  return <NotificationCard notifications={notification} />;
+  const [notifications, setNotifications] = useState<any>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const loadNotifications = async () => {
+    try {
+      const res = await profileService.notificationScreen();
+      setNotifications(res?.data || []);
+    } catch (error: any) {
+      console.log("Notification screen error:", error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Failed to load notifications",
+      });
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadNotifications();
+  };
+
+  return (
+    <>
+      <Stack.Screen options={{ title: "Notification", headerShown: true }} />
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={
+          notifications?.length === 0 && !loading
+            ? styles.emptyWrapper
+            : undefined
+        }
+      >
+        {loading ? (
+          <ThemedText style={styles.loading}>Loading...</ThemedText>
+        ) : notifications?.length === 0 ? (
+          <ThemedView style={styles.emptyContainer}>
+            <ThemedText style={styles.emptyTitle}>🎉 You're all caught up!</ThemedText>
+            <ThemedText style={styles.emptyText}>No new notifications right now.</ThemedText>
+          </ThemedView>
+        ) : (
+          // <NotificationCard notifications={notifications} />
+          null
+        )}
+      </ScrollView>
+    </>
+
+  )
 }
 
-const styles = StyleSheet.create({});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  loading: {
+    textAlign: "center",
+    marginTop: 40,
+    color: "#888",
+  },
+  emptyWrapper: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    paddingVertical: 100,
+  },
+  emptyTitle: {
+    fontWeight: "600",
+    color: "#333",
+  },
+  emptyText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#666",
+  }
+});
