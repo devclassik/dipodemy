@@ -24,7 +24,7 @@ export const API_ENDPOINTS = {
     CHANGE_PASSWORD: "/users/change-password",
   },
   HOME: {
-    HOME_SCREEN: "",
+    HOME_SCREEN: "home",
     HOME_SCREEN_COURSES: "/home/courses",
     HOME_SCREEN_COURSE_DETAILS: "/home/course-details",
     NOTIFICATION: "notifications"

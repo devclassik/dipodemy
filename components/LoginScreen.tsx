@@ -509,7 +509,7 @@ const LoginScreen = () => {
               </ThemedText>
 
               {/* Debug buttons - remove these in production */}
-              <TouchableOpacity 
+              {/* <TouchableOpacity 
                 style={styles.debugButton} 
                 onPress={logout}
               >
@@ -528,7 +528,7 @@ const LoginScreen = () => {
                 onPress={checkStorageOnly}
               >
                 <ThemedText style={styles.debugText}>Check Storage Only (Debug)</ThemedText>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </ThemedView>
           </ScrollView>
         </TouchableWithoutFeedback>

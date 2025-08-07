@@ -7,6 +7,7 @@ import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -29,6 +30,7 @@ const ProfileScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
 
   const logout = async () => {
     await AsyncStorage.clear();
@@ -61,8 +63,13 @@ const ProfileScreen = () => {
   }, []);
 
   const pickMedia = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
+    const { status: pickerStatus, canAskAgain } =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    const { status: libraryStatus } =
+      await MediaLibrary.requestPermissionsAsync();
+
+    if (pickerStatus !== "granted" || libraryStatus !== "granted" && canAskAgain) {
       Toast.show({
         type: ALERT_TYPE.WARNING,
         title: "Permission Required",
