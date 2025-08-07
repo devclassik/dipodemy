@@ -47,6 +47,11 @@ const BoughtCourse = () => {
       });
 
       const newCourses = res.data.courses;
+
+      if (newCourses.length === 0) {
+       return  setShowModal(true)
+      }
+
       const meta = res.data.meta;
 
       setCourses((prev) =>
