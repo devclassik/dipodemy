@@ -221,7 +221,7 @@ const ProfileScreen = () => {
         >
           <ThemedView style={modalStyles.modalContainer}>
             <ThemedView style={modalStyles.modalContent}>
-              <ThemedText style={modalStyles.modalTitle}>Edit Profile</ThemedText>
+              <Text style={modalStyles.modalTitle}>Edit Profile</Text>
 
               <TextInput
                 placeholder="First Name"
@@ -236,7 +236,7 @@ const ProfileScreen = () => {
                 style={modalStyles.input}
               />
 
-              <ThemedView style={modalStyles.buttonRow}>
+              <View style={modalStyles.buttonRow}>
                 <TouchableOpacity onPress={() => setIsModalVisible(false)}>
                   <ThemedText style={modalStyles.cancelButton}>Cancel</ThemedText>
                 </TouchableOpacity>
@@ -266,7 +266,7 @@ const ProfileScreen = () => {
                 >
                   <ThemedText style={modalStyles.saveButton}>Save</ThemedText>
                 </TouchableOpacity>
-              </ThemedView>
+              </View>
             </ThemedView>
           </ThemedView>
         </Modal>
