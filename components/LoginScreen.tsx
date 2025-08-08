@@ -43,53 +43,6 @@ const LoginScreen = () => {
   useEffect(() => {
     const loadStoredCredentials = async () => {
       try {
-        const tokCred = await tokenService.getToken();
-        if (tokCred) {
-          // Validate the token by making a test API call
-          try {
-            console.log("🔍 Found stored token, validating...");
-            
-            // Test the token with a simple API call to ensure it's valid
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-            
-            try {
-              const response = await fetch("https://adcparty.com.ng/api/v1/", {
-                method: 'GET',
-                headers: {
-                  'Authorization': `Bearer ${tokCred}`,
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-                },
-                signal: controller.signal
-              });
-              
-              clearTimeout(timeoutId);
-              
-              if (response.ok) {
-                console.log("✅ Token is valid, redirecting to tabs");
-                router.replace("/(tabs)");
-                return;
-              } else {
-                console.log("❌ Token validation failed, removing invalid token");
-                await tokenService.removeToken();
-              }
-            } catch (fetchError: any) {
-              clearTimeout(timeoutId);
-              if (fetchError.name === 'AbortError') {
-                console.log("⏰ Token validation timed out, removing token");
-              } else {
-                console.log("❌ Token validation failed:", fetchError);
-              }
-              await tokenService.removeToken();
-            }
-          } catch (tokenError) {
-            console.error("Token validation failed:", tokenError);
-            // Remove invalid token
-            await tokenService.removeToken();
-          }
-        }
-
         const creds = await tokenService.getUserCreds();
         if (creds) {
           setEmail(creds.email);
@@ -129,21 +82,21 @@ const LoginScreen = () => {
         console.log("🔍 Full token for Postman comparison:", token);
         console.log("🔍 Bearer format for Postman:", `Bearer ${token}`);
       }
-      
+
       // Test if token is in axios headers
       const authHeader = api.defaults.headers.common['Authorization'];
       console.log("🔍 Token in axios headers:", authHeader ? "EXISTS" : "NULL");
       if (authHeader) {
         console.log("🔍 Full header for comparison:", authHeader);
       }
-      
+
       // Show current status without API calls
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Token Status",
         textBody: `Storage: ${token ? 'OK' : 'MISSING'}, Headers: ${authHeader ? 'OK' : 'MISSING'}`,
       });
-      
+
       // Only test API if token exists
       if (token) {
         // Test token with a simple API call
@@ -191,7 +144,7 @@ const LoginScreen = () => {
         console.log("🔍 Storage check - Token length:", token.length);
         console.log("🔍 Storage check - Token preview:", token.substring(0, 20) + "...");
       }
-      
+
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Storage Check",
@@ -235,33 +188,33 @@ const LoginScreen = () => {
         // Use secure token service for better reliability
         const storageSuccess = await tokenService.setToken(responseData.token);
         console.log(`${Platform.OS} - Token storage result:`, storageSuccess ? "SUCCESS" : "FAILED");
-        
+
         if (!storageSuccess) {
           throw new Error("Token storage failed");
         }
-        
+
         // Manually set token in axios headers for immediate use
         setAuthToken(responseData.token);
-        
+
         // Verify token was stored correctly
         const storedToken = await tokenService.getToken();
         console.log(`${Platform.OS} - Token verification - stored:`, storedToken ? "YES" : "NO");
-        
+
         if (!storedToken) {
           throw new Error("Token verification failed");
         }
-        
+
         // Additional iOS verification
         if (Platform.OS === 'ios') {
           console.log('🍎 iOS - Double-checking token in headers...');
           const authHeader = api.defaults.headers.common['Authorization'];
           console.log('🍎 iOS - Token in headers:', authHeader ? 'EXISTS' : 'MISSING');
-          
+
           if (!authHeader) {
             console.log('🍎 iOS - Re-setting token in headers...');
             setAuthToken(responseData.token);
           }
-          
+
           // Force refresh axios configuration for iOS
           forceRefreshAxiosConfig();
         }
@@ -284,44 +237,44 @@ const LoginScreen = () => {
       });
 
       // Platform-specific delay to ensure token is properly stored and interceptor can pick it up
-      const navigationDelay = Platform.OS === 'ios' ? 1500 : 100;
+      const navigationDelay = Platform.OS === 'ios' ? 1000 : 100;
       console.log(`${Platform.OS} - Waiting ${navigationDelay}ms before navigation...`);
       await new Promise(resolve => setTimeout(resolve, navigationDelay));
 
       // Refresh token in interceptor to ensure it's available
       await refreshTokenInInterceptor();
-      
+
       // iOS-specific: Additional verification and delay
       if (Platform.OS === 'ios') {
         console.log('🍎 iOS - Final token verification before navigation...');
         const finalTokenCheck = await AsyncStorage.getItem("auth_token");
         const finalHeaderCheck = api.defaults.headers.common['Authorization'];
-        
+
         console.log('🍎 iOS - Final token in storage:', finalTokenCheck ? 'EXISTS' : 'MISSING');
         console.log('🍎 iOS - Final token in headers:', finalHeaderCheck ? 'EXISTS' : 'MISSING');
-        
+
         if (!finalTokenCheck || !finalHeaderCheck) {
           console.log('🍎 iOS - Token missing, re-setting...');
           setAuthToken(responseData.token);
-          await new Promise(resolve => setTimeout(resolve, 500)); // Additional delay
+          await new Promise(resolve => setTimeout(resolve, 10)); // Additional delay
         }
-        
+
         // Force refresh axios configuration for iOS
         forceRefreshAxiosConfig();
       }
-      
+
       // Final verification for both platforms
       console.log(`${Platform.OS} - Final verification before navigation...`);
       const finalToken = await AsyncStorage.getItem("auth_token");
       const finalHeader = api.defaults.headers.common['Authorization'];
-      
+
       console.log(`${Platform.OS} - Final token:`, finalToken ? 'EXISTS' : 'MISSING');
       console.log(`${Platform.OS} - Final header:`, finalHeader ? 'EXISTS' : 'MISSING');
-      
+
       if (!finalToken || !finalHeader) {
         console.log(`${Platform.OS} - Final verification failed, re-setting token...`);
         setAuthToken(responseData.token);
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 10));
       }
 
       // Check if user is verified and navigate accordingly
@@ -447,6 +400,11 @@ const LoginScreen = () => {
                   />
                 </TouchableOpacity>
               </View>
+              {password.length < 8 && (
+              <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+                Passwords must match and be at least 8 characters.
+              </ThemedText>
+            )}
 
               <View style={styles.rememberRow}>
                 <TouchableOpacity

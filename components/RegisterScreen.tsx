@@ -10,6 +10,7 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -37,8 +38,13 @@ const RegisterScreen = () => {
   const [repeatPassword, setRepeatPassword] = useState("");
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const [isModalVisible, setModalVisible] = useState(false);
+
 
   const isLoginButtonDisabled = !isValidEmail(email);
+
+  const toggleModal = () => setModalVisible(!isModalVisible);
+
 
   const onRegisterPress = async () => {
     if (!isValidEmail(email)) {
@@ -85,12 +91,13 @@ const RegisterScreen = () => {
         await AsyncStorage.removeItem("user_creds");
       }
       router.replace("/pin");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login Error:", error);
+      console.error("oop:", error.response.data);
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Login Failed",
-        textBody: "An error occurred during login.",
+        title: "Oops!",
+        textBody: error?.response?.data?.errors?.email || error?.response?.data?.errors?.phone,
       });
     } finally {
       setIsLoading(false);
@@ -213,6 +220,11 @@ const RegisterScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+            {password.length < 8 && (
+              <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+                Passwords must be at least 8 characters.
+              </ThemedText>
+            )}
             <View style={styles.inputWrapper}>
               <Ionicons
                 name="lock-closed"
@@ -232,7 +244,7 @@ const RegisterScreen = () => {
               />
               <TouchableOpacity
                 style={styles.eyeIcon}
-                onPress={() => setPasswordVisible(!passwordVisible)}
+                onPress={() => setPasswordVisible(!!passwordVisible)}
               >
                 <Ionicons
                   name={passwordVisible ? "eye-off" : "eye"}
@@ -241,11 +253,16 @@ const RegisterScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+            {repeatPassword.length > 0 && repeatPassword !== password && (
+              <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+                Passwords must match and be at least 8 characters.
+              </ThemedText>
+            )}
 
             <View style={styles.rememberRow}>
               <TouchableOpacity
                 style={styles.rememberCheck}
-                onPress={() => setRememberMe(!rememberMe)}
+                onPress={toggleModal}
               >
                 <MaterialCommunityIcons
                   name={
@@ -254,11 +271,49 @@ const RegisterScreen = () => {
                       : "checkbox-blank-circle-outline"
                   }
                   size={20}
-                  color="#27d86c"
+                  color={colors.themeGreen}
                 />
                 <ThemedText style={styles.rememberText}>Agree to Terms & Condition</ThemedText>
               </TouchableOpacity>
             </View>
+
+            {/* Modal */}
+            <Modal visible={isModalVisible} animationType="slide" transparent>
+              <View style={styles.modalOverlay}>
+                <View style={styles.modalBox}>
+                  <ScrollView>
+                    <ThemedText style={styles.modalTitle}>
+                      Terms and Conditions
+                    </ThemedText>
+                    <ThemedText style={styles.modalContent}>
+                      Here are your terms and conditions... (long text here)
+                    </ThemedText>
+                  </ScrollView>
+
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity
+                      style={[styles.acceptBtn, {backgroundColor: colors.themeGreen}]}
+                      onPress={() => {
+                        setRememberMe(true);
+                        toggleModal();
+                      }}
+                    >
+                      <ThemedText style={[{color: colors.white}]}>Accept</ThemedText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.rejectBtn, {backgroundColor: colors.danger}]}
+                      onPress={() => {
+                        setRememberMe(false);
+                        toggleModal();
+                      }}
+                    >
+                      <ThemedText style={[{color: colors.white}]}>Decline</ThemedText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+
 
             <View
               style={{
@@ -283,7 +338,7 @@ const RegisterScreen = () => {
                   )
                 }
                 onPress={onRegisterPress}
-                disabled={isLoginButtonDisabled && rememberMe}
+                disabled={isLoginButtonDisabled || !rememberMe}
               />
             </View>
 
@@ -384,21 +439,7 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "bold",
   },
-  signInButton: {
-    flexDirection: "row",
-    backgroundColor: "#27d86c",
-    paddingVertical: 14,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 6,
-    marginBottom: 20,
-  },
-  signInText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
+
   orText: {
     textAlign: "center",
     color: "#333",
@@ -434,4 +475,22 @@ const styles = StyleSheet.create({
     color: "#ff9900",
     fontWeight: "bold",
   },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    padding: 20,
+  },
+  modalBox: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 15,
+    maxHeight: "80%",
+  },
+  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  modalContent: { fontSize: 14, color: "#555" },
+  modalButtons: { flexDirection: "row", justifyContent: "flex-end", gap: 5, marginTop: 15 },
+  acceptBtn: {padding: 10, borderRadius: 8 },
+  rejectBtn: {padding: 10, borderRadius: 8 },
 });
