@@ -1,12 +1,61 @@
+import { API_BASE_URL, API_ENDPOINTS } from "@/constants/api";
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
+import axios from "axios";
+import * as Application from 'expo-application';
 import { router } from "expo-router";
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 const LandingScreen = () => {
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [updateUrl, setUpdateUrl] = useState("https://play.google.com/store/apps/details?id=com.yourapp");
+
+  console.log("App Version:", Application.nativeApplicationVersion);
+  console.log("Build Version:", Application.nativeBuildVersion);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      checkAppVersion();
+    }
+  }, [isFocused]);
+
+  const checkAppVersion = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.VERSION.APP_VERSION}`);
+      const data = response.data as {
+        latestVersion: string; downloadUrl?: string, forceUpdate: boolean,
+      };
+      const latest = data.latestVersion;
+      const current = Application.nativeApplicationVersion ?? "2.33.21";
+
+      // Define isNewerVersion if not already defined
+      const isNewerVersion = (latest: string, current: string) => {
+        const latestParts = latest.split(".").map(Number);
+        const currentParts = current.split(".").map(Number);
+
+        for (let i = 0; i < latestParts.length; i++) {
+          if (latestParts[i] > (currentParts[i] || 0)) return true;
+          if (latestParts[i] < (currentParts[i] || 0)) return false;
+        }
+        return false;
+      };
+
+      if (isNewerVersion(latest, current)) {
+        if (data?.downloadUrl) setUpdateUrl(data.downloadUrl);
+        setShowUpdateModal(true);
+      }
+    } catch (error) {
+      console.log("Version check failed:", error);
+    }
+  };
+
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.inner}>
@@ -57,7 +106,7 @@ const LandingScreen = () => {
         </ThemedView>
 
         <ThemedText style={styles.footerText}>
-          Don’t have an Account?{" "}
+          Don’t have an account?{" "}
           <ThemedText
             style={styles.signupText}
             onPress={() => router.navigate("/register")}
@@ -66,6 +115,23 @@ const LandingScreen = () => {
           </ThemedText>
         </ThemedText>
       </ThemedView>
+      <Modal visible={showUpdateModal} transparent animationType="slide">
+        <View style={styles.overlay}>
+          <View style={styles.modal}>
+            <Text style={styles.titleModal}>Update Available</Text>
+            <Text style={styles.message}>
+              A new version of the app is available. Please update to continue.
+            </Text>
+
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: Colors.dark.green }]}
+              onPress={() => Linking.openURL(updateUrl)}
+            >
+              <Text style={styles.buttonText}>Download Update</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ThemedView>
   );
 };
@@ -148,11 +214,42 @@ const styles = StyleSheet.create({
   footerText: {
     textAlign: "center",
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
     marginVertical: 30,
   },
   signupText: {
     color: "#f97316",
     fontWeight: "bold",
   },
+
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  modal: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%"
+  },
+  titleModal: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10
+  },
+  message: {
+    fontSize: 14,
+    marginBottom: 20
+  },
+  button: {
+    padding: 12,
+    borderRadius: 5,
+    alignItems: "center"
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold"
+  }
 });

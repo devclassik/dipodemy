@@ -78,7 +78,7 @@ export const authService = {
     try {
       const response = await api.get(API_ENDPOINTS.AUTH.ME);
       console.log("from test me", response);
-      
+
       return response.status === 200;
     } catch (error) {
       console.error('Token validation failed:', error);
@@ -102,6 +102,19 @@ export const authService = {
 
   },
 
+
+  // Validate token by making a simple API call
+  termsCondition: async () => {
+    try {
+      const response = await api.get(API_ENDPOINTS.AUTH.ME);
+      console.log("from test me", response);
+
+      return response.data
+    } catch (error) {
+      // console.error('Token validation failed:', error);
+      return false;
+    }
+  },
 
   // Logout
   logout: async (): Promise<ApiResponse<void>> => {

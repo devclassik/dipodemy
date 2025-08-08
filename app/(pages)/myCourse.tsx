@@ -5,10 +5,12 @@ import MyCourseScreen from "@/components/MyCourseScreen";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, useColorScheme } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+
 
 const BoughtCourse = () => {
   const [showModal, setShowModal] = useState(false);
@@ -23,9 +25,13 @@ const BoughtCourse = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    loadCourses(1, status, { initial: true });
-  }, []);
+    if (isFocused) {
+      loadCourses(1, status, { initial: true });
+    }
+  }, [isFocused, status]);
 
   const loadCourses = async (
     pageNum: number,

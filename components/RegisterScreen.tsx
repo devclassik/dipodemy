@@ -282,7 +282,7 @@ const RegisterScreen = () => {
               <View style={styles.modalOverlay}>
                 <View style={styles.modalBox}>
                   <ScrollView>
-                    <ThemedText style={styles.modalTitle}>
+                    <ThemedText style={[styles.modalTitle, {color: colors.textDim}]}>
                       Terms and Conditions
                     </ThemedText>
                     <ThemedText style={styles.modalContent}>

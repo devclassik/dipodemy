@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  skip: { position: "absolute", top: 70, right: 30 },
+  skip: { position: "absolute", top: 60, right: 20 },
   skipText: {
     color: "#888",
-    fontWeight: "bold",
+    fontWeight: "500",
   },
   image: { width: 120, height: 120, marginBottom: 30 },
   title: {

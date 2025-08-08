@@ -16,6 +16,9 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: "forgot-password",
     RESET_FORGOTTEN_PASSWORD: "reset-password",
   },
+  VERSION: {
+    APP_VERSION: "version"
+  },
 
   // User endpoints
   USER: {
