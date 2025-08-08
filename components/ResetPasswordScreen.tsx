@@ -29,8 +29,8 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
   const [current_password, setCurrent_password] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-    const colorScheme = useColorScheme();
-    const colors = Colors[colorScheme ?? "light"];
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
 
   const handleResetPassword = async () => {
     if (!password || !password_confirmation) {
@@ -123,6 +123,12 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
             />
           </TouchableOpacity>
         </View>
+
+      )}
+      {current_password.length < 8 && (
+        <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+          Current passwords should be at least 8 characters.
+        </ThemedText>
       )}
 
       <View style={styles.inputWrapper}>
@@ -152,6 +158,11 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
           />
         </TouchableOpacity>
       </View>
+      {password.length < 8 && (
+        <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+          New passwords must be at least 8 characters.
+        </ThemedText>
+      )}
 
       <View style={styles.inputWrapper}>
         <Ionicons
@@ -180,17 +191,22 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
           />
         </TouchableOpacity>
       </View>
+      {password_confirmation.length > 0 && password_confirmation !== password && (
+        <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+          Passwords must match and be at least 8 characters.
+        </ThemedText>
+      )}
 
       <RoundedActionButton
         text={isLoading ? "Please wait..." : "Continue"}
         icon={
           isLoading ? (
-            <ActivityIndicator size="small" color={colors.themeGreen} /> 
+            <ActivityIndicator size="small" color={colors.themeGreen} />
           ) : (
-            <Ionicons name="arrow-forward" size={24} color={colors.themeGreen}/>
+            <Ionicons name="arrow-forward" size={24} color={colors.themeGreen} />
           )
         }
-        bgColor="#27d86c"
+        bgColor={colors.themeGreen}
         onPress={handleResetPassword}
         style={{
           flex: 1,
@@ -199,7 +215,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
           alignSelf: "center",
           width: "50%",
         }}
-        disabled={isLoading}
+        disabled={isLoading || password !== password_confirmation || !password}
       />
     </View>
   );
