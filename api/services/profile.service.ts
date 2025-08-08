@@ -27,7 +27,7 @@ export const profileService = {
       const response = await api.post<ApiResponse<ProfileScreenResponse>>(
         API_ENDPOINTS.PROFILE.GET_PROFILE, data
       );
-      // console.log('Raw server response:', response);
+      // console.log('Raw server response:', response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching profile screen data:", error);

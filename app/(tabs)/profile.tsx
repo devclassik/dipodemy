@@ -63,6 +63,11 @@ const ProfileScreen = () => {
   }, []);
 
   const pickMedia = async () => {
+    Toast.show({
+      type: ALERT_TYPE.WARNING,
+      title: "5MB",
+      textBody: "Only 5MB of image allowed",
+    });
     const { status: pickerStatus, canAskAgain } =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -95,19 +100,31 @@ const ProfileScreen = () => {
         });
 
         const dataUri = `data:image/jpeg;base64,${base64}`;
-
         const data = {
           first_name: userdata?.data?.user?.first_name,
           last_name: userdata?.data?.user?.last_name,
           image: dataUri,
         }
-        await profileService.updateProfileScreen(data)
-
         Toast.show({
-          type: ALERT_TYPE.SUCCESS,
+          type: ALERT_TYPE.INFO,
           title: "Image Selected",
           textBody: "updating your media.",
         });
+        try {
+          const upload = await profileService.updateProfileScreen(data)
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Image Uplaoded",
+            textBody: upload.message,
+          });
+
+        } catch (error) {
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Image Uplaoded Error",
+            textBody: "File too large",
+          });
+        }
       }
     } catch (error) {
       console.error("Error requesting media library permissions:", error);
