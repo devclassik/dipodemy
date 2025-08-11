@@ -29,6 +29,7 @@ const LandingScreen = () => {
   const checkAppVersion = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.VERSION.APP_VERSION}`);
+      
       const data = response.data as {
         latestVersion: string; downloadUrl?: string, forceUpdate: boolean,
       };

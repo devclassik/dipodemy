@@ -33,18 +33,6 @@ export const homeService = {
           console.error('❌ Failed request URL:', error.config.baseURL + error.config.url);
           console.error('❌ Failed request headers:', error.config.headers);
         }
-        
-        // If the main endpoint fails, try alternative endpoints
-        if (error.response?.status === 404 || error.response?.status === 401) {
-          console.log('🔄 Trying alternative home endpoint...');
-          try {
-            const alternativeResponse = await api.get<ApiResponse<HomeScreenResponse>>('dashboard');
-            console.log('✅ Alternative endpoint succeeded');
-            return alternativeResponse.data;
-          } catch (altError: any) {
-            console.error('❌ Alternative endpoint also failed:', altError.response?.data || altError.message);
-          }
-        }
   
         console.error('Error fetching home screen data here:', error);
         throw error;

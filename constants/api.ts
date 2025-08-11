@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
     RESET_FORGOTTEN_PASSWORD: "reset-password",
   },
   VERSION: {
-    APP_VERSION: "version"
+    APP_VERSION: "version/latest"
   },
 
   // User endpoints
