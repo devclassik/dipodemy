@@ -3,10 +3,11 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   useColorScheme,
@@ -25,6 +26,7 @@ const KeyboardPinEntryScreen = () => {
   const inputRef = useRef<TextInput>(null);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const [secondsLeft, setSecondsLeft] = useState(60);
 
   const onConfirmOtp = async () => {
     setIsLoading(true);
@@ -64,6 +66,7 @@ const KeyboardPinEntryScreen = () => {
   }
 
   const onResendOtp = async () => {
+    setSecondsLeft(60);
     setIsLoading(true);
     try {
       const jsonValue = await AsyncStorage.getItem("user_creds");
@@ -111,64 +114,62 @@ const KeyboardPinEntryScreen = () => {
 
   const handleModalClose = () => setShowModal(false);
 
+  useEffect(() => {
+    if (secondsLeft <= 0) return; // Don't run interval if timer is stopped
+
+    const timerId = setInterval(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [secondsLeft]);
+
+  const formatTime = () => {
+    const minutes = Math.floor(secondsLeft / 60);
+    const seconds = secondsLeft % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>Verify Email</ThemedText>
-      <ThemedText style={styles.subtitle}>
-        Input the Pin sent to your email
-      </ThemedText>
+    <>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color={colors.themeGreen} />
+        </TouchableOpacity>
+      </View>
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.title}>Verify Email</ThemedText>
+        <ThemedText style={styles.subtitle}>
+          Input the Pin sent to your email
+        </ThemedText>
 
-      {/* Pin boxes container */}
-      <TouchableOpacity
-        style={styles.pinRow}
-        onPress={handlePress}
-        activeOpacity={1}
-      >
-        {[0, 1, 2, 3, 4, 5,].map((i) => (
-          <View key={i} style={styles.pinBox}>
-            {/* Show dot if pin character exists */}
-            <ThemedText style={styles.pinText}>{pin[i] ? "•" : ""}</ThemedText>
-          </View>
-        ))}
+        <TouchableOpacity
+          style={styles.pinRow}
+          onPress={handlePress}
+          activeOpacity={1}
+        >
+          {[0, 1, 2, 3, 4, 5,].map((i) => (
+            <View key={i} style={styles.pinBox}>
+              {/* Show dot if pin character exists */}
+              <ThemedText style={styles.pinText}>{pin[i] ? "•" : ""}</ThemedText>
+            </View>
+          ))}
 
-        {/* Hidden input for actual input */}
-        <TextInput
-          ref={inputRef}
-          value={pin}
-          onChangeText={handleChange}
-          keyboardType="number-pad"
-          maxLength={6}
-          style={styles.hiddenInput}
-          // You can add autoFocus here if you want
-          autoFocus={true}
-        />
-      </TouchableOpacity>
+          <TextInput
+            ref={inputRef}
+            value={pin}
+            onChangeText={handleChange}
+            keyboardType="number-pad"
+            maxLength={6}
+            style={styles.hiddenInput}
+            // You can add autoFocus here if you want
+            autoFocus={true}
+          />
+        </TouchableOpacity>
 
-      {pin.length <= 5 && (
-        <RoundedActionButton
-          text={isLoading ? "Please wait..." : "Resend OTP"}
-          icon={
-            isLoading ? (
-              <ActivityIndicator size="small" color={colors.themeGreen} />
-            ) : (
-              <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={colors.themeGreen}
-              />
-            )
-          }
-          onPress={onResendOtp}
-          style={{ backgroundColor: colors.warning }}
-        />
-      )}
-
-      {/* Show Continue button only when pin is 4 digits */}
-      {pin.length === 6 && (
-        <View>
+        {pin.length <= 5 && (
           <RoundedActionButton
-            disabled={pin.length < 4}
-            text={isLoading ? "Please wait..." : "Continue"}
+            text={isLoading ? "Please wait..." : "Resend OTP"}
             icon={
               isLoading ? (
                 <ActivityIndicator size="small" color={colors.themeGreen} />
@@ -180,28 +181,57 @@ const KeyboardPinEntryScreen = () => {
                 />
               )
             }
-            onPress={handleContinue}
+            onPress={onResendOtp}
+            style={{ backgroundColor: colors.warning }}
+            disabled={secondsLeft > 0 || isLoading}
           />
-        </View>
-      )}
+        )}
+        {secondsLeft > 0 && (
+          <View>
+            <Text style={styles.timer}>{formatTime()}</Text>
+          </View>)
+        }
 
-      {showModal && (
-        <CustomModal
-          visible={showModal}
-          onClose={handleModalClose}
-          lottieSource={require("@/assets/lottie/alert.json")}
-          imageSource={require("@/assets/images/avatar.png")}
-          caption="Welcome to ADC campus!"
-          subText="Your Account is Ready to Use. You will be redirected to the Home Page in a Few Seconds."
-          loading={false}
-          buttonText="OK"
-          onButtonPress={() => {
-            router.replace("/(tabs)");
-            handleModalClose();
-          }}
-        />
-      )}
-    </ThemedView>
+        {pin.length === 6 && (
+          <View>
+            <RoundedActionButton
+              disabled={pin.length < 4}
+              text={isLoading ? "Please wait..." : "Continue"}
+              icon={
+                isLoading ? (
+                  <ActivityIndicator size="small" color={colors.themeGreen} />
+                ) : (
+                  <Ionicons
+                    name="arrow-forward"
+                    size={24}
+                    color={colors.themeGreen}
+                  />
+                )
+              }
+              onPress={handleContinue}
+            />
+          </View>
+        )}
+
+        {showModal && (
+          <CustomModal
+            visible={showModal}
+            onClose={handleModalClose}
+            lottieSource={require("@/assets/lottie/alert.json")}
+            imageSource={require("@/assets/images/avatar.png")}
+            caption="Welcome to ADC campus!"
+            subText="Your Account is Ready to Use. You will be redirected to the Home Page in a Few Seconds."
+            loading={false}
+            buttonText="OK"
+            onButtonPress={() => {
+              router.replace("/(tabs)");
+              handleModalClose();
+            }}
+          />
+        )}
+      </ThemedView>
+    </>
+
   );
 };
 
@@ -241,6 +271,26 @@ const styles = StyleSheet.create({
     width: 1,
     height: 1,
     opacity: 0,
+  },
+  timer: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "red"
+  },
+  header: {
+    position: "absolute",
+    top: 50, // adjust for safe area
+    left: 20,
+    zIndex: 10,
+  },
+  backButton: {
+    padding: 8,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
 });
 

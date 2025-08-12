@@ -165,7 +165,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         onPress={onEnroll ?? (() => {})}
         style={{
           marginVertical: 20,
-          width: 250,
+          width: 300,
           alignSelf: "center",
           alignItems: "center",
         }}

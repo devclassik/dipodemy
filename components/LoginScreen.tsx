@@ -73,88 +73,6 @@ const LoginScreen = () => {
     }
   };
 
-  const testToken = async () => {
-    try {
-      const token = await tokenService.getToken();
-      console.log("🔍 Current token in storage:", token ? "EXISTS" : "NULL");
-      if (token) {
-        console.log("🔍 Token preview:", token.substring(0, 30) + "...");
-        console.log("🔍 Full token for Postman comparison:", token);
-        console.log("🔍 Bearer format for Postman:", `Bearer ${token}`);
-      }
-
-      // Test if token is in axios headers
-      const authHeader = api.defaults.headers.common['Authorization'];
-      console.log("🔍 Token in axios headers:", authHeader ? "EXISTS" : "NULL");
-      if (authHeader) {
-        console.log("🔍 Full header for comparison:", authHeader);
-      }
-
-      // Show current status without API calls
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Token Status",
-        textBody: `Storage: ${token ? 'OK' : 'MISSING'}, Headers: ${authHeader ? 'OK' : 'MISSING'}`,
-      });
-
-      // Only test API if token exists
-      if (token) {
-        // Test token with a simple API call
-        try {
-          console.log("🧪 Testing token with /auth/me endpoint...");
-          const response = await fetch("https://adcparty.com.ng/api/v1/auth/profile", {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            }
-          });
-          console.log("🧪 /auth/me response status:", response.status);
-          if (response.ok) {
-            const data = await response.json();
-            console.log("🧪 /auth/me response:", data);
-            Toast.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Token Test",
-              textBody: "Token works with /auth/me endpoint!",
-            });
-          } else {
-            console.log("🧪 /auth/me failed:", response.status);
-            Toast.show({
-              type: ALERT_TYPE.DANGER,
-              title: "Token Test",
-              textBody: "Token failed with /auth/me endpoint",
-            });
-          }
-        } catch (testError) {
-          console.log("🧪 Token test error:", testError);
-        }
-      }
-    } catch (error) {
-      console.error("Error testing token:", error);
-    }
-  };
-
-  const checkStorageOnly = async () => {
-    try {
-      const token = await tokenService.getToken();
-      console.log("🔍 Storage check - Token exists:", !!token);
-      if (token) {
-        console.log("🔍 Storage check - Token length:", token.length);
-        console.log("🔍 Storage check - Token preview:", token.substring(0, 20) + "...");
-      }
-
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Storage Check",
-        textBody: `Token in storage: ${token ? 'YES' : 'NO'}`,
-      });
-    } catch (error) {
-      console.error("Storage check error:", error);
-    }
-  };
-
   const onLoginPress = async () => {
     if (!isValidEmail(email)) {
       Toast.show({
@@ -178,16 +96,17 @@ const LoginScreen = () => {
     // Set authentication flag to prevent interceptor redirect
     setAuthenticating(true);
     try {
+      await AsyncStorage.setItem(
+        "user_creds",
+        JSON.stringify({ email, password })
+      );
       const res = await authService.login(email, password);
-
       // Handle the response data safely
       const responseData = res.data as any;
-      console.log("Login response:", responseData);
 
       if (responseData?.token) {
         // Use secure token service for better reliability
         const storageSuccess = await tokenService.setToken(responseData.token);
-        console.log(`${Platform.OS} - Token storage result:`, storageSuccess ? "SUCCESS" : "FAILED");
 
         if (!storageSuccess) {
           throw new Error("Token storage failed");
@@ -198,7 +117,6 @@ const LoginScreen = () => {
 
         // Verify token was stored correctly
         const storedToken = await tokenService.getToken();
-        console.log(`${Platform.OS} - Token verification - stored:`, storedToken ? "YES" : "NO");
 
         if (!storedToken) {
           throw new Error("Token verification failed");
@@ -236,54 +154,14 @@ const LoginScreen = () => {
         textBody: res.message || "Login successful!",
       });
 
-      // Platform-specific delay to ensure token is properly stored and interceptor can pick it up
-      const navigationDelay = Platform.OS === 'ios' ? 1000 : 100;
-      console.log(`${Platform.OS} - Waiting ${navigationDelay}ms before navigation...`);
-      await new Promise(resolve => setTimeout(resolve, navigationDelay));
-
       // Refresh token in interceptor to ensure it's available
       await refreshTokenInInterceptor();
 
-      // iOS-specific: Additional verification and delay
-      if (Platform.OS === 'ios') {
-        console.log('🍎 iOS - Final token verification before navigation...');
-        const finalTokenCheck = await AsyncStorage.getItem("auth_token");
-        const finalHeaderCheck = api.defaults.headers.common['Authorization'];
-
-        console.log('🍎 iOS - Final token in storage:', finalTokenCheck ? 'EXISTS' : 'MISSING');
-        console.log('🍎 iOS - Final token in headers:', finalHeaderCheck ? 'EXISTS' : 'MISSING');
-
-        if (!finalTokenCheck || !finalHeaderCheck) {
-          console.log('🍎 iOS - Token missing, re-setting...');
-          setAuthToken(responseData.token);
-          await new Promise(resolve => setTimeout(resolve, 10)); // Additional delay
-        }
-
-        // Force refresh axios configuration for iOS
-        forceRefreshAxiosConfig();
-      }
-
-      // Final verification for both platforms
-      console.log(`${Platform.OS} - Final verification before navigation...`);
-      const finalToken = await AsyncStorage.getItem("auth_token");
-      const finalHeader = api.defaults.headers.common['Authorization'];
-
-      console.log(`${Platform.OS} - Final token:`, finalToken ? 'EXISTS' : 'MISSING');
-      console.log(`${Platform.OS} - Final header:`, finalHeader ? 'EXISTS' : 'MISSING');
-
-      if (!finalToken || !finalHeader) {
-        console.log(`${Platform.OS} - Final verification failed, re-setting token...`);
-        setAuthToken(responseData.token);
-        await new Promise(resolve => setTimeout(resolve, 10));
-      }
-
       // Check if user is verified and navigate accordingly
       if (responseData?.user?.isEmailVerified !== false) {
-        console.log("User is verified, navigating to tabs");
         router.replace("/(tabs)");
       } else {
-        console.log("User needs email verification, navigating to PIN");
-        router.replace("/(auth)/pin");
+        router.navigate("/(auth)/pin");
       }
     } catch (error: any) {
       console.error("Login Error:", error);

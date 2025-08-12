@@ -8,6 +8,7 @@ import PagesCourseDescription from "./PagesCourseDescription";
 import ParallaxScrollView from "./ParallaxScrollView";
 import { ThemedView } from "./ThemedView";
 
+
 export interface Lesson {
   id: number;
   title: string;
@@ -124,7 +125,7 @@ const InstructionSection = () => {
 
   return (
     <ScrollView
-      style={{ flex: 1 }}
+      style={{ flex: 1,}}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={fetchCourses} />
       }

@@ -90,6 +90,7 @@ const RegisterScreen = () => {
       } else {
         await AsyncStorage.removeItem("user_creds");
       }
+      
       router.navigate("/pin");
     } catch (error: any) {
       console.error("Login Error:", error);
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 45,
-    color: "#000",
+    color: "black",
   },
   inputIcon: {
     marginRight: 8,

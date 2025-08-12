@@ -2,6 +2,7 @@ import InstructionSection from "@/components/InstructionSection";
 import { Stack } from "expo-router";
 import React from "react";
 
+
 const CourseDetails = () => {
 
   

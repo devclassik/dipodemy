@@ -24,7 +24,6 @@ export default function HomeScreen() {
 
       } catch (error: any) {
         console.log("Home screen error:", error);
-
       }
 
     })();
