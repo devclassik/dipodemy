@@ -90,7 +90,7 @@ const RegisterScreen = () => {
       } else {
         await AsyncStorage.removeItem("user_creds");
       }
-      router.replace("/pin");
+      router.navigate("/pin");
     } catch (error: any) {
       console.error("Login Error:", error);
       console.error("oop:", error.response.data);
