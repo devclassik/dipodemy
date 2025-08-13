@@ -5,13 +5,16 @@ import React from "react";
 const CourseReview = () => {
   const { data } = useLocalSearchParams();
 
- const course = data ? JSON.parse(data as string) : null; 
- 
- console.log("Course Details:", course);
- 
+  const course = data ? JSON.parse(data as string) : null;
+
+  console.log("Course Details:", course);
+
   return (
     <>
-      <Stack.Screen options={{ title: "Course Review", headerShown: true }} />
+      <Stack.Screen options={{
+        title: "Course Review", headerBackTitle: "Back",
+        headerShown: true
+      }} />
       <CourseReviewScreen />
     </>
   );

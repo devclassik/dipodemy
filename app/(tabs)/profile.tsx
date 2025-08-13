@@ -3,6 +3,7 @@ import { tokenService } from "@/api/services/token.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { Colors } from "@/constants/Colors";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
@@ -28,6 +29,7 @@ const ProfileScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [media, setMedia] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
@@ -54,6 +56,10 @@ const ProfileScreen = () => {
       setRefreshing(false);
     }
   };
+
+  const termsAndContidion = async () => {
+    setIsTermsModalVisible(true);
+  }
 
   useEffect(() => {
     (async () => {
@@ -211,13 +217,13 @@ const ProfileScreen = () => {
             text="Notifications"
             onPress={() => router.navigate("/notification")}
           />
-          <OptionItem
+          {/* <OptionItem
             icon="language"
             text="Language"
             rightText="English (US)"
             rightTextColor="#0066cc"
-          />
-          <OptionItem icon="description" text="Terms & Conditions" />
+          /> */}
+          <OptionItem icon="description" text="Terms & Conditions" onPress={termsAndContidion} />
           <OptionItem
             icon="change-password"
             text="Change Password"
@@ -289,7 +295,40 @@ const ProfileScreen = () => {
         </Modal>
       )}
 
-    </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isTermsModalVisible}
+        onRequestClose={() => setIsTermsModalVisible(false)}
+      >
+        <ThemedView style={modalStyles.overlay}>
+          <ThemedView style={modalStyles.modalBox}>
+            {/* Header */}
+            <Text style={[modalStyles.modalTitle, { color: Colors.light.textDim }]}>
+              Terms and Conditions
+            </Text>
+            <TouchableOpacity
+              style={modalStyles.closeButton}
+              onPress={() => setIsTermsModalVisible(false)}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>×</Text>
+            </TouchableOpacity>
+
+            {/* Scrollable Content */}
+            <ScrollView
+              style={modalStyles.scrollArea}
+              contentContainerStyle={{ paddingBottom: 20 }}
+              keyboardShouldPersistTaps="handled"
+            >
+              <ThemedText style={modalStyles.modalContent}>
+                Here are your terms and conditions... (long text here)
+              </ThemedText>
+            </ScrollView>
+          </ThemedView>
+        </ThemedView>
+      </Modal>
+
+    </ScrollView >
   );
 };
 
@@ -347,6 +386,8 @@ const OptionItem = ({
             {rightText}
           </Text>
         )}
+
+
         <Ionicons name="chevron-forward" size={18} color="#999" />
       </View>
     </TouchableOpacity>
@@ -474,6 +515,30 @@ const modalStyles = StyleSheet.create({
     color: "#0066cc",
     fontWeight: "bold",
   },
+
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalBox: {
+    borderRadius: 12,
+    padding: 20,
+    width: "100%",
+    maxHeight: "80%",
+  },
+  closeButton: {
+    position: "absolute",
+    right: 10,
+    top: 10,
+    padding: 5,
+  },
+  scrollArea: {
+    flexGrow: 0,
+  },
+
 });
 
 

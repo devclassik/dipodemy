@@ -106,6 +106,7 @@ const BoughtCourse = () => {
         options={{
           title: "My Courses",
           headerShown: true,
+          headerBackTitle: "Back",
           headerRight: () => (
             <TouchableOpacity
               onPress={handleFilterPress}

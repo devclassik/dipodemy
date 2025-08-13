@@ -56,6 +56,8 @@ export default function VideoPlayerScreen() {
         options={{
           title: "Video player",
           headerShown: true,
+          headerBackTitle: "Back",
+
         }}
       />
       <ThemedView style={styles.container}>

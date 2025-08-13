@@ -75,6 +75,8 @@ const Reviews: FC<ReviewProps> = ({ canWrite = false }) => {
         options={{
           title: "Reviews",
           headerShown: true,
+          headerBackTitle: "Back",
+
         }}
       />
       <ScrollView

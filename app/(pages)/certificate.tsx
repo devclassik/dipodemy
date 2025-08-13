@@ -12,7 +12,10 @@ const Certificate = () => {
   return (
     <>
       <Stack.Screen
-        options={{ title: "Certificate Download", headerShown: true }}
+        options={{
+          title: "Certificate Download", headerBackTitle: "Back",
+          headerShown: true
+        }}
       />
       <CertificateScreen />
     </>

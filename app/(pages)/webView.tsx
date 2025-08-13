@@ -21,7 +21,10 @@ export default function PaystackWebView() {
         options={{
           title: typeof pageTitle === "string" ? pageTitle : "Paystack Payment",
           headerShown: true,
+          headerBackTitle: "Back",
+
         }}
+        
       />
       <ThemedView style={{ flex: 1 }}>
         <WebView

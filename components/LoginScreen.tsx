@@ -10,8 +10,6 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
-  Keyboard,
-  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -19,9 +17,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   useColorScheme,
-  View,
+  View
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import RoundedActionButton from "./RoundedActionButton";
@@ -198,154 +195,148 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <ThemedView style={styles.container}>
-              <Image
-                source={require("../assets/images/icon.png")}
-                style={styles.logo}
+        <ThemedView style={styles.container}>
+          <Image
+            source={require("../assets/images/icon.png")}
+            style={styles.logo}
+          />
+          <Text style={styles.title}>Dipodemy</Text>
+
+          <ThemedText style={styles.loginLabel}>Login!</ThemedText>
+
+          <View style={styles.inputWrapper}>
+            <Ionicons
+              name="mail-outline"
+              size={20}
+              color="#888"
+              style={styles.inputIcon}
+            />
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              placeholderTextColor="#444"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              editable={!isLoading}
+              autoCorrect={false}
+              spellCheck={false}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onSubmitEditing={() => {
+                // Focus password input
+              }}
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <Ionicons
+              name="lock-closed-outline"
+              size={20}
+              color="#888"
+              style={styles.inputIcon}
+            />
+            <TextInput
+              placeholder="Password"
+              secureTextEntry={!passwordVisible}
+              style={styles.input}
+              placeholderTextColor="#444"
+              autoCapitalize="none"
+              value={password}
+              onChangeText={setPassword}
+              editable={!isLoading}
+              autoCorrect={false}
+              spellCheck={false}
+              returnKeyType="done"
+              blurOnSubmit={true}
+              onSubmitEditing={onLoginPress}
+            />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={() => setPasswordVisible((visible) => !visible)}
+              disabled={isLoading}
+            >
+              <Ionicons
+                name={passwordVisible ? "eye-off" : "eye"}
+                size={20}
+                color="#888"
               />
-              <Text style={styles.title}>Dipodemy</Text>
+            </TouchableOpacity>
+          </View>
+          {password.length < 8 && (
+            <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+              Passwords must match and be at least 8 characters.
+            </ThemedText>
+          )}
 
-              <ThemedText style={styles.loginLabel}>Login!</ThemedText>
+          <View style={styles.rememberRow}>
+            <TouchableOpacity
+              style={styles.rememberCheck}
+              onPress={() => setRememberMe((remember) => !remember)}
+              disabled={isLoading}
+            >
+              <MaterialCommunityIcons
+                name={
+                  rememberMe
+                    ? "checkbox-marked-circle"
+                    : "checkbox-blank-circle-outline"
+                }
+                size={20}
+                color={colors.themeGreen}
+              />
+              <ThemedText style={styles.rememberText}>
+                {" "}
+                Remember Password
+              </ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.navigate("/(auth)/forgetPassword")}
+              disabled={isLoading}
+            >
+              <ThemedText style={styles.forgotText}>
+                Forget password
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
 
-              <View style={styles.inputWrapper}>
-                <Ionicons
-                  name="mail-outline"
-                  size={20}
-                  color="#888"
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  placeholder="Email"
-                  style={styles.input}
-                  placeholderTextColor="#444"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  value={email}
-                  onChangeText={setEmail}
-                  editable={!isLoading}
-                  autoCorrect={false}
-                  spellCheck={false}
-                  returnKeyType="next"
-                  blurOnSubmit={false}
-                  onSubmitEditing={() => {
-                    // Focus password input
-                  }}
-                />
-              </View>
-
-              <View style={styles.inputWrapper}>
-                <Ionicons
-                  name="lock-closed-outline"
-                  size={20}
-                  color="#888"
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  placeholder="Password"
-                  secureTextEntry={!passwordVisible}
-                  style={styles.input}
-                  placeholderTextColor="#444"
-                  autoCapitalize="none"
-                  value={password}
-                  onChangeText={setPassword}
-                  editable={!isLoading}
-                  autoCorrect={false}
-                  spellCheck={false}
-                  returnKeyType="done"
-                  blurOnSubmit={true}
-                  onSubmitEditing={onLoginPress}
-                />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setPasswordVisible((visible) => !visible)}
-                  disabled={isLoading}
-                >
+          <View style={styles.buttonContainer}>
+            <RoundedActionButton
+              text={isLoading ? "Logging in..." : "Sign In"}
+              icon={
+                isLoading ? (
+                  <ActivityIndicator size="small" color={colors.themeGreen} />
+                ) : (
                   <Ionicons
-                    name={passwordVisible ? "eye-off" : "eye"}
-                    size={20}
-                    color="#888"
-                  />
-                </TouchableOpacity>
-              </View>
-              {password.length < 8 && (
-                <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
-                  Passwords must match and be at least 8 characters.
-                </ThemedText>
-              )}
-
-              <View style={styles.rememberRow}>
-                <TouchableOpacity
-                  style={styles.rememberCheck}
-                  onPress={() => setRememberMe((remember) => !remember)}
-                  disabled={isLoading}
-                >
-                  <MaterialCommunityIcons
-                    name={
-                      rememberMe
-                        ? "checkbox-marked-circle"
-                        : "checkbox-blank-circle-outline"
-                    }
-                    size={20}
+                    name="arrow-forward"
+                    size={24}
                     color={colors.themeGreen}
                   />
-                  <ThemedText style={styles.rememberText}>
-                    {" "}
-                    Remember Password
-                  </ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => router.navigate("/(auth)/forgetPassword")}
-                  disabled={isLoading}
-                >
-                  <ThemedText style={styles.forgotText}>
-                    Forget password
-                  </ThemedText>
-                </TouchableOpacity>
-              </View>
+                )
+              }
+              bgColor={colors.themeGreen}
+              onPress={onLoginPress}
+              disabled={isLoginButtonDisabled}
+            />
+          </View>
 
-              <View style={styles.buttonContainer}>
-                <RoundedActionButton
-                  text={isLoading ? "Logging in..." : "Sign In"}
-                  icon={
-                    isLoading ? (
-                      <ActivityIndicator size="small" color={colors.themeGreen} />
-                    ) : (
-                      <Ionicons
-                        name="arrow-forward"
-                        size={24}
-                        color={colors.themeGreen}
-                      />
-                    )
-                  }
-                  bgColor={colors.themeGreen}
-                  onPress={onLoginPress}
-                  disabled={isLoginButtonDisabled}
-                />
-              </View>
+          <ThemedText style={styles.footerText}>
+            Already have an Account?{" "}
+            <ThemedText
+              style={styles.signUp}
+              onPress={() => router.navigate("/register")}
+            >
+              SIGN UP
+            </ThemedText>
+          </ThemedText>
 
-              <ThemedText style={styles.footerText}>
-                Already have an Account?{" "}
-                <ThemedText
-                  style={styles.signUp}
-                  onPress={() => router.navigate("/register")}
-                >
-                  SIGN UP
-                </ThemedText>
-              </ThemedText>
-
-              {/* Debug buttons - remove these in production */}
-              {/* <TouchableOpacity 
+          {/* Debug buttons - remove these in production */}
+          {/* <TouchableOpacity 
                 style={styles.debugButton} 
                 onPress={logout}
               >
@@ -365,10 +356,8 @@ const LoginScreen = () => {
               >
                 <ThemedText style={styles.debugText}>Check Storage Only (Debug)</ThemedText>
               </TouchableOpacity> */}
-            </ThemedView>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+        </ThemedView>
+      </ScrollView>
     </SafeAreaView>
   );
 };

@@ -28,7 +28,7 @@ export interface CourseItem {
 const PopularCourse = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [courses, setCourses] = useState<CourseItem[]>([]);
-  const [query, setQuery] = useState(""); 
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -98,7 +98,7 @@ const PopularCourse = () => {
   };
 
   const handleSearchSectionPress = (category: Category) => {
-    if (category.name === query) return; 
+    if (category.name === query) return;
     setQuery(category.name);
     setPage(1);
     fetchCourses(1, true);
@@ -106,7 +106,10 @@ const PopularCourse = () => {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Popular Course", headerShown: true }} />
+      <Stack.Screen options={{
+        title: "Popular Course", headerBackTitle: "Back",
+        headerShown: true
+      }} />
       <PopularCourseScreen
         sections={categories}
         onSectionPress={handleSearchSectionPress}
@@ -115,7 +118,7 @@ const PopularCourse = () => {
           router.navigate({
             pathname: "/(pages)/courseDetails",
             params: { data: data.id },
-            
+
           })
         }
         isLoading={isInitialLoading}

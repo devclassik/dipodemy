@@ -72,6 +72,8 @@ const WriteReviews = () => {
         options={{
           title: "Write Review",
           headerShown: true,
+          headerBackTitle: "Back",
+
         }}
       />
       <WriteReviewCard

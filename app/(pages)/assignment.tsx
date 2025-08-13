@@ -64,6 +64,7 @@ const Assignment = () => {
           headerShown: true,
           gestureEnabled: true,
           gestureDirection: "horizontal",
+          headerBackTitle: "Back",
         }}
       />
       <SubmitAssignmentCard

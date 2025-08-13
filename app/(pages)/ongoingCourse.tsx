@@ -9,7 +9,6 @@ import React, { useEffect, useState } from "react";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 const OngoingCourse = () => {
-  const [programs, setPrograms] = useState<any[]>([]);
   const [selectedTab, setSelectedTab] =
     useState<TabOptionsScreen["options"]>("ongoing");
   const [loadingMore, setLoadingMore] = useState(false);
@@ -98,7 +97,7 @@ const OngoingCourse = () => {
   return (
     <>
       <Stack.Screen
-        options={{ title: "Ongoing/Completed Course", headerShown: true }}
+        options={{ title: "Ongoing/Completed Course", headerBackTitle: "Back", headerShown: true }}
       />
       {loading ? (
         <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>

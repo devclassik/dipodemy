@@ -148,7 +148,7 @@ export default function CourseCategory() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Course Category", headerShown: true }} />
+      <Stack.Screen options={{ title: "Course Category", headerBackTitle: "Back", headerShown: true }} />
       <ThemedView style={styles.container}>
         <Search
           showFilter={false}

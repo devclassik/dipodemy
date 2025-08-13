@@ -52,6 +52,7 @@ const courseContent = () => {
       <Stack.Screen
         options={{
           title: "Course Content",
+          headerBackTitle: "Back",
           headerShown: true,
         }}
       />

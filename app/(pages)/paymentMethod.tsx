@@ -14,7 +14,10 @@ const PaymentMethod = () => {
   };
   return (
     <>
-      <Stack.Screen options={{ title: "Payment Methods", headerShown: true }} />
+      <Stack.Screen options={{
+        title: "Payment Methods", headerBackTitle: "Back",
+        headerShown: true
+      }} />
       <PaymentMethodsScreen
         id={mockCourses.id}
         category={mockCourses.category}

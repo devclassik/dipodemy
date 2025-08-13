@@ -8,7 +8,7 @@ const CourseDetails = () => {
   
   return (
     <>
-      <Stack.Screen options={{ title: "Course Details", headerShown: true }} />
+      <Stack.Screen options={{ title: "Course Details", headerBackTitle: "Back" ,headerShown: true }} />
       <InstructionSection  />
     </>
   );
