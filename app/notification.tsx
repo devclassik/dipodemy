@@ -50,7 +50,9 @@ export default function NotificationScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Notification", headerShown: true }} />
+      <Stack.Screen options={{
+        title: "Notification", headerShown: true, headerBackTitle: "Back",
+      }} />
       <ScrollView
         style={styles.container}
         refreshControl={

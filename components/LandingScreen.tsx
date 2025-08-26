@@ -3,17 +3,27 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import axios from "axios";
-import * as Application from 'expo-application';
+import * as Application from "expo-application";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Linking,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
 const LandingScreen = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [updateUrl, setUpdateUrl] = useState("https://play.google.com/store/apps/details?id=com.yourapp");
+  const [updateUrl, setUpdateUrl] = useState(
+    "https://play.google.com/store/apps/details?id=com.yourapp"
+  );
 
   console.log("App Version:", Application.nativeApplicationVersion);
   console.log("Build Version:", Application.nativeBuildVersion);
@@ -28,10 +38,14 @@ const LandingScreen = () => {
 
   const checkAppVersion = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.VERSION.APP_VERSION}`);
-      
+      const response = await axios.get(
+        `${API_BASE_URL}${API_ENDPOINTS.VERSION.APP_VERSION}`
+      );
+
       const data = response.data as {
-        latestVersion: string; downloadUrl?: string, forceUpdate: boolean,
+        latestVersion: string;
+        downloadUrl?: string;
+        forceUpdate: boolean;
       };
       const latest = data.latestVersion;
       const current = Application.nativeApplicationVersion ?? "2.33.21";
@@ -59,10 +73,14 @@ const LandingScreen = () => {
 
   return (
     <ThemedView style={styles.container}>
+      <ThemedView>
+        <Image
+          source={require("../assets/images/icon.png")}
+          style={styles.image}
+        />
+      </ThemedView>
       <ThemedView style={styles.inner}>
-        <ThemedText style={styles.title}>
-          Let’s you in
-        </ThemedText>
+        <ThemedText style={styles.title}>Let’s you in</ThemedText>
 
         {/* <TouchableOpacity style={styles.socialButton}>
           <ThemedView style={styles.iconWrapper}>
@@ -93,7 +111,7 @@ const LandingScreen = () => {
         <ThemedView
           style={{
             flex: 1,
-            width: "70%",
+            width: "90%",
             alignSelf: "center",
             alignItems: "center",
             marginVertical: 60,
@@ -227,30 +245,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   modal: {
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    width: "80%"
+    width: "80%",
   },
   titleModal: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10
+    marginBottom: 10,
   },
   message: {
     fontSize: 14,
-    marginBottom: 20
+    marginBottom: 20,
   },
   button: {
     padding: 12,
     borderRadius: 5,
-    alignItems: "center"
+    alignItems: "center",
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
+  image: {
+    width: 200,
+    height: 200,
+    // borderRadius: "100%",
+    marginHorizontal: 120,
+    resizeMode: "contain",
+  },
 });

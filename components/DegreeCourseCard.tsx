@@ -1,27 +1,22 @@
 import { router } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { CoursesProps } from "./CourseSection";
+import { DegreeCourse } from "./DegreeSection";
 import { ThemedView } from "./ThemedView";
 
-const CourseCard: React.FC<CoursesProps> = ({
-
+const DegreeCourseCard: React.FC<DegreeCourse> = ({
   id,
   title,
   description,
   image,
   price,
-  discount_price,
+  type,
+  duration,
   rating,
-  is_enrolled,
   enrollments,
   reviews_count,
-  level,
-  duration,
-  status,
   slug,
-  lessons_count,
-  type,
+  status,
 }) => {
   const handlePress = () => {
       router.navigate({
@@ -35,7 +30,7 @@ const CourseCard: React.FC<CoursesProps> = ({
       <ThemedView style={styles.card}>
         <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
         <View style={styles.info}>
-          <Text style={styles.category}>{level || type}</Text>
+          <Text style={styles.category}>{type || type}</Text>
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>
@@ -100,4 +95,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CourseCard;
+export default DegreeCourseCard;

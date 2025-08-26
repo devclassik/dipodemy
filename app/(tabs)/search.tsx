@@ -16,7 +16,6 @@ import {
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
-
 export default function SearchScreen() {
   const { data } = useLocalSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -51,12 +50,14 @@ export default function SearchScreen() {
         page: pageNum,
         limit: 10,
         search: search,
-      });      
+      });
       const newCategories = res?.data?.categories ?? [];
       const meta = res?.data?.meta;
       const currentPage = meta?.current_page ?? pageNum;
       const lastPage = meta?.last_page ?? currentPage;
-      setCategories((prev) => (replace ? newCategories : [...prev, ...newCategories]));
+      setCategories((prev) =>
+        replace ? newCategories : [...prev, ...newCategories]
+      );
       setPage(pageNum);
       setHasMore(currentPage < lastPage);
       setHasLoadedOnce(true);
@@ -114,7 +115,12 @@ export default function SearchScreen() {
             onPress={() =>
               router.navigate({
                 pathname: "/(pages)/courseCategory",
-                params: { data: JSON.stringify({ categoryName: category.name, id: category.id }) },
+                params: {
+                  data: JSON.stringify({
+                    categoryName: category.name,
+                    id: category.id,
+                  }),
+                },
               })
             }
           >
@@ -151,13 +157,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "column",
   },
   categoryTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    marginTop: 8,
+    textAlign: "center",
   },
   avatar: {
     width: 40,
     height: 40,
+    borderRadius: 10,
   },
 });

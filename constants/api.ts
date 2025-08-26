@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   },
   HOME: {
     HOME_SCREEN: "home",
+    HOME_DEGREE_SCREEN: "degree",
     HOME_SCREEN_COURSES: "/home/courses",
     HOME_SCREEN_COURSE_DETAILS: "/home/course-details",
     NOTIFICATION: "notifications"

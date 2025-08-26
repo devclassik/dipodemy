@@ -271,7 +271,7 @@ const LoginScreen = () => {
           </View>
           {password.length < 8 && (
             <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
-              Passwords must match and be at least 8 characters.
+              Passwords be at least 8 characters.
             </ThemedText>
           )}
 

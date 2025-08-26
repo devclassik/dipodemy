@@ -41,8 +41,8 @@ export const learnService = {
       if (query.length) url += `?${query.join("&")}`;
       const response = await api.get<ApiResponse<CategoryScreenResponse>>(url);
       return response.data;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      return error;
     }
   },
 

@@ -44,8 +44,11 @@ export default function VideoPlayerScreen() {
   };
 
   const getVideoId = (youtubeUrl: string) => {
-    const regex = /[?&]v=([^&#]+)/;
+    const regex = /(?:youtube\.com\/(?:.*v=|embed\/)|youtu\.be\/)([^&#?]+)/;;
     const match = youtubeUrl.match(regex);
+    console.log("YouTube URL:", youtubeUrl);
+    console.log("Extracted video ID:", match?.[1]);
+
     return match?.[1] || "";
   };
   const videoId = getVideoId(url as string);

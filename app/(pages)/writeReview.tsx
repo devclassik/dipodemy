@@ -23,7 +23,7 @@ const WriteReviews = () => {
         const res = await learnService.fetchCourseScreen(
           data as string | number
         );
-        setCourse(res.data.course);
+        setCourse(res?.data?.course);
       } catch (error) {
         console.error("Failed to load course data:", error);
       } finally {

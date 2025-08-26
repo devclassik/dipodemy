@@ -51,8 +51,8 @@ const InstructionSection = () => {
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: "Oops",
-        textBody: (error as any)?.message ?? "Failed to fetch courses",
+        title: "Failed to fetch courses",
+        textBody: (error as any)?.message ?? "Failed to fetch courses, please try again later.",
       });
       console.error("Fetch failed:", error);
     } finally {
@@ -66,7 +66,7 @@ const InstructionSection = () => {
       const res = await learnService.curriculumScreen(courseId());
       setCurriculum(res.data.sections);
     } catch (error) {
-      console.error("Login Error:", error);
+      console.error("Oops Error:", error);
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Login Failed",

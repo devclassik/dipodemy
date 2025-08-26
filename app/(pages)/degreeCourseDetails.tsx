@@ -2,14 +2,14 @@ import InstructionSection from "@/components/InstructionSection";
 import { Stack } from "expo-router";
 import React from "react";
 
-const CourseDetails = () => {
+const DegreeCourseDetails = () => {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Course Details", headerBackTitle: "Back" ,headerShown: true }} />
+      <Stack.Screen options={{ title: "Degree Course Details", headerBackTitle: "Back" ,headerShown: true }} />
       <InstructionSection  />
     </>
   );
 };
 
-export default CourseDetails;
+export default DegreeCourseDetails;

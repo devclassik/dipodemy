@@ -4,28 +4,28 @@ import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { homeService } from "@/api/services/home.service";
 import CategoryList from "@/components/CategoryList";
 import CourseSection from "@/components/CourseSection";
+import DegreeSection from "@/components/DegreeSection";
 import Header from "@/components/Header";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import SpecialOfferBanner from "@/components/SpecialOfferBanner";
-import { router, } from "expo-router";
+import { router } from "expo-router";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
-
 
 export default function HomeScreen() {
   const [userdata, setUserdata] = useState<any>(null);
+  const [degreeCourses, setDegreeCourses] = useState<any>(null);
   const [refreshing, setRefreshing] = useState(false);
-
 
   useEffect(() => {
     (async () => {
       try {
         const res = await homeService.homeScreen();
         setUserdata(res);
-
+        const degree = await homeService.homeDegreeScreen();
+        setDegreeCourses(degree.data["Degree-courses" as keyof typeof degree.data]);
       } catch (error: any) {
         console.log("Home screen error:", error);
       }
-
     })();
   }, []);
 
@@ -34,6 +34,8 @@ export default function HomeScreen() {
     try {
       const res = await homeService.homeScreen();
       setUserdata(res);
+      const degree = await homeService.homeDegreeScreen();
+        setDegreeCourses(degree.data["Degree-courses" as keyof typeof degree.data]);
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -83,15 +85,20 @@ export default function HomeScreen() {
         courses={userdata?.data?.newest_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
       />
-      <CourseSection
-        title="Earn Your Degree"
-        courses={userdata?.data?.popular_courses}
+      <DegreeSection
+        title="Degree Courses"
+        courses={degreeCourses}
         onSeeAllPress={() => router.navigate("/learn")}
       />
       <CourseSection
-        title="Most Popular Courses"
+        title="Top Courses"
         courses={userdata?.data?.degree_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
+      />
+      <CourseSection
+        title="Most Popular Courses"
+        courses={userdata?.data?.popular_courses}
+        onSeeAllPress={() => router.navigate("/learn")}
       />
     </ScrollView>
   );
@@ -100,5 +107,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 60,
   },
 });

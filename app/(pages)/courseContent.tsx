@@ -41,9 +41,7 @@ const courseContent = () => {
   const handleAsCompleted = async (url: Lesson) => {
     try {
       const data = await courseService.progressScreen(url.id);
-      // console.log(data);
     } catch (error) {
-      // console.log(error);
     }
   };
 

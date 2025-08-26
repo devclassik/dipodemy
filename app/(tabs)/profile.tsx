@@ -192,7 +192,7 @@ const ProfileScreen = () => {
             name="camera-outline"
             size={24}
             color="#000"
-            style={{ position: "absolute", top: -85, left: 25 }}
+            style={{ position: "absolute", top: -93, left: 20, backgroundColor: "#fcd401", borderRadius: 10 }}
           />
         </TouchableOpacity>
 
@@ -246,12 +246,15 @@ const ProfileScreen = () => {
             <ThemedView style={modalStyles.modalContent}>
               <Text style={modalStyles.modalTitle}>Edit Profile</Text>
 
+              <Text>First Name</Text>
               <TextInput
                 placeholder="First Name"
                 value={firstName}
                 onChangeText={setFirstName}
                 style={modalStyles.input}
               />
+              <Text>Last Name</Text>
+
               <TextInput
                 placeholder="Last Name"
                 value={lastName}

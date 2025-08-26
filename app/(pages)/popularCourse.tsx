@@ -34,10 +34,12 @@ const PopularCourse = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-
   const fetchCategory = async () => {
     try {
-      const res = await searchService.categoryScreenPaginated({ page: 1, limit: 20 });
+      const res = await searchService.categoryScreenPaginated({
+        page: 1,
+        limit: 20,
+      });
       const newCategories = res?.data?.categories ?? [];
       setCategories(newCategories);
     } catch (error) {
@@ -50,9 +52,14 @@ const PopularCourse = () => {
   };
 
   const fetchCourses = async (pageNum: number = 1, replace = false) => {
-    if (replace) setIsInitialLoading(true);
-    else setIsFetchingMore(true);
+    if (replace) {
+      setIsInitialLoading(true);
+    } else {
+      setIsFetchingMore(true);
+    }
 
+    console.log('query', query);
+    
     try {
       const res = await learnService.learnScreenPaginated({
         search: query,
@@ -73,7 +80,7 @@ const PopularCourse = () => {
         type: ALERT_TYPE.DANGER,
         title: "Error",
         textBody: (error as any)?.message ?? "Failed to load courses",
-      });
+      });      
     } finally {
       setIsInitialLoading(false);
       setIsFetchingMore(false);
@@ -85,10 +92,9 @@ const PopularCourse = () => {
     fetchCourses(1, true);
   }, []);
 
-
   const handleLoadMore = () => {
     if (!isFetchingMore && hasMore) {
-      fetchCourses(page + 1,);
+      fetchCourses(page + 1);
     }
   };
 
@@ -102,14 +108,20 @@ const PopularCourse = () => {
     setQuery(category.name);
     setPage(1);
     fetchCourses(1, true);
+
+    console.log(category.name);
+    
   };
 
   return (
     <>
-      <Stack.Screen options={{
-        title: "Popular Course", headerBackTitle: "Back",
-        headerShown: true
-      }} />
+      <Stack.Screen
+        options={{
+          title: "Popular Course",
+          headerBackTitle: "Back",
+          headerShown: true,
+        }}
+      />
       <PopularCourseScreen
         sections={categories}
         onSectionPress={handleSearchSectionPress}
@@ -118,7 +130,6 @@ const PopularCourse = () => {
           router.navigate({
             pathname: "/(pages)/courseDetails",
             params: { data: data.id },
-
           })
         }
         isLoading={isInitialLoading}

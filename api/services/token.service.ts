@@ -36,14 +36,14 @@ export const tokenService = {
       // Try secure storage first
       let token = await SecureStore.getItemAsync(TOKEN_KEY);
       if (token) {
-        console.log('🔐 Token retrieved from SecureStore');
+        // console.log('🔐 Token retrieved from SecureStore');
         return token;
       }
       
       // Fallback to AsyncStorage
       token = await AsyncStorage.getItem(TOKEN_KEY);
       if (token) {
-        console.log('🔐 Token retrieved from AsyncStorage');
+        // console.log('🔐 Token retrieved from AsyncStorage');
         return token;
       }
       

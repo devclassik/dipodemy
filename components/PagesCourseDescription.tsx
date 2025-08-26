@@ -12,7 +12,6 @@ import {
 import About from "./About";
 import CourseInfoScreen from "./CourseInfo";
 import { Section } from "./InstructionSection";
-import LessonSections from "./LessonSections";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
 
@@ -70,7 +69,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         <View style={styles.header}>
           <ThemedText style={styles.categoryText}>{category}</ThemedText>
           <View style={styles.ratingAndButton}>
-            <Ionicons name="star" size={14} color={colors.accent}/>
+            <Ionicons name="star" size={14} color={colors.accent} />
             <ThemedText style={styles.ratingText}>{rating}</ThemedText>
             {isPaid && (
               <TouchableOpacity style={styles.playButton} onPress={onPress}>
@@ -85,8 +84,14 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         <View style={styles.detailsContainer}>
           <View style={styles.leftDetails}>
             <View style={styles.detailItem}>
-              <Ionicons name="videocam-outline" size={16} color={colors.green} />
-              <ThemedText style={styles.detailText}>{classes} Classes</ThemedText>
+              <Ionicons
+                name="videocam-outline"
+                size={16}
+                color={colors.green}
+              />
+              <ThemedText style={styles.detailText}>
+                {classes} Classes
+              </ThemedText>
             </View>
             <ThemedText style={{ color: "#000" }}>|</ThemedText>
             <View style={styles.detailItem}>
@@ -139,7 +144,8 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         {activeTab === "about" ? (
           <About description={title} />
         ) : (
-          <LessonSections curriculum={curriculum} onPress={() => onPress} />
+          <About description={title} />
+          // <LessonSections curriculum={curriculum} onPress={() => onPress} />
         )}
       </View>
 

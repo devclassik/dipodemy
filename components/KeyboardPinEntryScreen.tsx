@@ -50,7 +50,6 @@ const KeyboardPinEntryScreen = () => {
       }
 
     } catch (error) {
-
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Oops!",
@@ -58,7 +57,7 @@ const KeyboardPinEntryScreen = () => {
       });
 
       if (error?.response?.data?.error === undefined || error?.response?.data?.error === "Your email is already verified") {
-        router.replace("/(tabs)");
+        router.replace("/(auth)/login");
       }
     } finally {
       setIsLoading(false);
@@ -224,7 +223,7 @@ const KeyboardPinEntryScreen = () => {
             loading={false}
             buttonText="OK"
             onButtonPress={() => {
-              router.replace("/(tabs)");
+              router.replace("/(auth)/login");
               handleModalClose();
             }}
           />

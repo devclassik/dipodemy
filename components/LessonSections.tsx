@@ -1,14 +1,12 @@
 import { Colors } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   useColorScheme,
-  View,
+  View
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { Lesson, Section } from "./InstructionSection";
@@ -39,9 +37,7 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View>
         {curriculum?.map((section, sectionIndex) => (
           <View key={sectionIndex} style={styles.sectionBlock}>
@@ -64,7 +60,7 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
               <>
                 <View key={lessonIndex} style={styles.lessonRow}>
                   <ThemedText style={styles.lessonIndex}>
-                    {lessonIndex + 1}.
+                    {lessonIndex + 1}
                   </ThemedText>
                   <View style={{ flex: 1, paddingLeft: 10 }}>
                     <ThemedText style={styles.lessonTitle}>
@@ -74,24 +70,43 @@ const LessonSections: React.FC<LessonSectionsProps> = ({
                       {lesson.description || "N/A"}
                     </ThemedText>
                     {lesson.pdf_url && (
-                      <Pressable onPress={() => handlePdfPress(lesson.pdf_url)}>
-                        <ThemedText
-                          style={[
-                            styles.lessonDuration,
-                            {
-                              color: colors.themeGreen,
-                              textDecorationLine: "underline",
-                            },
-                          ]}
+                      <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Pressable
+                          onPress={() => handlePdfPress(lesson.pdf_url)}
                         >
-                          View PDF
-                        </ThemedText>
-                      </Pressable>
+                          <ThemedText
+                            style={[
+                              styles.lessonDuration,
+                              {
+                                color: colors.themeGreen,
+                                textDecorationLine: "underline",
+                              },
+                            ]}
+                          >
+                            View PDF
+                          </ThemedText>
+                        </Pressable>
+                        <Pressable
+                          onPress={() => onPress(lesson)}
+                        >
+                          <ThemedText
+                            style={[
+                              styles.lessonDuration,
+                              {
+                                color: colors.themeGreen,
+                                textDecorationLine: "underline",
+                              },
+                            ]}
+                          >
+                            Play
+                          </ThemedText>
+                        </Pressable>
+                      </View>
                     )}
                   </View>
-                  <TouchableOpacity onPress={() => onPress(lesson)}>
+                  {/* <TouchableOpacity onPress={() => onPress(lesson)}>
                     <Ionicons name="play-outline" color={colors.green} />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
                 <ThemedView style={styles.lessonSeparator} />
               </>
@@ -124,9 +139,8 @@ const styles = StyleSheet.create({
     color: "#167F71",
   },
   lessonIndex: {
-    width: 15,
-    height: 15,
-    fontWeight: "bold",
+    width: 30,
+    height: 30,
     color: "#555",
     backgroundColor: "#E8F1FF",
     borderRadius: 10,

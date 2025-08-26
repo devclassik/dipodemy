@@ -119,7 +119,7 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
         icon={<Ionicons name="arrow-forward" size={24} color={colors.green} />}
         onPress={handleSubmit}
         style={{
-          width: "60%",
+          width: "70%",
           alignSelf: "center",
           alignItems: "center",
           marginVertical: 40,
