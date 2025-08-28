@@ -41,6 +41,8 @@ const MyCourseScreen: React.FC<MyCourseScreenProps> = ({
             onBookmarkPress={() => {}}
             isCompleted={isCompleted}
             isCompletedAction={isCompletedAction}
+            totalLessons={item.lessons_count}
+            completedLessons={item.lessons_count}
           />
         )}
         onEndReached={onEndReached}

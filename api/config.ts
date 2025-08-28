@@ -141,6 +141,7 @@ export const disable401Redirect = () => {
 };
 
 api.interceptors.request.use(
+  // @ts-ignore
   async (config) => {
     // console.log(`📱 Platform: ${Platform.OS}`);
     // console.log(`🔧 DEV Mode: ${__DEV__}`);

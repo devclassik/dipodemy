@@ -7,7 +7,7 @@ const CourseReview = () => {
 
   const course = data ? JSON.parse(data as string) : null;
 
-  console.log("Course Details:", course);
+  // console.log("Course Details:", course);
 
   return (
     <>

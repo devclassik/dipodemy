@@ -24,7 +24,7 @@ export default function NotificationScreen() {
   const loadNotifications = async () => {
     try {
       const res = await profileService.notificationScreen();
-
+      // @ts-ignore
       setNotifications(res?.data?.notifications || []);
     } catch (error: any) {
       console.log("Notification screen error:", error);

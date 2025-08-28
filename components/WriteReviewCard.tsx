@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TextInput,
   useColorScheme,
-  View
+  View,
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import RoundedActionButton from "./RoundedActionButton";
@@ -22,7 +22,7 @@ export interface WriteReviewCardProps {
   rating?: number;
   reviews?: number;
   image?: any;
-  submitReview?: (id: number, imageUri: string | null, comment: string) => void;
+  submitReview?: (id: any, imageUri: string | null, comment: string) => void;
 }
 
 const MAX_CHARACTERS = 250;

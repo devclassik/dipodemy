@@ -51,7 +51,9 @@ export default function SearchScreen() {
         limit: 10,
         search: search,
       });
+            // @ts-ignore
       const newCategories = res?.data?.categories ?? [];
+            // @ts-ignore
       const meta = res?.data?.meta;
       const currentPage = meta?.current_page ?? pageNum;
       const lastPage = meta?.last_page ?? currentPage;

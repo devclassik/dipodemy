@@ -48,6 +48,7 @@ const SubmitAssignmentCard: React.FC<SubmitAssignmentCardProps> = ({
       });
       return;
     }
+    // @ts-ignore
     submitAssignment?.(id, media);
     setMedia(null);
   };

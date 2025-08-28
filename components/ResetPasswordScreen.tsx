@@ -48,6 +48,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordProps> = ({
         password_confirmation,
         current_password
       );
+            // @ts-ignore
       if (res.success) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,

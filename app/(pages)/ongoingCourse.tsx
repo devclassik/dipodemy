@@ -42,8 +42,9 @@ const OngoingCourse = () => {
         status,
         limit: 10,
       });
-
+      // @ts-ignore
       const newCourses = res.data.courses;
+      // @ts-ignore
       const meta = res.data.meta;
 
       setCourses((prev) =>
@@ -88,6 +89,7 @@ const OngoingCourse = () => {
         page: 1,
         search: searchQuery,
       });
+      // @ts-ignore
       setCourses(result.data.courses);
     } finally {
       setLoading(false);
@@ -97,7 +99,11 @@ const OngoingCourse = () => {
   return (
     <>
       <Stack.Screen
-        options={{ title: "Ongoing/Completed Course", headerBackTitle: "Back", headerShown: true }}
+        options={{
+          title: "Ongoing/Completed Course",
+          headerBackTitle: "Back",
+          headerShown: true,
+        }}
       />
       {loading ? (
         <ThemedView style={{ paddingTop: 50, alignItems: "center" }}>
@@ -123,7 +129,7 @@ const OngoingCourse = () => {
           onRefresh={handleRefresh}
           loadingMore={loadingMore}
           onLoadMore={handleLoadMore}
-          onCardPress={(data) => 
+          onCardPress={(data) =>
             router.navigate({
               pathname: "/(pages)/courseContent",
               params: { data: JSON.stringify(data) },

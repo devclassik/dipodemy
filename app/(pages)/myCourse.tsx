@@ -51,15 +51,14 @@ const BoughtCourse = () => {
         status,
         limit: 10,
       });
-
+      // @ts-ignore
       const newCourses = res.data.courses;
 
       if (newCourses.length === 0) {
        return  setShowModal(true)
       }
-
+      // @ts-ignore
       const meta = res.data.meta;
-
       setCourses((prev) =>
         pageNum === 1 ? newCourses : [...prev, ...newCourses]
       );

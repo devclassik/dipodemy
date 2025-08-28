@@ -83,7 +83,7 @@ const PopularCourseScreen: React.FC<PopularCourseScreenProps> = ({
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <ThemedView style={styles.emptyView}>
-            <ThemedText>No courses found</ThemedText>
+            <ThemedText>No course found</ThemedText>
           </ThemedView>
         }
         ListFooterComponent={

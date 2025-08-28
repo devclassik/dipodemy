@@ -61,16 +61,15 @@ export default function Learn() {
         search: query,
         limit: 10,
       });
-
+      // @ts-ignore
       const results = res.data.courses;
 
       setCourses((prev) =>
         pageToFetch === 1 ? results : [...prev, ...results]
       );
-
+      // @ts-ignore
       setHasMore(res.data.meta.current_page < res.data.meta.last_page);
       setPage(pageToFetch);
-
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -99,7 +98,11 @@ export default function Learn() {
     setSearchTriggered(true);
     setLoading(true);
     try {
-      const result = await learnService.learnScreenPaginated({ page: 1, search: searchQuery });
+      const result = await learnService.learnScreenPaginated({
+        page: 1,
+        search: searchQuery,
+      });
+      // @ts-ignore
       setCourses(result.data.courses);
     } finally {
       setLoading(false);

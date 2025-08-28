@@ -89,8 +89,8 @@ const MyCourseCard: React.FC<{
   isCompleted?: boolean;
   isProgress?: boolean;
   isCompletedAction?: () => void;
-  totalLessons: number;
-  completedLessons: number;
+  totalLessons?: number;
+  completedLessons?: number;
 }> = ({
   item,
   onPress,
@@ -137,7 +137,7 @@ const MyCourseCard: React.FC<{
           </TouchableOpacity>
         )}
 
-        {isProgress && <ProgressBar completed={completedLessons} total={totalLessons} />}
+        {isProgress && <ProgressBar completed={completedLessons || 0} total={totalLessons || 0} />}
       </View>
       {/* <TouchableOpacity onPress={handlePress}>
         <Ionicons

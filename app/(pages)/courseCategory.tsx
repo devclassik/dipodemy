@@ -59,8 +59,10 @@ export default function CourseCategory() {
       }
 
       const res = await searchService.categoryScreenIdPaginated(id);
+      // @ts-ignore
       const results = res.data?.courses.map((course: any) => ({
         ...course,
+        // @ts-ignore
         category: res.data?.category,
       }));
 
@@ -98,7 +100,9 @@ export default function CourseCategory() {
         page: 1,
         search: searchQuery,
       });
+      // @ts-ignore
       console.log(res.data.courses);
+      // @ts-ignore
       setCourses(res.data.courses);
     } finally {
       setLoading(false);
@@ -125,13 +129,13 @@ export default function CourseCategory() {
         search: query,
         limit: 10,
       });
-
+      // @ts-ignore
       const results = res.data.courses;
 
       setCourses((prev) =>
         pageToFetch === 1 ? results : [...prev, ...results]
       );
-
+      // @ts-ignore
       setHasMore(res.data.meta.current_page < res.data.meta.last_page);
       setPage(pageToFetch);
     } catch (error) {
@@ -148,7 +152,13 @@ export default function CourseCategory() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Course Category", headerBackTitle: "Back", headerShown: true }} />
+      <Stack.Screen
+        options={{
+          title: "Course Category",
+          headerBackTitle: "Back",
+          headerShown: true,
+        }}
+      />
       <ThemedView style={styles.container}>
         <Search
           showFilter={false}

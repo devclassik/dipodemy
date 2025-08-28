@@ -18,6 +18,7 @@ const Assignment = () => {
         const res = await learnService.fetchAssignmentScreen(
           data as string | number
         );
+        // @ts-ignore
         setCourse(res.data.assignment);
       } catch (error) {
         console.error("Failed to load course data:", error);

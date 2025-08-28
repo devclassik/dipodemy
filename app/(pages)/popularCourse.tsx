@@ -40,10 +40,11 @@ const PopularCourse = () => {
         page: 1,
         limit: 20,
       });
+      // @ts-ignore
       const newCategories = res?.data?.categories ?? [];
       setCategories(newCategories);
     } catch (error) {
-      Toast.show({
+      Toast.show({  
         type: ALERT_TYPE.DANGER,
         title: "Error",
         textBody: (error as any)?.message || "Failed to load categories",
@@ -51,23 +52,25 @@ const PopularCourse = () => {
     }
   };
 
-  const fetchCourses = async (pageNum: number = 1, replace = false) => {
+  const fetchCourses = async (
+    pageNum: number = 1,
+    replace = false,
+    searchQuery: string = query
+  ) => {
     if (replace) {
       setIsInitialLoading(true);
     } else {
       setIsFetchingMore(true);
     }
-
-    console.log('query', query);
-    
     try {
       const res = await learnService.learnScreenPaginated({
-        search: query,
+        search: searchQuery,
         page: pageNum,
         limit: 20,
       });
-
+      // @ts-ignore
       const newCourses = res?.data?.courses ?? [];
+      // @ts-ignore
       const meta = res?.data?.meta;
       const currentPage = meta?.current_page ?? pageNum;
       const lastPage = meta?.last_page ?? currentPage;
@@ -80,7 +83,7 @@ const PopularCourse = () => {
         type: ALERT_TYPE.DANGER,
         title: "Error",
         textBody: (error as any)?.message ?? "Failed to load courses",
-      });      
+      });
     } finally {
       setIsInitialLoading(false);
       setIsFetchingMore(false);
@@ -107,10 +110,7 @@ const PopularCourse = () => {
     if (category.name === query) return;
     setQuery(category.name);
     setPage(1);
-    fetchCourses(1, true);
-
-    console.log(category.name);
-    
+    fetchCourses(1, true, category.name);
   };
 
   return (

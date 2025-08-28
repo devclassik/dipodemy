@@ -11,7 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   useColorScheme,
-  View
+  View,
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import CustomModal from "./CustomModal";
@@ -36,9 +36,10 @@ const KeyboardPinEntryScreen = () => {
         const { email, password } = JSON.parse(jsonValue);
         const userdata = {
           email: email,
-          otp: pin
-        }
+          otp: pin,
+        };
         const res = await authService.verifyOtp(userdata);
+        // @ts-ignore
         if (res.success) {
           setShowModal(true);
         }
@@ -48,21 +49,26 @@ const KeyboardPinEntryScreen = () => {
           textBody: res.message,
         });
       }
-
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Oops!",
+        // @ts-ignore
         textBody: error?.response?.data?.error,
       });
-
-      if (error?.response?.data?.error === undefined || error?.response?.data?.error === "Your email is already verified") {
+      // @ts-ignore
+      if (
+        // @ts-ignore
+        error?.response?.data?.error === undefined ||
+        // @ts-ignore
+        error?.response?.data?.error === "Your email is already verified"
+      ) {
         router.replace("/(auth)/login");
       }
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const onResendOtp = async () => {
     setSecondsLeft(60);
@@ -72,8 +78,8 @@ const KeyboardPinEntryScreen = () => {
       if (jsonValue !== null) {
         const { email, password } = JSON.parse(jsonValue);
         const userdata = {
-          email: email
-        }
+          email: email,
+        };
         const res = await authService.resendOtp(userdata);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
@@ -81,7 +87,6 @@ const KeyboardPinEntryScreen = () => {
           textBody: res.message,
         });
       }
-
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -91,7 +96,7 @@ const KeyboardPinEntryScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   // Focus the hidden TextInput when user taps the pin boxes
   const handlePress = () => {
@@ -132,7 +137,10 @@ const KeyboardPinEntryScreen = () => {
   return (
     <>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
           <Ionicons name="arrow-back" size={24} color={colors.themeGreen} />
         </TouchableOpacity>
       </View>
@@ -147,10 +155,12 @@ const KeyboardPinEntryScreen = () => {
           onPress={handlePress}
           activeOpacity={1}
         >
-          {[0, 1, 2, 3, 4, 5,].map((i) => (
+          {[0, 1, 2, 3, 4, 5].map((i) => (
             <View key={i} style={styles.pinBox}>
               {/* Show dot if pin character exists */}
-              <ThemedText style={styles.pinText}>{pin[i] ? "•" : ""}</ThemedText>
+              <ThemedText style={styles.pinText}>
+                {pin[i] ? "•" : ""}
+              </ThemedText>
             </View>
           ))}
 
@@ -188,8 +198,8 @@ const KeyboardPinEntryScreen = () => {
         {secondsLeft > 0 && (
           <View>
             <Text style={styles.timer}>{formatTime()}</Text>
-          </View>)
-        }
+          </View>
+        )}
 
         {pin.length === 6 && (
           <View>
@@ -230,7 +240,6 @@ const KeyboardPinEntryScreen = () => {
         )}
       </ThemedView>
     </>
-
   );
 };
 
@@ -274,7 +283,7 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "red"
+    color: "red",
   },
   header: {
     position: "absolute",

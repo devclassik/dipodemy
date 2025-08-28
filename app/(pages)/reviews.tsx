@@ -40,7 +40,9 @@ const Reviews: FC<ReviewProps> = ({ canWrite = false }) => {
     setRefreshing(true);
     try {
       const res = await reviewService.reviewScreen(courseId);
+      // @ts-ignore
       setReviews(res?.data?.reviews ?? []);
+      // @ts-ignore
       if (res?.data?.reviews?.length === 0) {
         setShowModal(true);
       } else {
@@ -76,7 +78,6 @@ const Reviews: FC<ReviewProps> = ({ canWrite = false }) => {
           title: "Reviews",
           headerShown: true,
           headerBackTitle: "Back",
-
         }}
       />
       <ScrollView

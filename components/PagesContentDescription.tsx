@@ -120,12 +120,10 @@ const PagesContentDescription: React.FC<CourseCardProps> = ({
       {activeTab === "about" ? (
         <About
           description={description}
-          price={price}
-          onPress={() => console.log(`enroll price:${price}`)}
-          showCourseInfo={true}
         />
       ) : (
         <LessonSections
+              // @ts-ignore
           curriculum={curriculum}
           onPress={() => onPress}
           price={price}

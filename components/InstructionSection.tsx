@@ -47,6 +47,7 @@ const InstructionSection = () => {
     setRefreshing(true);
     try {
       const res = await learnService.courseDetailScreen(courseId());
+      // @ts-ignore
       setCourseDetail(res?.data.course || null);
     } catch (error) {
       Toast.show({
@@ -64,6 +65,7 @@ const InstructionSection = () => {
     setIsLoading(true);
     try {
       const res = await learnService.curriculumScreen(courseId());
+      // @ts-ignore
       setCurriculum(res.data.sections);
     } catch (error) {
       console.error("Oops Error:", error);
@@ -91,6 +93,7 @@ const InstructionSection = () => {
 
     try {
       const res = await learnService.enrollCourse(courseId());
+      // @ts-ignore
       if (res?.success) {
         // const authorizationUrl = await paystackService.initiatePayment({
         //   amount: res.data.paymentDetails.amount,
@@ -105,6 +108,7 @@ const InstructionSection = () => {
         router.navigate({
           pathname: "/webView",
           params: {
+            // @ts-ignore
             url: res.data.payment_data.authorization_url,
           },
         });

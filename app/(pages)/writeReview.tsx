@@ -23,6 +23,7 @@ const WriteReviews = () => {
         const res = await learnService.fetchCourseScreen(
           data as string | number
         );
+        // @ts-ignore
         setCourse(res?.data?.course);
       } catch (error) {
         console.error("Failed to load course data:", error);
@@ -73,7 +74,6 @@ const WriteReviews = () => {
           title: "Write Review",
           headerShown: true,
           headerBackTitle: "Back",
-
         }}
       />
       <WriteReviewCard

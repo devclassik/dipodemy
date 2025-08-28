@@ -55,17 +55,21 @@ const OngoingCourseScreen: React.FC<OngoingCourseScreenProps> = ({
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <MyCourseCard
+            // @ts-ignore
             item={item}
             onPress={() => onCardPress?.(item)}
             onBookmarkPress={() => {}}
             isCompleted={isCompleted}
             isCompletedAction={isCompletedActions}
             isProgress={isProgress}
-            totalLessons={item.sections.length || 0}
+            // @ts-ignore
+            totalLessons={item?.sections.length || 0}
             completedLessons={
-              item.sections.filter((section) =>
+              // @ts-ignore
+              item?.sections.filter((section: any) =>
+                // @ts-ignore
                 section.lessons.some((lesson) => lesson.is_completed)
-              ).length
+              ).length || 0
             }
           />
         )}

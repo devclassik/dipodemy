@@ -41,8 +41,7 @@ const courseContent = () => {
   const handleAsCompleted = async (url: Lesson) => {
     try {
       const data = await courseService.progressScreen(url.id);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
@@ -76,6 +75,7 @@ const courseContent = () => {
           }}
         >
           <LessonSections
+            // @ts-ignore
             curriculum={courses.sections}
             onPress={(item) => {
               // console.log("Selected lesson:", item);
@@ -88,6 +88,7 @@ const courseContent = () => {
           text="Start Course Again"
           isFresh={true}
           onButtonPress={() => {
+            // @ts-ignore
             handlePlayPress(courses.sections[0].lessons[0].video_url);
           }}
         />
