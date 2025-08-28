@@ -163,7 +163,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
       )}
 
       <RoundedActionButton
-        text={`Enroll Course   ₦${price}`}
+        text={`Pay ₦${price}`}
         icon={
           <Ionicons name="arrow-forward" size={24} color={colors.themeGreen} />
         }
@@ -171,7 +171,7 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
         onPress={onEnroll ?? (() => {})}
         style={{
           marginVertical: 20,
-          width: 300,
+          width: 250,
           alignSelf: "center",
           alignItems: "center",
         }}

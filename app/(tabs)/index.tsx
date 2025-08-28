@@ -22,7 +22,9 @@ export default function HomeScreen() {
         const res = await homeService.homeScreen();
         setUserdata(res);
         const degree = await homeService.homeDegreeScreen();
-        setDegreeCourses(degree.data["Degree-courses" as keyof typeof degree.data]);
+        setDegreeCourses(
+          degree.data["Degree-courses" as keyof typeof degree.data]
+        );
       } catch (error: any) {
         console.log("Home screen error:", error);
       }
@@ -35,7 +37,9 @@ export default function HomeScreen() {
       const res = await homeService.homeScreen();
       setUserdata(res);
       const degree = await homeService.homeDegreeScreen();
-        setDegreeCourses(degree.data["Degree-courses" as keyof typeof degree.data]);
+      setDegreeCourses(
+        degree.data["Degree-courses" as keyof typeof degree.data]
+      );
     } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
@@ -85,19 +89,19 @@ export default function HomeScreen() {
         courses={userdata?.data?.newest_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
       />
-      <DegreeSection
-        title="Degree Courses"
-        courses={degreeCourses}
-        onSeeAllPress={() => router.navigate("/learn")}
-      />
       <CourseSection
-        title="Top Courses"
+        title="Degree  Courses"
         courses={userdata?.data?.degree_courses}
         onSeeAllPress={() => router.navigate("/(pages)/popularCourse")}
       />
       <CourseSection
         title="Most Popular Courses"
         courses={userdata?.data?.popular_courses}
+        onSeeAllPress={() => router.navigate("/learn")}
+      />
+      <DegreeSection
+        title="Top Courses"
+        courses={degreeCourses}
         onSeeAllPress={() => router.navigate("/learn")}
       />
     </ScrollView>

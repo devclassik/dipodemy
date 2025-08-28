@@ -90,7 +90,7 @@ export const learnService = {
 
       
       const response = await api.post<ApiResponse<CategoryScreenResponse>>(url, paymentData);
-      console.log("Enroll course response:", response.data);
+      // console.log("Enroll course response:", response.data);
 
       return response.data;
     } catch (error) {

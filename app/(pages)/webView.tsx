@@ -10,6 +10,8 @@ export default function PaystackWebView() {
   const router = useRouter();
 
   const handleNavigationChange = (navState: any) => {
+    // console.log("state", navState);
+    // console.log("url", navState.url);
     if (navState.url.includes("verify")) {
       router.replace("/(tabs)/course");
     }

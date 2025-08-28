@@ -40,15 +40,12 @@ const RegisterScreen = () => {
   const colors = Colors[colorScheme ?? "light"];
   const [isModalVisible, setModalVisible] = useState(false);
 
-
   const isLoginButtonDisabled = !isValidEmail(email);
 
   const toggleModal = () => setModalVisible(!isModalVisible);
 
-
   const onRegisterPress = async () => {
     if (!isValidEmail(email)) {
-
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Invalid Email address",
@@ -73,8 +70,8 @@ const RegisterScreen = () => {
         last_name: lastName,
         phone: phone,
         password: password,
-        password_confirmation: repeatPassword
-      }
+        password_confirmation: repeatPassword,
+      };
       const res = await authService.register(userdata);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -90,7 +87,7 @@ const RegisterScreen = () => {
       } else {
         await AsyncStorage.removeItem("user_creds");
       }
-      
+
       router.navigate("/pin");
     } catch (error: any) {
       console.error("Login Error:", error);
@@ -98,18 +95,20 @@ const RegisterScreen = () => {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Oops!",
-        textBody: error?.response?.data?.errors?.email || error?.response?.data?.errors?.phone,
+        textBody:
+          error?.response?.data?.errors?.email ||
+          error?.response?.data?.errors?.phone,
       });
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
@@ -163,7 +162,12 @@ const RegisterScreen = () => {
             </View>
 
             <View style={styles.inputWrapper}>
-              <Ionicons name="mail" size={20} color="#000" style={styles.inputIcon} />
+              <Ionicons
+                name="mail"
+                size={20}
+                color="#000"
+                style={styles.inputIcon}
+              />
               <TextInput
                 placeholder="Email"
                 style={styles.input}
@@ -180,7 +184,6 @@ const RegisterScreen = () => {
                 size={20}
                 color="#000"
                 style={styles.inputIcon}
-
               />
               <TextInput
                 placeholder="Phone Number"
@@ -209,6 +212,9 @@ const RegisterScreen = () => {
                 autoCapitalize="none"
                 onChangeText={setPassword}
                 editable={!isLoading}
+                importantForAutofill="no"
+                textContentType="newPassword" // 👈 prevents autofill yellow
+                autoComplete="off"
               />
               <TouchableOpacity
                 style={styles.eyeIcon}
@@ -222,7 +228,9 @@ const RegisterScreen = () => {
               </TouchableOpacity>
             </View>
             {password.length < 8 && (
-              <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+              <ThemedText
+                style={{ color: "red", fontSize: 10, marginTop: -10 }}
+              >
                 Passwords must be at least 8 characters.
               </ThemedText>
             )}
@@ -242,6 +250,9 @@ const RegisterScreen = () => {
                 autoCapitalize="none"
                 onChangeText={setRepeatPassword}
                 editable={!isLoading}
+                importantForAutofill="no"
+                textContentType="newPassword" // 👈 prevents autofill yellow
+                autoComplete="off"
               />
               <TouchableOpacity
                 style={styles.eyeIcon}
@@ -255,7 +266,9 @@ const RegisterScreen = () => {
               </TouchableOpacity>
             </View>
             {repeatPassword.length > 0 && repeatPassword !== password && (
-              <ThemedText style={{ color: "red", fontSize: 10, marginTop: -10 }}>
+              <ThemedText
+                style={{ color: "red", fontSize: 10, marginTop: -10 }}
+              >
                 Passwords must match and be at least 8 characters.
               </ThemedText>
             )}
@@ -274,7 +287,9 @@ const RegisterScreen = () => {
                   size={20}
                   color={colors.themeGreen}
                 />
-                <ThemedText style={styles.rememberText}>Agree to Terms & Condition</ThemedText>
+                <ThemedText style={styles.rememberText}>
+                  Agree to Terms & Condition
+                </ThemedText>
               </TouchableOpacity>
             </View>
 
@@ -283,7 +298,9 @@ const RegisterScreen = () => {
               <View style={styles.modalOverlay}>
                 <View style={styles.modalBox}>
                   <ScrollView>
-                    <ThemedText style={[styles.modalTitle, {color: colors.textDim}]}>
+                    <ThemedText
+                      style={[styles.modalTitle, { color: colors.textDim }]}
+                    >
                       Terms and Conditions
                     </ThemedText>
                     <ThemedText style={styles.modalContent}>
@@ -293,28 +310,37 @@ const RegisterScreen = () => {
 
                   <View style={styles.modalButtons}>
                     <TouchableOpacity
-                      style={[styles.acceptBtn, {backgroundColor: colors.themeGreen}]}
+                      style={[
+                        styles.acceptBtn,
+                        { backgroundColor: colors.themeGreen },
+                      ]}
                       onPress={() => {
                         setRememberMe(true);
                         toggleModal();
                       }}
                     >
-                      <ThemedText style={[{color: colors.white}]}>Accept</ThemedText>
+                      <ThemedText style={[{ color: colors.white }]}>
+                        Accept
+                      </ThemedText>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={[styles.rejectBtn, {backgroundColor: colors.danger}]}
+                      style={[
+                        styles.rejectBtn,
+                        { backgroundColor: colors.danger },
+                      ]}
                       onPress={() => {
                         setRememberMe(false);
                         toggleModal();
                       }}
                     >
-                      <ThemedText style={[{color: colors.white}]}>Decline</ThemedText>
+                      <ThemedText style={[{ color: colors.white }]}>
+                        Decline
+                      </ThemedText>
                     </TouchableOpacity>
                   </View>
                 </View>
               </View>
             </Modal>
-
 
             <View
               style={{
@@ -362,7 +388,10 @@ const RegisterScreen = () => {
 
             <ThemedText style={styles.footerText}>
               Already have an Account?{" "}
-              <ThemedText style={styles.signUp} onPress={() => router.navigate('/(auth)/login')}>
+              <ThemedText
+                style={styles.signUp}
+                onPress={() => router.navigate("/(auth)/login")}
+              >
                 SIGN IN
               </ThemedText>
             </ThemedText>
@@ -370,7 +399,6 @@ const RegisterScreen = () => {
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
-
   );
 };
 
@@ -418,6 +446,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 45,
     color: "black",
+    backgroundColor: "#ecf8e9",
   },
   inputIcon: {
     marginRight: 8,
@@ -470,7 +499,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#444",
     fontSize: 13,
-    top: 20
+    top: 20,
   },
   signUp: {
     color: "#ff9900",
@@ -491,7 +520,12 @@ const styles = StyleSheet.create({
   },
   modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
   modalContent: { fontSize: 14, color: "#555" },
-  modalButtons: { flexDirection: "row", justifyContent: "flex-end", gap: 5, marginTop: 15 },
-  acceptBtn: {padding: 10, borderRadius: 8 },
-  rejectBtn: {padding: 10, borderRadius: 8 },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 5,
+    marginTop: 15,
+  },
+  acceptBtn: { padding: 10, borderRadius: 8 },
+  rejectBtn: { padding: 10, borderRadius: 8 },
 });

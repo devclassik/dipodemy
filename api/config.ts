@@ -201,8 +201,8 @@ api.interceptors.response.use(
     }
 
     // Don't redirect if we're currently authenticating OR if this is a home/dashboard endpoint
-    const isHomeEndpoint = url?.includes('home') || url?.includes('dashboard') || url === '';
-    const shouldRedirect = status === 401 && !isAuthenticating && !isHomeEndpoint;
+    const isHomeEndpoint = url?.includes('home');
+    const shouldRedirect = status === 401 && isHomeEndpoint;
 
     if (shouldRedirect) {
       // console.warn('🚫 Unauthorized. Clearing storage and redirecting to login.');

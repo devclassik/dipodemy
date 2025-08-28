@@ -34,7 +34,7 @@ const LearnCard: React.FC<{
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image source={{ uri: item.image }} style={styles.image} />
       <View style={{ flex: 1 }}>
-        <ThemedText style={styles.category}>{item.category.name}</ThemedText>
+        <ThemedText style={styles.category}>{item?.category?.name || "Dipodemy"}</ThemedText>
         <ThemedText style={styles.title}>{item.title}</ThemedText>
         <ThemedText style={styles.price}>₦{item.price}</ThemedText>
         <View style={styles.row}>

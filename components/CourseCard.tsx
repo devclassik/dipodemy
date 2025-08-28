@@ -35,7 +35,7 @@ const CourseCard: React.FC<CoursesProps> = ({
       <ThemedView style={styles.card}>
         <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
         <View style={styles.info}>
-          <Text style={styles.category}>{level || type}</Text>
+          <Text style={styles.category}>{level || type || "Dipodemy"}</Text>
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>

@@ -143,7 +143,7 @@ const InstructionSection = () => {
       >
         <ThemedView style={styles.carOverlay}>
           <PagesCourseDescription
-            category={courseDetail?.category?.name}
+            category={courseDetail?.category?.name || "Dipodemy"}
             title={courseDetail?.description}
             rating={courseDetail?.rating}
             classes={courseDetail?.lessons_count}
