@@ -30,7 +30,7 @@ const WriteReviews = () => {
       } finally {
         setLoading(false); // ✅ done loading
       }
-    };
+    };    
 
     fetchCourse();
   }, [data]);

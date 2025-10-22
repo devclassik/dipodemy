@@ -5,8 +5,7 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
+  useColorScheme
 } from "react-native";
 import { Review } from "./PagesCourseDescription";
 import { ThemedText } from "./ThemedText";
@@ -28,7 +27,7 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
   toGain = [
     { icon: "book-outline", text: "Lessons" },
     { icon: "laptop-outline", text: "Access on Mobile, Desktop & TV" },
-    // { icon: "trending-up-outline", text: "All Level" },
+    { icon: "trending-up-outline", text: "All Level" },
     // { icon: "headset-outline", text: "Audio Book" },
     { icon: "infinite-outline", text: "Lifetime Access" },
     { icon: "create-outline", text: "Assignment" },
@@ -64,14 +63,14 @@ const CourseInfoScreen: React.FC<CourseInfoProps> = ({
         ))}
       </ThemedView>
 
-      <ThemedView style={styles.reviewsHeader}>
+      {/* <ThemedView style={styles.reviewsHeader}>
         <ThemedText style={styles.sectionTitle}>Reviews</ThemedText>
         <TouchableOpacity onPress={onSeeAll}>
           <ThemedText style={[styles.seeAll, { color: colors.success }]}>
             SEE ALL
           </ThemedText>
         </TouchableOpacity>
-      </ThemedView>
+      </ThemedView> */}
 
       {review?.map((review, index) => (
         <ThemedView

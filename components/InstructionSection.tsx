@@ -18,6 +18,7 @@ export interface Lesson {
   order: string;
   status: boolean;
   content_type: string;
+  has_assignment?: boolean;
 }
 
 export interface Section {

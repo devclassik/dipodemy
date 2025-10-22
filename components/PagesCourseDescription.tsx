@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons"; // Example for icons
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 import {
@@ -14,6 +15,7 @@ import CourseInfoScreen from "./CourseInfo";
 import { Section } from "./InstructionSection";
 import RoundedActionButton from "./RoundedActionButton";
 import { ThemedText } from "./ThemedText";
+import { ThemedView } from "./ThemedView";
 
 export interface Review {
   id: number;
@@ -26,6 +28,7 @@ export interface Review {
   created_at: string;
   time_ago: string;
 }
+
 interface CourseCardProps {
   category: string;
   title: string;
@@ -57,98 +60,77 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
   courseId = 0,
   onEnroll,
 }) => {
-  const [activeTab, setActiveTab] = React.useState<"about" | "curriculum">(
-    "about"
-  );
+  const [activeTab, setActiveTab] = React.useState<"about" | "curriculum">("about");
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
   return (
     <>
       <View style={styles.cardContainer}>
+        {/* Header */}
         <View style={styles.header}>
-          <ThemedText style={styles.categoryText}>{category}</ThemedText>
-          <View style={styles.ratingAndButton}>
-            <Ionicons name="star" size={14} color={colors.accent} />
+          <ThemedText style={[styles.categoryText, { color: colors.primary }]}>
+            {category}
+          </ThemedText>
+          <View style={styles.ratingContainer}>
+            <Ionicons name="star" size={14} color="#F4B400" />
             <ThemedText style={styles.ratingText}>{rating}</ThemedText>
             {isPaid && (
               <TouchableOpacity style={styles.playButton} onPress={onPress}>
-                <Ionicons name="play" size={24} color={colors.white} />
+                <Ionicons name="play" size={20} color="#fff" />
               </TouchableOpacity>
             )}
           </View>
         </View>
 
-        <ThemedText style={styles.titleText}>{description}</ThemedText>
+        {/* Title */}
+        <ThemedText style={styles.titleText}>{title}</ThemedText>
+        <ThemedText style={styles.descText}>{description}</ThemedText>
 
+        {/* Course Details */}
         <View style={styles.detailsContainer}>
-          <View style={styles.leftDetails}>
-            <View style={styles.detailItem}>
-              <Ionicons
-                name="videocam-outline"
-                size={16}
-                color={colors.green}
-              />
-              <ThemedText style={styles.detailText}>
-                {classes} Classes
-              </ThemedText>
-            </View>
-            <ThemedText style={{ color: "#000" }}>|</ThemedText>
-            <View style={styles.detailItem}>
-              <Ionicons name="time-outline" size={16} color={colors.green} />
-              <ThemedText style={styles.detailText}>{hours}</ThemedText>
-            </View>
+          <View style={styles.detailItem}>
+            <Ionicons name="videocam-outline" size={16} color={colors.green} />
+            <ThemedText style={styles.detailText}>{classes} Classes</ThemedText>
+          </View>
+          <View style={styles.detailItem}>
+            <Ionicons name="time-outline" size={16} color={colors.green} />
+            <ThemedText style={styles.detailText}>{hours}</ThemedText>
           </View>
           <ThemedText style={styles.priceText}>₦{price}</ThemedText>
         </View>
 
+        {/* Tabs */}
         <View style={styles.tabsContainer}>
-          <TouchableOpacity
-            style={[
-              styles.tabButton,
-              activeTab === "about" && styles.activeTabButton,
-            ]}
-            onPress={() => {
-              setActiveTab("about");
-            }}
-          >
-            <Text
+          {["about", "Reviews"].map((tab) => (
+            <TouchableOpacity
+              key={tab}
               style={[
-                styles.tabText,
-                activeTab === "about" && styles.activeTabButton,
+                styles.tabButton,
+                activeTab === tab && styles.activeTabButton,
               ]}
+              onPress={() => setActiveTab(tab as "about" | "curriculum")}
             >
-              About
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tabButton,
-              activeTab === "curriculum" && styles.activeTabButton,
-            ]}
-            onPress={() => {
-              setActiveTab("curriculum");
-            }}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "curriculum" && styles.activeTabButton,
-              ]}
-            >
-              Curriculum
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.tabText,
+                  activeTab === tab && styles.activeTabText,
+                ]}
+              >
+                {tab === "about" ? "About" : "Reviews"}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
+        {/* Tab Content */}
         {activeTab === "about" ? (
           <About description={title} />
         ) : (
           <About description={title} />
-          // <LessonSections curriculum={curriculum} onPress={() => onPress} />
         )}
       </View>
-
+      {/* Reviews + Button */}
       {activeTab === "about" && (
         <CourseInfoScreen
           onSeeAll={() =>
@@ -158,23 +140,84 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
             })
           }
           topic={category}
-          review={review}
+        // review={review}
         />
       )}
 
+      {activeTab !== "about" && (
+        <>
+          <ThemedView style={styles.reviewsHeader}>
+            <ThemedText style={styles.sectionTitle}>Reviews</ThemedText>
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(pages)/reviews",
+                  params: { data: courseId.toString() },
+                })
+              }
+            >
+              <ThemedText style={[styles.seeAll, { color: colors.success }]}>
+                SEE ALL
+              </ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+
+          {review?.map((review, index) => (
+            <ThemedView
+              key={index}
+              style={[styles.reviewCard, { borderBottomColor: colors.success }]}
+            >
+              <Image
+                source={{ uri: review?.user?.image }}
+                style={styles.reviewAvatar}
+              />
+              <ThemedView style={styles.reviewContent}>
+                <ThemedView style={styles.reviewHeader}>
+                  <ThemedText style={styles.reviewName}>
+                    {review?.user?.name}
+                  </ThemedText>
+                  <ThemedView style={styles.ratingBox}>
+                    <Ionicons name="star" size={12} color={colors.warning} />
+                    <ThemedText style={styles.ratingText}>
+                      {review.rating}
+                    </ThemedText>
+                  </ThemedView>
+                </ThemedView>
+
+                <ThemedText style={styles.reviewComment}>
+                  {review.comment}
+                </ThemedText>
+
+                <ThemedView style={styles.reviewFooter}>
+                  <ThemedView style={styles.reviewLikes}>
+                    <FontAwesome name="heart" size={14} color={colors.danger} />
+                    <ThemedText style={styles.reviewMetaText}>
+                      {review.rating} Likes
+                    </ThemedText>
+                  </ThemedView>
+                  <ThemedText
+                    style={[styles.reviewMetaText, { color: colors.primaryDark }]}
+                  >
+                    {review.time_ago}
+                  </ThemedText>
+                </ThemedView>
+              </ThemedView>
+            </ThemedView>
+          ))}
+        </>
+      )}
+
+
+
+
+
+
       <RoundedActionButton
         text={`Pay ₦${price}`}
-        icon={
-          <Ionicons name="arrow-forward" size={24} color={colors.themeGreen} />
-        }
+        icon={<Ionicons name="arrow-forward" size={22} color={colors.themeGreen} />}
         bgColor={colors.green}
-        onPress={onEnroll ?? (() => {})}
-        style={{
-          marginVertical: 20,
-          width: 250,
-          alignSelf: "center",
-          alignItems: "center",
-        }}
+        onPress={onEnroll ?? (() => { })}
+        style={styles.enrollButton}
       />
     </>
   );
@@ -183,98 +226,177 @@ const PagesCourseDescription: React.FC<CourseCardProps> = ({
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginHorizontal: 10,
+    borderRadius: 16,
+    padding: 18,
+    marginHorizontal: 4,
+    marginVertical: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
   },
   categoryText: {
-    color: "#FF6B00",
-    fontWeight: "bold",
+    fontSize: 13,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
-  ratingAndButton: {
+  ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 5,
+    marginTop: -20,
   },
-  ratingText: {
-    fontSize: 12,
-    color: "#FAC025",
-    marginRight: 10,
-  },
+  // ratingText: {
+  //   fontSize: 13,
+  //   fontWeight: "500",
+  //   color: "#333",
+
+  // },
   playButton: {
     backgroundColor: "#40E96A",
-    borderRadius: 20,
+    borderRadius: 24,
     width: 40,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -30,
+    marginLeft: 10,
+    marginTop: -20,
+    shadowColor: "#40E96A",
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
   },
   titleText: {
     color: "#202244",
-    fontWeight: "bold",
-    marginBottom: 10,
-    // fontSize: 15
+    fontWeight: "700",
+    fontSize: 16,
+    marginTop: 10,
+  },
+  descText: {
+    color: "#555",
+    fontSize: 13,
+    marginTop: 6,
+    lineHeight: 18,
   },
   detailsContainer: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  leftDetails: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
+    marginVertical: 12,
   },
   detailItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 10,
+    gap: 6,
   },
   detailText: {
     fontSize: 12,
-    color: "gray",
-    marginLeft: 5,
+    color: "#666",
   },
   priceText: {
     fontWeight: "bold",
     color: "#167F71",
+    fontSize: 14,
   },
   tabsContainer: {
     flexDirection: "row",
-    marginBottom: 10,
-    justifyContent: "space-between",
-    overflow: "hidden",
-    backgroundColor: "#E8F1FF",
-    borderRadius: 10,
+    backgroundColor: "#F4F6FA",
+    borderRadius: 12,
+    padding: 4,
+    marginTop: 10,
   },
   tabButton: {
+    flex: 1,
+    alignItems: "center",
     paddingVertical: 10,
-    paddingHorizontal: 50,
     borderRadius: 10,
-    marginRight: 10,
   },
   tabText: {
-    fontWeight: "600",
+    fontWeight: "500",
+    color: "#777",
+    fontSize: 13,
   },
   activeTabButton: {
     backgroundColor: "#FAC025",
+    shadowColor: "#FAC025",
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   },
-
   activeTabText: {
     color: "#000",
+    fontWeight: "600",
+  },
+  enrollButton: {
+    marginVertical: 25,
+    width: 260,
+    alignSelf: "center",
+  },
+
+  reviewsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  seeAll: {
+    color: "#167F71",
+    fontWeight: "500",
+  },
+  reviewCard: {
+    flexDirection: "row",
+    marginBottom: 20,
+    gap: 10,
+    borderBottomWidth: 1,
+  },
+  reviewAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  reviewContent: {
+    flex: 1,
+  },
+  reviewHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  reviewName: {
+    fontWeight: "600",
+  },
+  ratingBox: {
+    backgroundColor: "#E6F8E9",
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    flexDirection: "row",
+  },
+  ratingText: {
+    color: "#23C865",
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  reviewComment: {
+    marginVertical: 4,
+  },
+  reviewFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  reviewLikes: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  reviewMetaText: {
+    fontSize: 14,
+  },
+  sectionTitle: {
     fontWeight: "bold",
+    marginVertical: 10,
   },
 });
 

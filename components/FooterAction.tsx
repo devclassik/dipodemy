@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     justifyContent: "space-around",
+    marginBottom: -60
   },
   card: {
     backgroundColor: "#f0f0f0",
@@ -68,14 +69,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   avatar: {
-    // alignItems: "center",
-    // height: 50,
-    // minWidth: 150,
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4,
-    // padding: 50
-
-    // tintColor: "#666",
 
     resizeMode: "contain",
   },

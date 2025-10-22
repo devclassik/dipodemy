@@ -8,7 +8,6 @@ import { tokenService } from './services/token.service';
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl || API_BASE_URL;
 
-console.log(`API URL: ${API_URL}`);
 
 // Flag to track if we're currently in an authentication attempt
 let isAuthenticating = false;
@@ -19,7 +18,6 @@ const api = axios.create({
   headers: API_HEADERS,
 });
 
-console.log(`Axios instance created with base URL: ${api.defaults.baseURL}`);
 
 // Request interceptor for adding auth token
 
@@ -44,13 +42,13 @@ const getTokenWithRetry = async (retries = 3, delay = 300): Promise<string | nul
         await new Promise((res) => setTimeout(res, iosDelay));
       }
     } catch (error) {
-      console.error(`❌ ${Platform.OS} - Error retrieving token on attempt ${i + 1}:`, error);
+      // console.error(`❌ ${Platform.OS} - Error retrieving token on attempt ${i + 1}:`, error);
       if (i < iosRetries - 1) {
         await new Promise((res) => setTimeout(res, iosDelay));
       }
     }
   }
-  console.warn(`❌ ${Platform.OS} - No valid token found after all retries`);
+  // console.warn(`❌ ${Platform.OS} - No valid token found after all retries`);
   return null;
 };
 
@@ -62,7 +60,7 @@ export const refreshTokenInInterceptor = async () => {
     // console.log('🔄 Current token in storage:', token ? 'EXISTS' : 'NULL');
     return token;
   } catch (error) {
-    console.error('❌ Error refreshing token:', error);
+    // console.error('❌ Error refreshing token:', error);
     return null;
   }
 };
@@ -71,47 +69,19 @@ export const refreshTokenInInterceptor = async () => {
 export const setAuthToken = (token: string) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    console.log(`🔐 ${Platform.OS} - Token manually set in axios headers`);
+    // console.log(`🔐 ${Platform.OS} - Token manually set in axios headers`);
 
-    // iOS-specific: Force clear any cached requests
-    if (Platform.OS === 'ios') {
-      // console.log('🍎 iOS - Clearing axios cache...');
-      // Clear any cached authorization headers
-      api.defaults.headers.common = {
-        ...api.defaults.headers.common,
-        'Authorization': `Bearer ${token}`,
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
-      };
-    }
   } else {
     delete api.defaults.headers.common['Authorization'];
-    console.log(`🔐 ${Platform.OS} - Token removed from axios headers`);
   }
 };
 
-// Function to force refresh axios configuration for iOS
-export const forceRefreshAxiosConfig = () => {
-  if (Platform.OS === 'ios') {
-    // console.log('🍎 iOS - Force refreshing axios configuration...');
-    // Clear any cached configurations
-    api.defaults.headers.common = {
-      ...api.defaults.headers.common,
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache'
-    };
-  }
-};
 
 // Function to validate token is properly set
 export const validateToken = async () => {
   try {
     const token = await AsyncStorage.getItem('auth_token');
     const headerToken = api.defaults.headers.common['Authorization'];
-
-    // console.log(`🔍 ${Platform.OS} - Token validation:`);
-    // console.log(`  Storage: ${token ? 'EXISTS' : 'MISSING'}`);
-    // console.log(`  Headers: ${headerToken ? 'EXISTS' : 'MISSING'}`);
 
     if (token && !headerToken) {
       // console.log(`🔧 ${Platform.OS} - Token in storage but not in headers, fixing...`);
@@ -121,7 +91,6 @@ export const validateToken = async () => {
 
     return !!(token && headerToken);
   } catch (error) {
-    console.error(`❌ ${Platform.OS} - Token validation error:`, error);
     return false;
   }
 };
@@ -129,12 +98,12 @@ export const validateToken = async () => {
 // Function to set authentication state
 export const setAuthenticating = (authenticating: boolean) => {
   isAuthenticating = authenticating;
-  console.log(`🔐 Authentication state set to: ${authenticating}`);
+  // console.log(`🔐 Authentication state set to: ${authenticating}`);
 };
 
 // Function to temporarily disable 401 redirects
 export const disable401Redirect = () => {
-  console.log('🚫 401 redirects temporarily disabled');
+  // console.log('🚫 401 redirects temporarily disabled');
   return () => {
     console.log('✅ 401 redirects re-enabled');
   };
@@ -213,7 +182,6 @@ api.interceptors.response.use(
       error.message = API_ERROR_MESSAGES.UNAUTHORIZED;
     } else if (status === 401 && (isAuthenticating || isHomeEndpoint)) {
       // console.log('🚫 401 during authentication or home endpoint - not redirecting to prevent loop');
-      console.log('Auth endpoint that failed:', url);
     }
 
     // Handle common errors
@@ -225,7 +193,6 @@ api.interceptors.response.use(
       error.message = API_ERROR_MESSAGES.SERVER_ERROR;
     }
 
-    console.error('❌ API Error:', error.message);
     return Promise.reject(error);
   }
 );

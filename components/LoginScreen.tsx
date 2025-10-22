@@ -1,4 +1,4 @@
-import api, { forceRefreshAxiosConfig, refreshTokenInInterceptor, setAuthenticating, setAuthToken } from "@/api/config";
+import { setAuthenticating, setAuthToken } from "@/api/config";
 import { authService } from "@/api/services/auth.service";
 import { tokenService } from "@/api/services/token.service";
 import { Colors } from "@/constants/Colors";
@@ -47,7 +47,6 @@ const LoginScreen = () => {
           setRememberMe(true);
         }
       } catch (error) {
-        console.error("Error loading stored credentials:", error);
       } finally {
         setIsCheckingAuth(false);
       }
@@ -59,14 +58,12 @@ const LoginScreen = () => {
   const logout = async () => {
     try {
       await tokenService.clearAll();
-      console.log("All authentication data cleared");
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Cleared",
         textBody: "Authentication data cleared successfully",
       });
     } catch (error) {
-      console.error("Error clearing auth data:", error);
     }
   };
 
@@ -119,22 +116,7 @@ const LoginScreen = () => {
           throw new Error("Token verification failed");
         }
 
-        // Additional iOS verification
-        if (Platform.OS === 'ios') {
-          console.log('🍎 iOS - Double-checking token in headers...');
-          const authHeader = api.defaults.headers.common['Authorization'];
-          console.log('🍎 iOS - Token in headers:', authHeader ? 'EXISTS' : 'MISSING');
-
-          if (!authHeader) {
-            console.log('🍎 iOS - Re-setting token in headers...');
-            setAuthToken(responseData.token);
-          }
-
-          // Force refresh axios configuration for iOS
-          forceRefreshAxiosConfig();
-        }
       } else {
-        console.error("No token received in response");
         throw new Error("No authentication token received");
       }
 
@@ -151,9 +133,6 @@ const LoginScreen = () => {
         textBody: res.message || "Login successful!",
       });
 
-      // Refresh token in interceptor to ensure it's available
-      await refreshTokenInInterceptor();
-
       // Check if user is verified and navigate accordingly
       if (responseData?.user?.isEmailVerified !== false) {
         router.replace("/(tabs)");
@@ -161,7 +140,6 @@ const LoginScreen = () => {
         router.navigate("/(auth)/pin");
       }
     } catch (error: any) {
-      console.error("Login Error:", error);
 
       // Handle specific error types
       let errorMessage = "An error occurred during login.";
@@ -254,7 +232,6 @@ const LoginScreen = () => {
               autoCorrect={false}
               spellCheck={false}
               returnKeyType="done"
-              blurOnSubmit={true}
               onSubmitEditing={onLoginPress}
             />
             <TouchableOpacity

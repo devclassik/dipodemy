@@ -1,5 +1,4 @@
 import { courseService } from "@/api/services/courses.service";
-import AssignmentReview from "@/components/AssigmentReview";
 import FooterAction from "@/components/FooterAction";
 import { Lesson } from "@/components/InstructionSection";
 import LessonSections from "@/components/LessonSections";
@@ -58,11 +57,10 @@ const courseContent = () => {
           paddingBottom: 100,
         }}
       >
-        <AssignmentReview courseId={courseId} />
+        {/* <AssignmentReview courseId={courseId} /> */}
 
         <ThemedView
           style={{
-            backgroundColor: "#fff",
             paddingVertical: 10,
             paddingHorizontal: 20,
             borderRadius: 10,
@@ -82,6 +80,7 @@ const courseContent = () => {
               handleAsCompleted(item);
               handlePlayPress(item.video_url);
             }}
+            courseId={courseId}
           />
         </ThemedView>
         <FooterAction
