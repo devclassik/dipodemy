@@ -20,9 +20,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import TermsModal from "../termsAndConditon";
 
 const ProfileScreen = () => {
   const [userdata, setUserdata] = useState<any>(null);
@@ -32,6 +34,8 @@ const ProfileScreen = () => {
   const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
 
 
   const logout = async () => {
@@ -157,7 +161,7 @@ const ProfileScreen = () => {
   return (
 
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[styles.container, { backgroundColor: colors.backgroundSecondary }]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -166,12 +170,12 @@ const ProfileScreen = () => {
         <Ionicons
           name="arrow-back"
           size={24}
-          color="#000"
+          color={colorScheme === "dark" ? colors.white : colors.secondary}
           onPress={() => router.back()}
         />
-        <Text style={styles.headerTitle} onPress={() => router.back()}>
+        <ThemedText style={styles.headerTitle} onPress={() => router.back()}>
           Profile
-        </Text>
+        </ThemedText>
       </View>
 
       <View style={styles.card}>
@@ -244,22 +248,22 @@ const ProfileScreen = () => {
         >
           <ThemedView style={modalStyles.modalContainer}>
             <ThemedView style={modalStyles.modalContent}>
-              <Text style={modalStyles.modalTitle}>Edit Profile</Text>
+              <ThemedText style={modalStyles.modalTitle}>Edit Profile</ThemedText>
 
-              <Text>First Name</Text>
+              <ThemedText>First Name</ThemedText>
               <TextInput
                 placeholder="First Name"
                 value={firstName}
                 onChangeText={setFirstName}
-                style={modalStyles.input}
+                style={[modalStyles.input, { color: colors.accent }]}
               />
-              <Text>Last Name</Text>
+              <ThemedText>Last Name</ThemedText>
 
               <TextInput
                 placeholder="Last Name"
                 value={lastName}
                 onChangeText={setLastName}
-                style={modalStyles.input}
+                style={[modalStyles.input, { color: colors.accent }]}
               />
 
               <View style={modalStyles.buttonRow}>
@@ -290,7 +294,7 @@ const ProfileScreen = () => {
                     }
                   }}
                 >
-                  <ThemedText style={modalStyles.saveButton}>Save</ThemedText>
+                  <ThemedText style={[modalStyles.saveButton, { color: colors.themeGreen }]}>Save</ThemedText>
                 </TouchableOpacity>
               </View>
             </ThemedView>
@@ -307,14 +311,14 @@ const ProfileScreen = () => {
         <ThemedView style={modalStyles.overlay}>
           <ThemedView style={modalStyles.modalBox}>
             {/* Header */}
-            <Text style={[modalStyles.modalTitle, { color: Colors.light.textDim }]}>
+            <Text style={[modalStyles.modalTitle, { color: colors.themeGreen }]}>
               Terms and Conditions
             </Text>
             <TouchableOpacity
               style={modalStyles.closeButton}
               onPress={() => setIsTermsModalVisible(false)}
             >
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>×</Text>
+              <Ionicons name="close" size={24} color={colors.danger} />
             </TouchableOpacity>
 
             {/* Scrollable Content */}
@@ -323,9 +327,7 @@ const ProfileScreen = () => {
               contentContainerStyle={{ paddingBottom: 20 }}
               keyboardShouldPersistTaps="handled"
             >
-              <ThemedText style={modalStyles.modalContent}>
-                Here are your terms and conditions... (long text here)
-              </ThemedText>
+              <TermsModal />
             </ScrollView>
           </ThemedView>
         </ThemedView>
@@ -389,8 +391,6 @@ const OptionItem = ({
             {rightText}
           </Text>
         )}
-
-
         <Ionicons name="chevron-forward" size={18} color="#999" />
       </View>
     </TouchableOpacity>
@@ -400,7 +400,6 @@ const OptionItem = ({
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#f5f8ff",
     flexGrow: 1,
   },
   header: {
@@ -487,7 +486,7 @@ const modalStyles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    backgroundColor: "#fff",
+
     borderRadius: 10,
     padding: 20,
     width: "80%",
@@ -521,7 +520,7 @@ const modalStyles = StyleSheet.create({
 
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.2)",
+    backgroundColor: "rgba(54, 53, 53, 0.2)",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,

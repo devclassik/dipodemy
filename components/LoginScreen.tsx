@@ -303,7 +303,7 @@ const LoginScreen = () => {
           </View>
 
           <ThemedText style={styles.footerText}>
-            Already have an Account?{" "}
+            Don't have an Account?{" "}
             <ThemedText
               style={styles.signUp}
               onPress={() => router.navigate("/register")}

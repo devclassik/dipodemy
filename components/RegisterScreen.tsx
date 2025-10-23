@@ -1,4 +1,5 @@
 import { authService } from "@/api/services/auth.service";
+import TermsModal from "@/app/termsAndConditon";
 import { Colors } from "@/constants/Colors";
 import { isValidEmail } from "@/utills/validator";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -295,34 +296,18 @@ const RegisterScreen = () => {
 
             {/* Modal */}
             <Modal visible={isModalVisible} animationType="slide" transparent>
-              <View style={styles.modalOverlay}>
-                <View style={styles.modalBox}>
+              <ThemedView style={styles.modalOverlay}>
+                <ThemedView style={styles.modalBox}>
                   <ScrollView>
                     <ThemedText
                       style={[styles.modalTitle, { color: colors.textDim }]}
                     >
                       Terms and Conditions
                     </ThemedText>
-                    <ThemedText style={styles.modalContent}>
-                      Here are your terms and conditions... (long text here)
-                    </ThemedText>
+                    <TermsModal />
                   </ScrollView>
 
                   <View style={styles.modalButtons}>
-                    <TouchableOpacity
-                      style={[
-                        styles.acceptBtn,
-                        { backgroundColor: colors.themeGreen },
-                      ]}
-                      onPress={() => {
-                        setRememberMe(true);
-                        toggleModal();
-                      }}
-                    >
-                      <ThemedText style={[{ color: colors.white }]}>
-                        Accept
-                      </ThemedText>
-                    </TouchableOpacity>
                     <TouchableOpacity
                       style={[
                         styles.rejectBtn,
@@ -337,9 +322,24 @@ const RegisterScreen = () => {
                         Decline
                       </ThemedText>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.acceptBtn,
+                        { backgroundColor: colors.themeGreen },
+                      ]}
+                      onPress={() => {
+                        setRememberMe(true);
+                        toggleModal();
+                      }}
+                    >
+                      <ThemedText style={[{ color: colors.white }]}>
+                        Accept
+                      </ThemedText>
+                    </TouchableOpacity>
+
                   </View>
-                </View>
-              </View>
+                </ThemedView>
+              </ThemedView>
             </Modal>
 
             <View
@@ -407,7 +407,7 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    backgroundColor: "#fff",
+    backgroundColor: "#fcfcfc",
     minHeight: 400,
   },
   logo: {
