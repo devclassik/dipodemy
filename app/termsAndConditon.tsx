@@ -100,7 +100,7 @@ const termsAndConditionsContent = `
 
 **Effective Date: October 24, 2025**
 
-Welcome to [Your App Name] (the "App"), a service provided by [Your Company Name] ("we," "us," or "our"). These Terms and Conditions ("Terms") govern your use of the App, including all courses, content, features, and services offered.
+Welcome to Dipodemy, a service provided by ADC. These Terms and Conditions ("Terms") govern your use of the App, including all courses, content, features, and services offered.
 
 By accessing or using the App, you agree to be bound by these Terms and our Privacy Policy. If you do not agree with any part of these Terms, you may not access or use the App.
 
@@ -108,7 +108,7 @@ By accessing or using the App, you agree to be bound by these Terms and our Priv
 
 ## 1. User Accounts and Registration
 
-1.1. Eligibility: You must be at least [Minimum Age, e.g., 13] years old to use the App. If you are under [Age of Majority, e.g., 18], you represent that you have obtained parental or guardian permission.
+1.1. Eligibility: You must be at least age, of 13 years old to use the App. If you are under 13, you represent that you have obtained parental or guardian permission.
 
 1.2. Account Responsibility: You are solely responsible for maintaining the confidentiality of your account login information and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account.
 
@@ -130,7 +130,7 @@ By accessing or using the App, you agree to be bound by these Terms and our Priv
 
 3.2. Payment: You agree to pay the fees for courses or subscriptions you purchase, and you authorize us to charge your debit or credit card or process other means of payment for those fees.
 
-3.3. Refunds: All purchases of courses and subscriptions are subject to our refund policy, which is available at [Link to your Refund Policy Page or describe the policy here, e.g., "within 14 days of purchase if less than 10% of the course has been viewed"].
+3.3. Refunds: All purchases of courses and subscriptions are subject to our refund policy, which is available at https://adc.org.ng/terms-of-service for more details.
 
 ## 4. Prohibited Conduct
 
@@ -155,11 +155,11 @@ The App is provided on an "AS IS" and "AS AVAILABLE" basis. We make no represent
 
 ## 7. Limitation of Liability
 
-In no event shall [Your Company Name], nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the App; (ii) any conduct or content of any third party on the App; (iii) any content obtained from the App.
+In no event shall ADC, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the App; (ii) any conduct or content of any third party on the App; (iii) any content obtained from the App.
 
 ## 8. Governing Law
 
-These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction, e.g., the State of California, United States], without regard to its conflict of law provisions.
+These Terms shall be governed and construed in accordance with the laws of Federal Republic of Nigeria, without regard to its conflict of law provisions.
 
 ## 9. Changes to Terms
 
@@ -167,7 +167,7 @@ We reserve the right, at our sole discretion, to modify or replace these Terms a
 
 * Contact Us
 
-If you have any questions about these Terms, please contact us at: [Your Email Address] or [Your Physical Address].
+If you have any questions about these Terms, please contact us at: info@adc.org.ng or telephone: Phone Number= 09129946954 or at our office address at:  No 4. Oyo street, Area 2, Abuja. Nigeria.
 `;
 
 // Step 2: Use the variable in your component
