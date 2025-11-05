@@ -38,4 +38,21 @@ export const homeService = {
       throw error;
     }
   },
+
+  TermsAndConditionsScreen: async (): Promise<ApiResponse<HomeScreenResponse>> => {
+    try {
+      const config = {
+        method: 'get',
+        url: API_ENDPOINTS.HOME.TERMS_AND_CONDITIONS_SCREEN,
+        headers: {}, // optional, axios will fill this in
+      };
+      const response = await api.get<ApiResponse<HomeScreenResponse>>(config.url);
+
+      return response.data;
+    } catch (error: any) {
+
+      console.error('Error fetching home degree screen data here:', error);
+      throw error;
+    }
+  },
 };

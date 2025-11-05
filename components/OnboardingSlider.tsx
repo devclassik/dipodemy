@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  doneText: { color: "#fff", fontSize: 28 },
+  doneText: { color: "#fff", fontSize: 28, bottom: 10, right: 10, position: "absolute" },
   nextBtnPlaceholder: { height: 50 },
   pagination: {
     left: 40,
