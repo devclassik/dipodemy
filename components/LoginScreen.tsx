@@ -351,6 +351,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 8,
     marginTop: Platform.OS === "ios" ? "20%" : "40%",
+    borderRadius: 10,
   },
   title: {
     textAlign: "center",

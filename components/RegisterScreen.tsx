@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 2,
     marginTop: "10%",
+    borderRadius: 10,
   },
   title: {
     textAlign: "center",
